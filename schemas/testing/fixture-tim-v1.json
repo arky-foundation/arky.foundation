@@ -1,0 +1,18 @@
+{
+  "$id": "https://arky.foundation/schemas/testing/fixture-tim-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TIM Test Fixture",
+  "description": "Wrapper schema for TIM test fixtures with metadata",
+  "type": "object",
+  "required": ["id", "tim"],
+  "additionalProperties": true,
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string" },
+    "description": { "type": "string" },
+    "tim": { "$ref": "../core/tim-v1.json" },
+    "canonical_bytes_hex": { "type": "string" },
+    "signing_key_ref": { "type": "string" },
+    "created": { "type": "string", "format": "date-time" }
+  }
+}
