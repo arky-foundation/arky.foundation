@@ -1,0 +1,77 @@
+{
+  "registry_id": "arky:registry:rails@v1",
+  "name": "Rails & Anchor Targets (v1)",
+  "ts": "2025-10-15T00:00:00Z",
+  "entries": {
+    "caip2:eip155:1": {
+      "urn": "caip2:eip155:1",
+      "kind": "blockchain",
+      "network": "ethereum-mainnet",
+      "locator_schema": "tx:<0xhex>",
+      "proof_profile": "merkle-v1",
+      "hash_alg": "sha256",
+      "leaf_encoding": "cid-bytes",
+      "default_finality": { "depth": 64 },
+      "limits": { "max_batch_cids": 2048, "max_batch_bytes": 1048576 },
+      "status": "active"
+    },
+    "solana:mainnet": {
+      "urn": "solana:mainnet",
+      "kind": "blockchain",
+      "network": "solana-mainnet",
+      "locator_schema": "sig:<base58>",
+      "proof_profile": "merkle-v1",
+      "hash_alg": "sha256",
+      "leaf_encoding": "cid-bytes",
+      "default_finality": { "depth": 150 },
+      "limits": { "max_batch_cids": 4096, "max_batch_bytes": 1048576 },
+      "status": "active"
+    },
+    "btc:mainnet": {
+      "urn": "btc:mainnet",
+      "kind": "blockchain",
+      "network": "bitcoin-mainnet",
+      "locator_schema": "txid:<hex>",
+      "proof_profile": "merkle-v1",
+      "hash_alg": "sha256",
+      "leaf_encoding": "cid-bytes",
+      "default_finality": { "depth": 6 },
+      "limits": { "max_batch_cids": 1024, "max_batch_bytes": 1048576 },
+      "status": "active"
+    },
+    "log:arky:transparency@v1": {
+      "urn": "log:arky:transparency@v1",
+      "kind": "audit_log",
+      "network": "arky-transparency-v1",
+      "locator_schema": "entry:<seqno>",
+      "proof_profile": "merkle-v1",
+      "hash_alg": "sha256",
+      "leaf_encoding": "cid-bytes",
+      "default_finality": { "time": "PT0S" },
+      "limits": { "max_batch_cids": 8192, "max_batch_bytes": 1048576 },
+      "status": "active"
+    },
+    "ach:us": {
+      "urn": "ach:us",
+      "kind": "payment_rail",
+      "network": "us-ach-network",
+      "locator_schema": "ref:<string>",
+      "proof_profile": "receipt-v1",
+      "default_finality": { "time": "P2D" },
+      "limits": { "max_amount": "1000000.00" },
+      "status": "active"
+    },
+    "sepa:eu": {
+      "urn": "sepa:eu",
+      "kind": "payment_rail",
+      "network": "eu-sepa-network",
+      "locator_schema": "ref:<string>",
+      "proof_profile": "receipt-v1",
+      "default_finality": { "time": "P1D" },
+      "limits": { "max_amount": "1000000.00" },
+      "status": "active"
+    }
+  },
+  "aliases": {},
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+}

@@ -1,0 +1,72 @@
+{
+  "registry_id": "arky:registry:verbs@v1",
+  "name": "Settler Verbs (v1)",
+  "ts": "2025-10-15T00:00:00Z",
+  "entries": {
+    "arky:verb/pay@v1": {
+      "urn": "arky:verb/pay@v1",
+      "semantics": "Initiate a payment on a supported rail.",
+      "input_schema": "https://arky.foundation/schemas/verbs/pay@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "payment", "rollback": "P2D" },
+      "rails": ["caip2:eip155:*", "sepa:eu", "ach:us"],
+      "vectors": []
+    },
+    "arky:verb/refund@v1": {
+      "urn": "arky:verb/refund@v1",
+      "semantics": "Return funds for a prior payment.",
+      "input_schema": "https://arky.foundation/schemas/verbs/refund@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "payment", "rollback": "P7D" },
+      "rails": ["caip2:eip155:*", "sepa:eu", "ach:us"],
+      "vectors": []
+    },
+    "arky:verb/slash@v1": {
+      "urn": "arky:verb/slash@v1",
+      "semantics": "Slash a stake or bond per policy.",
+      "input_schema": "https://arky.foundation/schemas/verbs/slash@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "custody", "rollback": "P1D" },
+      "rails": ["controller:*"],
+      "vectors": []
+    },
+    "arky:verb/revoke@v1": {
+      "urn": "arky:verb/revoke@v1",
+      "semantics": "Revoke an authorization or credential.",
+      "input_schema": "https://arky.foundation/schemas/verbs/revoke@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "control", "rollback": "PT0S" },
+      "rails": ["controller:*"],
+      "vectors": []
+    },
+    "arky:verb/upgrade@v1": {
+      "urn": "arky:verb/upgrade@v1",
+      "semantics": "Upgrade a contract, account, or system component.",
+      "input_schema": "https://arky.foundation/schemas/verbs/upgrade@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "control", "rollback": "PT0S" },
+      "rails": ["controller:*"],
+      "vectors": []
+    },
+    "arky:verb/signal@v1": {
+      "urn": "arky:verb/signal@v1",
+      "semantics": "Emit a governance or telemetry signal.",
+      "input_schema": "https://arky.foundation/schemas/verbs/signal@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "control", "rollback": "PT0S" },
+      "rails": ["controller:*"],
+      "vectors": []
+    },
+    "arky:verb/control@v1": {
+      "urn": "arky:verb/control@v1",
+      "semantics": "Execute a control action per policy.",
+      "input_schema": "https://arky.foundation/schemas/verbs/control@v1.json",
+      "idempotency": "key:<commitment+args>",
+      "safety": { "class": "control", "rollback": "PT0S" },
+      "rails": ["controller:*"],
+      "vectors": []
+    }
+  },
+  "aliases": {},
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+}

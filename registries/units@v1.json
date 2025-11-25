@@ -1,0 +1,108 @@
+{
+  "registry_id": "arky:registry:units@v1",
+  "name": "Units & Resources (v1)",
+  "ts": "2025-10-15T00:00:00Z",
+  "entries": {
+    "arky:unit/newton": {
+      "urn": "arky:unit/newton",
+      "symbol": "N",
+      "dimension": { "kg": 1, "m": 1, "s": -2 },
+      "si_prefix": true,
+      "format": { "decimals_max": 9 },
+      "aliases": ["N"],
+      "notes": "SI derived unit"
+    },
+    "arky:unit/meter": {
+      "urn": "arky:unit/meter",
+      "symbol": "m",
+      "dimension": { "m": 1 },
+      "si_prefix": true,
+      "format": { "decimals_max": 9 },
+      "aliases": ["m"],
+      "notes": "SI base unit"
+    },
+    "arky:unit/second": {
+      "urn": "arky:unit/second",
+      "symbol": "s",
+      "dimension": { "s": 1 },
+      "si_prefix": true,
+      "format": { "decimals_max": 9 },
+      "aliases": ["s"],
+      "notes": "SI base unit"
+    },
+    "arky:unit/m-per-s": {
+      "urn": "arky:unit/m-per-s",
+      "symbol": "m/s",
+      "dimension": { "m": 1, "s": -1 },
+      "si_prefix": true,
+      "format": { "decimals_max": 9 },
+      "aliases": ["ms"],
+      "notes": "meters per second"
+    },
+    "arky:unit/watt": {
+      "urn": "arky:unit/watt",
+      "symbol": "W",
+      "dimension": { "kg": 1, "m": 2, "s": -3 },
+      "si_prefix": true,
+      "format": { "decimals_max": 9 },
+      "aliases": ["W"],
+      "notes": "SI derived unit"
+    },
+    "arky:unit/percent": {
+      "urn": "arky:unit/percent",
+      "symbol": "%",
+      "dimension": {},
+      "si_prefix": false,
+      "format": { "decimals_max": 4 },
+      "aliases": ["%"],
+      "notes": "dimensionless"
+    },
+    "arky:unit/blocks": {
+      "urn": "arky:unit/blocks",
+      "symbol": "blocks",
+      "dimension": {},
+      "si_prefix": false,
+      "format": { "decimals_max": 0 },
+      "aliases": [],
+      "notes": "block count"
+    },
+    "arky:unit/gas": {
+      "urn": "arky:unit/gas",
+      "symbol": "gas",
+      "dimension": {},
+      "si_prefix": false,
+      "format": { "decimals_max": 0 },
+      "aliases": [],
+      "notes": "EVM gas units"
+    },
+    "arky:ru/tfloph": {
+      "urn": "arky:ru/tfloph",
+      "symbol": "TFLOP-h",
+      "basis": "flop*h",
+      "si_prefix": true,
+      "format": { "decimals_max": 6 },
+      "aliases": [],
+      "notes": "Resource unit for compute"
+    },
+    "arky:unit/temp.C": {
+      "urn": "arky:unit/temp.C",
+      "symbol": "C",
+      "dimension": { "K": 1 },
+      "si_prefix": false,
+      "format": { "decimals_max": 2 },
+      "aliases": ["celsius"],
+      "notes": "Temperature in Celsius"
+    },
+    "arky:unit/humidity.percent": {
+      "urn": "arky:unit/humidity.percent",
+      "symbol": "%RH",
+      "dimension": {},
+      "si_prefix": false,
+      "format": { "decimals_max": 1 },
+      "aliases": ["rh"],
+      "notes": "Relative humidity percentage"
+    }
+  },
+  "aliases": {},
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+}

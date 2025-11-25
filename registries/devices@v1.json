@@ -1,0 +1,45 @@
+{
+  "registry_id": "arky:registry:devices@v1",
+  "name": "Device Classes (v1)",
+  "ts": "2025-10-15T00:00:00Z",
+  "entries": {
+    "arky:device/camera.rgb": {
+      "urn": "arky:device/camera.rgb",
+      "description": "RGB camera sensor",
+      "fields": { "fov_deg": "number", "sn": "string" },
+      "attestation": { "recommended": true }
+    },
+    "arky:device/gpu.cluster": {
+      "urn": "arky:device/gpu.cluster",
+      "description": "GPU compute cluster",
+      "fields": { "nodes": "integer", "model": "string" },
+      "attestation": { "recommended": true }
+    },
+    "arky:device/controller": {
+      "urn": "arky:device/controller",
+      "description": "Robot controller",
+      "fields": { "fw_version": "string", "sn": "string" },
+      "attestation": { "recommended": true }
+    },
+    "arky:device/sensor.pipeline": {
+      "urn": "arky:device/sensor.pipeline",
+      "description": "Sensor processing pipeline",
+      "fields": { "latency_ms": "number" },
+      "attestation": { "recommended": true }
+    },
+    "arky:device/temp-sensor": {
+      "urn": "arky:device/temp-sensor",
+      "description": "Temperature sensor",
+      "fields": { "range_min": "number", "range_max": "number", "accuracy": "number" },
+      "attestation": { "recommended": false }
+    },
+    "arky:device/humidity-sensor": {
+      "urn": "arky:device/humidity-sensor",
+      "description": "Humidity sensor",
+      "fields": { "range_min": "number", "range_max": "number", "accuracy": "number" },
+      "attestation": { "recommended": false }
+    }
+  },
+  "aliases": {},
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+}

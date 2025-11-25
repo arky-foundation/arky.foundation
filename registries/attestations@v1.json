@@ -1,0 +1,213 @@
+{
+  "registry_id": "arky:registry:attestations@v1",
+  "name": "Unified Attestation Schemes (v1)",
+  "ts": "2025-10-15T00:00:00Z",
+  "entries": {
+    "arky:attest/rats.eat@v1": {
+      "urn": "arky:attest/rats.eat@v1",
+      "name": "RATS Entity Attestation Token",
+      "description": "Standardized attestation format for remote attestation using Entity Attestation Tokens",
+      "category": "tee",
+      "container": "cose",
+      "format": {
+        "fmt_id": "eat-cbor",
+        "serialization": "cbor",
+        "schema_ref": "arky:schema/attest/eat@v1",
+        "jose_header_keys": [],
+        "cose_labels": ["eat_profile", "cnf"],
+        "tpm_struct": "",
+        "digest_rules": {
+          "payload_field": "$.payload",
+          "hash": "sha-256"
+        }
+      },
+      "bindings": {
+        "required": ["key"],
+        "optional": ["content"]
+      },
+      "freshness": {
+        "max_age_ms": 600000,
+        "accept_skew_ms": 60000
+      },
+      "trust_anchors": {
+        "model": "vendor",
+        "root_ids": ["rats-eat-root-1"],
+        "distribution": "jwks",
+        "policy": "hard"
+      },
+      "revocation": {
+        "methods": ["list"],
+        "cache_ttl_ms": 600000,
+        "soft_fail": false
+      },
+      "claims_map": {
+        "hw_vendor": "$.ueid.vendor",
+        "hw_model": "$.ueid.model",
+        "tee": "$.tee",
+        "sw_measurement": "$.meas.code",
+        "debug": "$.dbg",
+        "anti_rollback": "$.antiRollback",
+        "boot_state": "$.boot",
+        "key_class": "$.key.class",
+        "origin": "$.origin",
+        "extensions": {}
+      },
+      "reference_values": {
+        "measurements": [],
+        "policy_predicates": []
+      },
+      "hash_algs": ["sha-256"],
+      "detection": {
+        "markers": {
+          "jose": [],
+          "cose": ["eat_profile"],
+          "tpm2": []
+        }
+      },
+      "vectors": ["/vectors/attest/a1-eat-001.json"],
+      "use_cases": [
+        "Remote TEE verification",
+        "Zero-trust device onboarding",
+        "Supply chain security validation"
+      ]
+    },
+    "arky:attest/tee.intel.sgx@v1": {
+      "urn": "arky:attest/tee.intel.sgx@v1",
+      "name": "Intel SGX Enclave Attestation",
+      "description": "Intel SGX hardware enclave attestation using EPID quotes",
+      "category": "tee",
+      "container": "other",
+      "format": {
+        "fmt_id": "sgx-quote",
+        "serialization": "bin",
+        "schema_ref": "arky:schema/attest/sgx-quote@v1",
+        "jose_header_keys": [],
+        "cose_labels": [],
+        "tpm_struct": "",
+        "digest_rules": {
+          "payload_field": "$.quote",
+          "hash": "sha-256"
+        }
+      },
+      "bindings": {
+        "required": ["key"],
+        "optional": ["content"]
+      },
+      "freshness": {
+        "max_age_ms": 600000,
+        "accept_skew_ms": 60000
+      },
+      "trust_anchors": {
+        "model": "vendor",
+        "root_ids": ["intel-sgx-root-1"],
+        "distribution": "pem",
+        "policy": "hard"
+      },
+      "revocation": {
+        "methods": ["crl"],
+        "cache_ttl_ms": 600000,
+        "soft_fail": false
+      },
+      "claims_map": {
+        "hw_vendor": "$.platform.vendor",
+        "hw_model": "$.platform.model",
+        "tee": "$.tee",
+        "sw_measurement": "$.mr_enclave",
+        "debug": "$.debug",
+        "anti_rollback": "$.isv_svn_ok",
+        "boot_state": "$.boot",
+        "key_class": "$.key.class",
+        "origin": "$.origin",
+        "extensions": {}
+      },
+      "reference_values": {
+        "measurements": [],
+        "policy_predicates": []
+      },
+      "hash_algs": ["sha-256"],
+      "detection": {
+        "markers": {
+          "jose": [],
+          "cose": [],
+          "tpm2": []
+        }
+      },
+      "vectors": ["/vectors/attest/a1-sgx-001.json"],
+      "use_cases": [
+        "Confidential computing workloads",
+        "Secure key management",
+        "Privacy-preserving computation"
+      ]
+    },
+    "arky:attest/tpm2.quote@v1": {
+      "urn": "arky:attest/tpm2.quote@v1",
+      "name": "TPM2 Device Quote Attestation",
+      "description": "TPM2 hardware security module attestation using quote structures",
+      "category": "hsm",
+      "container": "tpm2",
+      "format": {
+        "fmt_id": "tpm2-quote",
+        "serialization": "bin",
+        "schema_ref": "arky:schema/attest/tpm2-quote@v1",
+        "jose_header_keys": [],
+        "cose_labels": [],
+        "tpm_struct": "TPMS_ATTEST",
+        "digest_rules": {
+          "payload_field": "$.attest",
+          "hash": "sha-256"
+        }
+      },
+      "bindings": {
+        "required": ["content"],
+        "optional": ["key"]
+      },
+      "freshness": {
+        "max_age_ms": 300000,
+        "accept_skew_ms": 30000
+      },
+      "trust_anchors": {
+        "model": "endorsement",
+        "root_ids": ["tpm2-ek-roots"],
+        "distribution": "pem",
+        "policy": "hard"
+      },
+      "revocation": {
+        "methods": ["list"],
+        "cache_ttl_ms": 600000,
+        "soft_fail": false
+      },
+      "claims_map": {
+        "hw_vendor": "$.tpm_vendor",
+        "hw_model": "$.tpm_model",
+        "tee": "$.tee",
+        "sw_measurement": "$.pcr_digest",
+        "debug": "$.debug_enabled",
+        "anti_rollback": "$.fw_version_ok",
+        "boot_state": "$.boot_state",
+        "key_class": "$.ak_class",
+        "origin": "$.origin",
+        "extensions": {}
+      },
+      "reference_values": {
+        "measurements": [],
+        "policy_predicates": []
+      },
+      "hash_algs": ["sha-256", "sha-384"],
+      "detection": {
+        "markers": {
+          "jose": [],
+          "cose": [],
+          "tpm2": ["TPM_ST_ATTEST_QUOTE"]
+        }
+      },
+      "vectors": [],
+      "use_cases": [
+        "Device identity verification",
+        "Secure boot validation",
+        "Platform integrity measurement"
+      ]
+    }
+  },
+  "aliases": {},
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+}
