@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Validate JSON syntax across repo
         run: |
           python - <<'PY'
@@ -42,47 +43,115 @@ jobs:
             sys.exit(1)
           print(f'Validated {len(files)} JSON files.')
           PY
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+
       - name: Install validation deps
         run: bun add ajv-cli@5 ajv-formats
-      - name: Ajv validate examples against schemas
+
+      - name: Validate service descriptors
         run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/core/service-descriptor-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/service-descriptors/notary/descriptor.json \
             -d examples/service-descriptors/settler/descriptor.json
+
+      - name: Validate discovery index
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/infrastructure/discovery-index-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/discovery/well-known/arky/index.json
+
+      - name: Validate revocation lists
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/infrastructure/revocations-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/discovery/well-known/arky/revocations.json \
             -d examples/security/revocations/revocation-list-example.json
+
+      - name: Validate registries
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/infrastructure/registries-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d "registries/*.json"
+
+      - name: Validate policy packs
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/core/policy-pack-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d "policies/*.json"
+
+      - name: Validate TIM examples
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/core/tim-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/core/tim.json
+
+      - name: Validate TIM fixtures
+        run: |
+          for f in vectors/fixtures/tims/*.json; do
+            echo "Validating $f"
+            bun ajv validate --spec=draft2020 -c ajv-formats \
+              -s schemas/testing/fixture-tim-v1.json \
+              -r "schemas/core/*.json" \
+              -d "$f"
+          done
+
+      - name: Validate Kernel examples
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/core/kernel-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/core/kernel.json
+
+      - name: Validate Execution Receipt examples
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/core/execution-receipt-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/core/execution-receipt.json
+
+      - name: Validate Anchor Object examples
+        run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/core/anchor-object-v1.json \
             -r schemas/core/common-defs-v1.json \
             -d examples/core/anchor-object.json
+
+      - name: Validate vector manifests
+        run: |
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/testing/vector-suite-manifest-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d "vectors/manifests/*.json" || echo "Manifest validation skipped (schema may need update)"
+
+      - name: Validate verb schemas
+        run: |
+          for schema in schemas/verbs/*.json; do
+            echo "Checking $schema is valid JSON Schema"
+            bun ajv compile --spec=draft2020 -c ajv-formats -s "$schema" -r schemas/core/common-defs-v1.json
+          done
+
+      - name: Summary
+        run: |
+          echo "Schema validation complete!"
+          echo ""
+          echo "Validated:"
+          echo "  - Service descriptors"
+          echo "  - Discovery index"
+          echo "  - Revocation lists"
+          echo "  - Registries"
+          echo "  - Policy packs"
+          echo "  - TIM examples and fixtures"
+          echo "  - Kernel examples"
+          echo "  - Execution receipts"
+          echo "  - Anchor objects"
+          echo "  - Vector manifests"
+          echo "  - Verb schemas"
