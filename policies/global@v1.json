@@ -1,0 +1,26 @@
+
+{
+  "pack_id": "arky:policy/global@v1",
+  "version": "1.0.0",
+  "rules": {
+    "tim": {
+      "numeric_units_required": true,
+      "min_witnesses": 2,
+      "privacy": { "no_pii": true }
+    },
+    "notary": {
+      "finality": {
+        "default_depths": { "caip2:eip155:1": 64, "solana:mainnet": 150 }
+      },
+      "dtn_ordering": true
+    },
+    "attestation": {
+      "required": false,
+      "types": ["arky:attest/rats.eat@v1"]
+    },
+    "revocations": { "enforce": true }
+  },
+  "overlays": {},
+  "ts": "2025-10-15T00:00:00Z",
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJwb2xpY3kifQ.placeholder_signature_value"
+}

@@ -1,0 +1,11 @@
+{
+  "pack_id": "arky:policy/na@v1",
+  "version": "1.0.0",
+  "rules": {
+    "privacy": { "no_pii": true },
+    "attestation": { "required": false }
+  },
+  "overlays": {},
+  "ts": "2025-10-15T00:00:00Z",
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJwb2xpY3kifQ.placeholder_signature_value"
+}
