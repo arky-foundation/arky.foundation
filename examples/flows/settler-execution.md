@@ -10,8 +10,8 @@ Scenario: Cloud scaling payment execution on ACH rails.
   "commitment_cid": "zQmKERNEL456...",
   "verbs": [
     {
-      "verb": "urn:arky:verb:pay@v1",
-      "rail": "urn:arky:rail:ach:us@v1",
+      "verb": "arky:verb/pay@v1",
+      "rail": "arky:rail/ach:us@v1",
       "args": {
         "to": "acct:cloud-provider:billing",
         "amount": { "value": 250, "unit": "USD" }
@@ -35,12 +35,12 @@ Settler validates:
 ```json
 {
   "request_id": "req_001",
-  "verb": "urn:arky:verb:pay@v1",
+  "verb": "arky:verb/pay@v1",
   "status": "pending",
   "locator": "ACH20251015T143005-xyz",
   "cost": { "unit": "USD", "value": 2.50 },
   "rail_metadata": {
-    "rail": "urn:arky:rail:ach:us@v1",
+    "rail": "arky:rail/ach:us@v1",
     "batch_id": "20251015_001",
     "expected_settlement": "2025-10-17T09:00:00Z"
   },
@@ -61,12 +61,12 @@ Settler validates:
 ```json
 {
   "request_id": "req_001",
-  "verb": "urn:arky:verb:pay@v1",
+  "verb": "arky:verb/pay@v1",
   "status": "success",
   "locator": "ACH20251015T143005-xyz",
   "cost": { "unit": "USD", "value": 2.50 },
   "rail_metadata": {
-    "rail": "urn:arky:rail:ach:us@v1",
+    "rail": "arky:rail/ach:us@v1",
     "confirmation": "ACH_CONF_xyz123",
     "settled_at": "2025-10-17T09:15:23Z"
   },

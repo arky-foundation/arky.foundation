@@ -144,7 +144,7 @@ ConsequenceSpec :=
 
 
 Verb :=
-  name:         string,                    // *required* — settler verb URN (e.g., urn:arky:verb:pay@v1)
+  name:         string,                    // *required* — settler verb URN (e.g., arky:verb/pay@v1)
   args:         object                     // *required* — verb-specific arguments
 
 
@@ -187,22 +187,22 @@ Outcome := "PASS" | "FAIL" | "INDETERMINATE" | Expr   // Expr returns boolean
 **Examples:**
 ```typescript
 // Simple: if all pass, execute payment
- "if": "PASS", "then": [ "name": "urn:arky:verb:pay@v1", "args": ... ]
+ "if": "PASS", "then": [ "name": "arky:verb/pay@v1", "args": ... ]
 
 // Conditional: different verbs for pass vs fail
 [
-   "if": "PASS", "then": [ "name": "urn:arky:verb:pay@v1", ...] ,
-   "if": "FAIL", "then": [ "name": "urn:arky:verb:notify@v1", ...]
+   "if": "PASS", "then": [ "name": "arky:verb/pay@v1", ...] ,
+   "if": "FAIL", "then": [ "name": "arky:verb/notify@v1", ...]
 ]
 
 // Complex: multi-assertion logic
 
   "if": "temp_check == PASS && (pressure_check == PASS || manual_override == true)",
-  "then": [ "name": "urn:arky:verb:activate@v1", ...]
+  "then": [ "name": "arky:verb/activate@v1", ...]
 
 
 // Fallback: catch indeterminate state
- "if": "INDETERMINATE", "then": [ "name": "urn:arky:verb:escalate@v1", ...]
+ "if": "INDETERMINATE", "then": [ "name": "arky:verb/escalate@v1", ...]
 ```
 
 **ClockSpec**

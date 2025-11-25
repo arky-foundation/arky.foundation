@@ -27,7 +27,7 @@ Scenario: Automated cloud scaling—pay for compute only if CPU load exceeds thr
 
 ```json
 {
-  "scope": "urn:arky:scope:cloud-autoscaling@v1",
+  "scope": "arky:scope/cloud-autoscaling@v1",
   "actor": "did:web:infra.company.com:controller",
   "intent": { "do": "provision_compute", "budget": { "value": 500, "unit": "USD" } },
   "measure": [
@@ -37,7 +37,7 @@ Scenario: Automated cloud scaling—pay for compute only if CPU load exceeds thr
     {
       "if": "PASS",
       "then": [
-        { "name": "urn:arky:verb:pay@v1", "args": { "to": "acct:cloud-provider:billing", "amount": { "value": 250, "unit": "USD" } } }
+        { "name": "arky:verb/pay@v1", "args": { "to": "acct:cloud-provider:billing", "amount": { "value": 250, "unit": "USD" } } }
       ],
       "limits": { "amount_max": { "value": 500, "unit": "USD" } }
     }
@@ -60,13 +60,13 @@ Kernel binds `cpu_load = 87.5` from TIM, evaluates:
 {
   "kernel_cid": "zQmKERNEL456...",
   "actor": "did:web:infra.company.com:controller",
-  "scope": "urn:arky:scope:cloud-autoscaling@v1",
+  "scope": "arky:scope/cloud-autoscaling@v1",
   "status": "APPROVED",
   "assertions": [
     { "name": "cpu_load", "result": "PASS", "inputs": ["zQmCPU123..."] }
   ],
   "authorized": [
-    { "name": "urn:arky:verb:pay@v1", "args": { "to": "acct:cloud-provider:billing", "amount": { "value": 250, "unit": "USD" } } }
+    { "name": "arky:verb/pay@v1", "args": { "to": "acct:cloud-provider:billing", "amount": { "value": 250, "unit": "USD" } } }
   ],
   "ts_eval": "2025-10-15T14:30:02Z",
   "cid": "zQmDECISION789...",
@@ -82,8 +82,8 @@ Kernel binds `cpu_load = 87.5` from TIM, evaluates:
   "commitment_cid": "zQmKERNEL456...",
   "verbs": [
     {
-      "verb": "urn:arky:verb:pay@v1",
-      "rail": "urn:arky:rail:ach:us@v1",
+      "verb": "arky:verb/pay@v1",
+      "rail": "arky:rail/ach:us@v1",
       "args": { "to": "acct:cloud-provider:billing", "amount": { "value": 250, "unit": "USD" } },
       "deadline": "2025-10-15T15:00:00Z"
     }
@@ -96,7 +96,7 @@ Kernel binds `cpu_load = 87.5` from TIM, evaluates:
 ```json
 {
   "request_id": "req_001",
-  "verb": "urn:arky:verb:pay@v1",
+  "verb": "arky:verb/pay@v1",
   "status": "pending",
   "locator": "ACH20251015T143005-xyz",
   "cost": { "unit": "USD", "value": 2.50 },

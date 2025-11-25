@@ -17,7 +17,7 @@ Scenario: Temperature sensor reading.
       "source": "device:temp-probe-01",
       "version": "v2"
     },
-    "device": "urn:arky:device:temp.ds18b20",
+    "device": "arky:device/temp.ds18b20",
     "error": "±0.5"
   },
   "cid": "z4EJqXvZxXJ58h5ZwJD9tUqX3Hf7KwVnN8YvRt2mZ9Q",

@@ -90,7 +90,7 @@ This document defines standard terminology, capitalization, and usage convention
 | **commitment_cid** | snake_case with lowercase cid | Not "commitmentCid" or "commitment_CID" |
 | **kernel_cid** | snake_case with lowercase cid | Not "kernelCid" |
 | **request_id** | snake_case | Not "requestId" |
-| **verb** | Lowercase | e.g., `"verb": "urn:arky:verb:pay@v1"` |
+| **verb** | Lowercase | e.g., `"verb": "arky:verb/pay@v1"` |
 
 ### Error Codes
 
@@ -122,9 +122,9 @@ urn:arky:verb:<name>@v<version>
 ```
 
 **Examples:**
-- `urn:arky:verb:pay@v1`
-- `urn:arky:verb:refund@v1`
-- `urn:arky:verb:control@v1`
+- `arky:verb/pay@v1`
+- `arky:verb/refund@v1`
+- `arky:verb/control@v1`
 
 **Rules:**
 - Verb names are lowercase
@@ -238,10 +238,10 @@ urn:arky:<type>:<name>@v<version>
 ```
 
 **Examples:**
-- `urn:arky:verb:pay@v1`
-- `urn:arky:rail:ach:us@v1`
-- `urn:arky:scope:treasury@v1`
-- `urn:arky:policy:witness-quorum@v1`
+- `arky:verb/pay@v1`
+- `arky:rail/ach:us@v1`
+- `arky:scope/treasury@v1`
+- `arky:policy/witness-quorum@v1`
 
 **Rules:**
 - All lowercase

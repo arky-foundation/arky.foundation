@@ -52,7 +52,7 @@ This document now serves as a concise index. Full tutorials and copy‑paste exa
 
 ```json
 {
-  "scope": "urn:arky:scope:cloud-autoscaling@v1",
+  "scope": "arky:scope/cloud-autoscaling@v1",
   "actor": "did:web:infra.company.com:scaling-controller",
   "intent": {
     "do": "provision_compute",
@@ -76,7 +76,7 @@ This document now serves as a concise index. Full tutorials and copy‑paste exa
     {
       "if": "PASS",
       "then": [{
-        "name": "urn:arky:verb:pay@v1",
+        "name": "arky:verb/pay@v1",
         "args": {
           "to": "acct:ach:us:cloud-provider-invoice",
           "amount": {
@@ -97,7 +97,7 @@ This document now serves as a concise index. Full tutorials and copy‑paste exa
     {
       "if": "FAIL",
       "then": [{
-        "name": "urn:arky:verb:signal@v1",
+        "name": "arky:verb/signal@v1",
         "args": {
           "topic": "ops-alerts",
           "payload_hash": "sha256:...",
@@ -188,7 +188,7 @@ ConsequenceSpec[0]: if="PASS" → MATCH
   then: [pay@v1]
   Authorized verbs: [
     {
-      name: "urn:arky:verb:pay@v1",
+      name: "arky:verb/pay@v1",
       args: {
         to: "acct:ach:us:cloud-provider-invoice",
         amount: { value: 250, unit: "USD" }
@@ -211,7 +211,7 @@ Conflicts: None
 {
   "kernel_cid": "zQmKERNEL456...",
   "actor": "did:web:infra.company.com:scaling-controller",
-  "scope": "urn:arky:scope:cloud-autoscaling@v1",
+  "scope": "arky:scope/cloud-autoscaling@v1",
   "assertions": [{
     "name": "cpu_load",
     "result": "PASS",
@@ -219,7 +219,7 @@ Conflicts: None
     "inputs": ["zQmCPU123..."]
   }],
   "authorized": [{
-    "name": "urn:arky:verb:pay@v1",
+    "name": "arky:verb/pay@v1",
     "args": {
       "to": "acct:ach:us:cloud-provider-invoice",
       "amount": {
@@ -248,8 +248,8 @@ Conflicts: None
   "request_id": "req_2025-10-15_001",
   "commitment_cid": "zQmKERNEL456...",
   "verbs": [{
-    "verb": "urn:arky:verb:pay@v1",
-    "rail": "urn:arky:rail:ach:us@v1",
+    "verb": "arky:verb/pay@v1",
+    "rail": "arky:rail/ach:us@v1",
     "args": {
       "to": "acct:ach:us:cloud-provider-invoice:123456789",
       "amount": {
@@ -266,7 +266,7 @@ Conflicts: None
   }],
   "anchors_required": true,
   "policy": {
-    "id": "urn:arky:policy:enterprise-payments@v1",
+    "id": "arky:policy/enterprise-payments@v1",
     "tim_level": "T2",
     "max_tim_age": 300000
   },
@@ -291,14 +291,14 @@ if (now > deadline) {
 // Result: ✓ 14:30:05 < 15:00:00
 
 // 1.2 Validate verb in registry
-const verbDef = await registry.getVerb("urn:arky:verb:pay@v1");
+const verbDef = await registry.getVerb("arky:verb/pay@v1");
 if (!verbDef) {
   return error("settler.unknown_verb");
 }
 // Result: ✓ pay@v1 found
 
 // 1.3 Validate rail supports verb
-const railDef = await registry.getRail("urn:arky:rail:ach:us@v1");
+const railDef = await registry.getRail("arky:rail/ach:us@v1");
 if (!railDef.supports_verbs.includes("pay@v1")) {
   return error("settler.unsupported_rail");
 }
@@ -332,7 +332,7 @@ if (!sigValid) {
 const authCheck = await policyEngine.canExecute({
   actor: "did:web:infra.company.com:scaling-controller",
   verb: "pay@v1",
-  scope: "urn:arky:scope:cloud-autoscaling@v1"
+  scope: "arky:scope/cloud-autoscaling@v1"
 });
 if (!authCheck.authorized) {
   return error("settler.policy_denied", authCheck.reason);
@@ -594,7 +594,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       "decision": "APPROVED",
       "verbs": [{
         "verb": "pay@v1",
-        "rail": "urn:arky:rail:ach:us@v1",
+        "rail": "arky:rail/ach:us@v1",
         "args": {
           "to": "acct:ach:us:cloud-provider-invoice:123456789",
           "amount": { "value": 250, "unit": "USD" },
@@ -603,7 +603,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       }]
     }
   }],
-  "policy": "urn:arky:pac:cloud-autoscaling@v1",
+  "policy": "arky:pac/cloud-autoscaling@v1",
   "cid": "zQmKERNEL456...",
   "sig": "eyJhbGciOi..."
 }
@@ -633,7 +633,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
   "commitment_cid": "zQmKERNEL456...",
   "verbs": [{
     "verb": "pay@v1",
-    "rail": "urn:arky:rail:ach:us@v1",
+    "rail": "arky:rail/ach:us@v1",
     "status": "success",
     "result": {
       "trace_id": "ach-tx-987654321",
@@ -722,7 +722,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       "decision": "APPROVED",
       "verbs": [{
         "verb": "control@v1",
-        "rail": "urn:arky:rail:satellite:command@v1",
+        "rail": "arky:rail/satellite:command@v1",
         "args": {
           "target": "sat:noaa:20",
           "command": "burn",
@@ -731,7 +731,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       }]
     }
   }],
-  "policy": "urn:arky:pac:two-person-rule@v1"
+  "policy": "arky:pac/two-person-rule@v1"
 }
 ```
 
@@ -819,7 +819,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       "decision": "APPROVED",
       "verbs": [{
         "verb": "control@v1",
-        "rail": "urn:arky:rail:medical:dispenser@v1",
+        "rail": "arky:rail/medical:dispenser@v1",
         "args": {
           "patient_id": "patient:302:john-doe",
           "medication": "med:lisinopril:10mg",
@@ -828,7 +828,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       }]
     }
   }],
-  "policy": "urn:arky:pac:hipaa-medication@v1"
+  "policy": "arky:pac/hipaa-medication@v1"
 }
 ```
 
@@ -906,7 +906,7 @@ current = SHA-256(min(H_CDE, H_AB) || max(H_CDE, H_AB)) = root ✓
       }]
     }
   }],
-  "policy": "urn:arky:pac:escrow-release@v1"
+  "policy": "arky:pac/escrow-release@v1"
 }
 ```
 
@@ -1050,13 +1050,13 @@ urn:arky:<type>:<name>@v<version>
 ```
 
 Correct:
-- `urn:arky:verb:pay@v1`
-- `urn:arky:rail:ach:us@v1`
-- `urn:arky:policy:witness-quorum@v1`
+- `arky:verb/pay@v1`
+- `arky:rail/ach:us@v1`
+- `arky:policy/witness-quorum@v1`
 
 Wrong:
-- `urn:arky:verb:Pay@v1` (uppercase name)
-- `urn:arky:verb:pay-v1` (missing @)
+- `arky:verb/Pay@v1` (uppercase name)
+- `arky:verb/pay-v1` (missing @)
 - `URN:ARKY:VERB:PAY@V1` (all uppercase)
 
 ### B.6 Markdown Code Formatting

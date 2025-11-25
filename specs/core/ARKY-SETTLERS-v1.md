@@ -391,16 +391,16 @@ ExecutionReceipts follow the same canonicalization rules as TIM. See **[ARKY-TIM
 **Example canonical body (before cid/sig):**
 ```json
 {
-  "anchors": [{"locator": "batch_001", "status": "pending", "target": "urn:arky:notary:foundation-primary@v1"}],
+  "anchors": [{"locator": "batch_001", "status": "pending", "target": "arky:notary/foundation-primary@v1"}],
   "args_hash": "z4EF...",
   "commitment_cid": "zQmKERNEL456...",
   "cost": { "unit": "USD", "value": 2.5 },
   "locator": "ACH20251015T143005-xyz",
-  "rail": "urn:arky:rail:ach:us@v1",
+  "rail": "arky:rail/ach:us@v1",
   "request_id": "req_2025-10-15_001",
   "status": "pending",
   "ts": "2025-10-15T14:30:05Z",
-  "verb": "urn:arky:verb:pay@v1"
+  "verb": "arky:verb/pay@v1"
 }
 ```
 Note: Keys are sorted alphabetically; no `cid` or `sig` present.
@@ -534,13 +534,13 @@ function deriveIdempotencyKey(request: ExecutionRequest, verbIndex: number): str
 {
   "args_hash": "z4EF...",
   "commitment_cid": "zQmKERNEL456...",
-  "rail": "urn:arky:rail:ach:us@v1",
-  "verb": "urn:arky:verb:pay@v1",
+  "rail": "arky:rail/ach:us@v1",
+  "verb": "arky:verb/pay@v1",
   "verb_index": 0
 }
 
 // Serialization (JCS, no whitespace):
-const canonical = '{"args_hash":"z4EF...","commitment_cid":"zQmKERNEL456...","rail":"urn:arky:rail:ach:us@v1","verb":"urn:arky:verb:pay@v1","verb_index":0}';
+const canonical = '{"args_hash":"z4EF...","commitment_cid":"zQmKERNEL456...","rail":"arky:rail/ach:us@v1","verb":"arky:verb/pay@v1","verb_index":0}';
 
 // Hash (SHA-256 example):
 const bytes = utf8.encode(canonical);

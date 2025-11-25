@@ -59,7 +59,7 @@ Provides a single wire format for errors, a stable code taxonomy, required metad
   "status": 422,
   "severity": "error",
   "retry": { "policy": "after", "after_ms": 300000 },
-  "context": { "rail": "urn:arky:rail:ach:us@v1", "required": 255, "available": 100 },
+  "context": { "rail": "arky:rail/ach:us@v1", "required": 255, "available": 100 },
   "ts": "2025-10-15T14:30:05Z"
 }
 ```

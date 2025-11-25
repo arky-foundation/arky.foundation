@@ -14,7 +14,7 @@ Copyable, minimal examples referenced by specs. No live services.
 
 ```json
 {
-  "service_id": "urn:arky:example:notary",
+  "service_id": "arky:example/notary",
   "service_type": "notary",
   "version": "1.0.0",
   "spec_ids": ["ARKY-NOTARY-v1", "ARKY-DISCOVERY-v1"],

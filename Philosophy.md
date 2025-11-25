@@ -47,7 +47,7 @@ last_updated: 2025-10-15
 ```json
 {
   "@type": "ARKY:TIM@v1",
-  "subject": "urn:arky:unit:temp.C",
+  "subject": "arky:unit/temp.C",
   "value": 22.3,
   "time": "2025-01-02T03:04:05Z",
   "cid": "zBase58...",
@@ -73,7 +73,7 @@ Terminology: Notary (specs/ARKY-NOTARY-v1.md), Anchors (specs/ARKY-TRANSLOG-v1.m
 ```json
 {
   "@type": "ARKY:Decision@v1",
-  "rule": "urn:arky:policy:cooling.on",
+  "rule": "arky:policy/cooling.on",
   "inputs": {"tim": "zBase58..."},
   "result": "ALLOW",
   "cid": "zBase58..."
@@ -86,7 +86,7 @@ Terminology: Kernel/Decision (specs/ARKY-KERNEL-v1.md), Policy Packs (specs/ARKY
 ```json
 {
   "@type": "ARKY:ExecutionReceipt@v1",
-  "verb": "urn:arky:verb:evm.transfer",
+  "verb": "arky:verb/evm.transfer",
   "params": {"to": "0x...", "value": "1"},
   "status": "SUCCESS",
   "anchors": [{"rail": "eth:1", "txid": "0xdef..."}]
