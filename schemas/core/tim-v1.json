@@ -1,0 +1,56 @@
+{
+  "$id": "https://arky.foundation/schemas/core/tim-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TIM Core v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["time", "identity", "measurement", "cid", "sig"],
+  "properties": {
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ts"],
+      "properties": {
+        "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
+        "witnesses": {"type": "array", "items": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}},
+        "ordering": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string"},
+        "claims": {"type": "array", "items": {"type": "string"}},
+        "proofs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value", "method"],
+      "properties": {
+        "name": {"type": "string"},
+        "value": {},
+        "unit": {"type": "string"},
+        "method": {"type": "string"},
+        "device": {"type": "string"},
+        "error": {"type": "string"},
+        "code": {"type": "string"},
+        "provenance": {"type": "object"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"value": {"type": "number"}}, "required": ["value"]},
+          "then": {"required": ["unit"]}
+        }
+      ]
+    },
+    "prev": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "nonce": {"type": "string"},
+    "exp": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  }
+}

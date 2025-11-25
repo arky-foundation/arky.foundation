@@ -1,0 +1,21 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/slash@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: slash@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject", "amount"],
+  "properties": {
+    "subject": {"type": "string", "minLength": 1},
+    "amount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"type": "string"}
+      }
+    },
+    "reason": {"type": "string"}
+  }
+}

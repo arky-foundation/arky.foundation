@@ -1,0 +1,149 @@
+{
+  "$id": "https://arky.foundation/schemas/core/service-descriptor-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Service Descriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["service_id", "service_type", "version", "spec_ids", "endpoints", "capabilities", "security", "ts", "cid", "sig"],
+  "properties": {
+    "service_id": {"type": "string"},
+    "service_type": {"type": "string", "enum": ["notary", "settler", "registry", "policy"]},
+    "version": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Semver"},
+    "spec_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "endpoints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "path", "method"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "method": {"type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "HEAD"]},
+          "media_types": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "capabilities": {"type": "object"},
+    "policy_defaults": {"type": "object", "additionalProperties": true},
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transport", "auth"],
+      "properties": {
+        "transport": {"type": "array", "items": {"type": "string", "enum": ["https"]}, "minItems": 1},
+        "auth": {"type": "array", "items": {"type": "string", "enum": ["mtls", "oauth2", "apikey", "none"]}, "minItems": 1},
+        "rate_limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "per_minute": {"type": "integer", "minimum": 0},
+            "burst": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"service_type": {"const": "notary"}}, "required": ["service_type"]},
+      "then": {"properties": {"capabilities": {"$ref": "#/$defs/NotaryCaps"}}}
+    },
+    {
+      "if": {"properties": {"service_type": {"const": "settler"}}, "required": ["service_type"]},
+      "then": {"properties": {"capabilities": {"$ref": "#/$defs/SettlerCaps"}}}
+    },
+    {
+      "if": {"properties": {"service_type": {"const": "registry"}}, "required": ["service_type"]},
+      "then": {"properties": {"capabilities": {"$ref": "#/$defs/RegistryCaps"}}}
+    },
+    {
+      "if": {"properties": {"service_type": {"const": "policy"}}, "required": ["service_type"]},
+      "then": {"properties": {"capabilities": {"$ref": "#/$defs/PolicyCaps"}}}
+    }
+  ],
+  "$defs": {
+    "NotaryCaps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["anchor_targets", "finality_defaults", "batch_limits", "witness_algorithms", "dtn_ordering", "policy_required"],
+      "properties": {
+        "anchor_targets": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "finality_defaults": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "batch_limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_count", "max_bytes", "max_dwell_ms"],
+          "properties": {
+            "max_count": {"type": "integer", "minimum": 1},
+            "max_bytes": {"type": "integer", "minimum": 1},
+            "max_dwell_ms": {"type": "integer", "minimum": 0}
+          }
+        },
+        "witness_algorithms": {"type": "array", "items": {"type": "string", "enum": ["Ed25519"]}, "minItems": 1},
+        "dtn_ordering": {"type": "boolean"},
+        "policy_required": {"type": "boolean"},
+        "attestation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required", "types"],
+          "properties": {
+            "required": {"type": "boolean"},
+            "types": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^arky:attest/[a-z0-9._-]+@v[0-9]+$"}}
+          }
+        }
+      }
+    },
+    "SettlerCaps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rails_supported", "verbs_supported", "rollback_support", "xr_anchor", "idempotency"],
+      "properties": {
+        "rails_supported": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "verbs_supported": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "rollback_support": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "window": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/IsoDuration"}
+            }
+          }
+        },
+        "xr_anchor": {"type": "string", "enum": ["required", "optional", "unsupported"]},
+        "idempotency": {"type": "string", "enum": ["keyed", "none"]},
+        "attestation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required", "types"],
+          "properties": {
+            "required": {"type": "boolean"},
+            "types": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^arky:attest/[a-z0-9._-]+@v[0-9]+$"}}
+          }
+        }
+      }
+    },
+    "RegistryCaps": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namespaces": {"type": "array", "items": {"type": "string"}},
+        "schema_uris": {"type": "array", "items": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"}},
+        "max_payload_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "PolicyCaps": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pack_ids": {"type": "array", "items": {"type": "string"}},
+        "storage_residency": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

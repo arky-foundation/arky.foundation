@@ -1,0 +1,29 @@
+{
+  "$id": "https://arky.foundation/schemas/meta/schemas-index-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Schemas Index (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["index_id", "ts", "schemas", "sig"],
+  "properties": {
+    "index_id": {"type": "string", "const": "arky:schemas:index@v1"},
+    "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
+    "schemas": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cid"],
+          "properties": {
+            "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+            "url": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"}
+          }
+        }
+      }
+    },
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  }
+}

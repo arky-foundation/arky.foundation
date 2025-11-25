@@ -1,0 +1,20 @@
+{
+  "$id": "https://arky.foundation/schemas/core/policy-pack-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Policy Pack (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pack_id", "version", "rules", "ts", "sig"],
+  "properties": {
+    "pack_id": {
+      "type": "string",
+      "pattern": "^arky:policy[/:]?[a-z0-9._-]+@v[0-9]+$"
+    },
+    "version": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Semver"},
+    "rules": {"type": "object", "additionalProperties": true},
+    "overlays": {"type": "object", "additionalProperties": true},
+    "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  }
+}

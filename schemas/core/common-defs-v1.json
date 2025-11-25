@@ -1,0 +1,37 @@
+{
+  "$id": "https://arky.foundation/schemas/common-defs-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Rfc3339": {"type": "string", "format": "date-time"},
+
+    "IsoDuration": {
+      "type": "string",
+      "pattern": "^P(?=.+)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
+    },
+
+    "Cid": {
+      "type": "string",
+      "description": "Base58-BTC(multihash(sha-256,...)) - prefix often 'z' but not enforced",
+      "pattern": "^[1-9A-HJ-NP-Za-km-z]{10,}$"
+    },
+
+    "JwsCompact": {
+      "type": "string",
+      "description": "JWS compact serialization (base64url.header.payload.signature)",
+      "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$"
+    },
+
+    "Caip2": {
+      "type": "string",
+      "description": "Approximate CAIP-2 chain id (namespace:reference)",
+      "pattern": "^[a-z0-9]+:[a-z0-9]+([:-][a-zA-Z0-9]+)*$"
+    },
+
+    "Uri": {"type": "string", "format": "uri"},
+
+    "Semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$id": "https://arky.foundation/schemas/core/execution-receipt-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Execution Receipt (XR) v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "commitment_id",
+    "verb",
+    "rail",
+    "inputs_cids",
+    "status",
+    "ts_exec",
+    "cid",
+    "sig"
+  ],
+  "properties": {
+    "commitment_id": {"type": "string", "minLength": 1},
+    "verb": {"type": "string"},
+    "rail": {"type": "string"},
+    "inputs_cids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"}},
+    "tx_ref": {"type": "string"},
+    "status": {"type": "string", "enum": ["success", "partial", "failed", "rolled_back"]},
+    "ts_exec": {"type": "string", "format": "date-time"},
+    "details": {"type": "object", "additionalProperties": true},
+    "prev": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  }
+}

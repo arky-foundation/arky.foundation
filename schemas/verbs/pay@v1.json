@@ -1,0 +1,22 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/pay@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: pay@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["to", "amount"],
+  "properties": {
+    "to": {"type": "string", "minLength": 1},
+    "amount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"type": "string"}
+      }
+    },
+    "reference": {"type": "string"},
+    "metadata": {"type": "object", "additionalProperties": true}
+  }
+}

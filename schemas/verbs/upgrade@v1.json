@@ -1,0 +1,13 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/upgrade@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: upgrade@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["target", "version"],
+  "properties": {
+    "target": {"type": "string", "minLength": 1},
+    "version": {"type": "string"},
+    "params": {"type": "object", "additionalProperties": true}
+  }
+}

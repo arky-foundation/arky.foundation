@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arky.foundation/schemas/infrastructure/registries-v1.json",
+  "title": "Arky Registry Document (v1)",
+  "description": "Schema for Arky registry documents containing namespaced URN entries",
+  "type": "object",
+  "required": ["registry_id", "name", "ts", "entries", "sig"],
+  "properties": {
+    "registry_id": {
+      "type": "string",
+      "pattern": "^arky:registry:[a-z0-9-]+@v[0-9]+$",
+      "description": "Unique identifier for this registry"
+    },
+    "name": {"type": "string", "description": "Human-readable name for this registry"},
+    "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
+    "entries": {
+      "type": "object",
+      "description": "Map of URN keys to registry entry objects",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["urn"],
+        "properties": {
+          "urn": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+:[a-zA-Z0-9/._:-]+(@v[0-9]+)?$",
+            "description": "URN matching the entry key"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "aliases": {
+      "type": "object",
+      "description": "Optional short aliases mapping to full URNs",
+      "additionalProperties": {"type": "string"}
+    },
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  },
+  "additionalProperties": false
+}

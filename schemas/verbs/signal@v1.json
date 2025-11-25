@@ -1,0 +1,12 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/signal@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: signal@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["channel"],
+  "properties": {
+    "channel": {"type": "string", "minLength": 1},
+    "payload": {"type": "object", "additionalProperties": true}
+  }
+}

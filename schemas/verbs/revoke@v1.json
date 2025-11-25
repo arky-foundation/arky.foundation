@@ -1,0 +1,13 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/revoke@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: revoke@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["subject"],
+  "properties": {
+    "subject": {"type": "string", "minLength": 1},
+    "credential": {"type": "string"},
+    "reason": {"type": "string"}
+  }
+}

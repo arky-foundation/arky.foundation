@@ -1,0 +1,12 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/control@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: control@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action"],
+  "properties": {
+    "action": {"type": "string", "minLength": 1},
+    "params": {"type": "object", "additionalProperties": true}
+  }
+}

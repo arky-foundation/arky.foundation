@@ -1,0 +1,32 @@
+{
+  "$id": "https://arky.foundation/schemas/core/anchor-object-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Notary Anchor Object",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cid_root", "target", "ts_anchor", "finality"],
+  "properties": {
+    "cid_root": {"type": "string", "pattern": "^z[1-9A-HJ-NP-Za-km-z]+$"},
+    "target": {"type": "string"},
+    "locator": {"type": "string"},
+    "ts_anchor": {"type": "string", "format": "date-time"},
+    "finality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "depth": {"type": "integer", "minimum": 0},
+        "status": {"type": "string", "enum": ["pending", "final"]}
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scheme", "branch"],
+      "properties": {
+        "scheme": {"type": "string", "enum": ["merkle-v1", "merkle-blake3-v1"]},
+        "branch": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

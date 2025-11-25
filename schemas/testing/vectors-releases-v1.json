@@ -1,0 +1,24 @@
+{
+  "$id": "https://arky.foundation/schemas/testing/vectors-releases-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Vectors Releases (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "release_date", "suites", "signature"],
+  "properties": {
+    "version": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Semver"},
+    "release_date": {"type": "string", "format": "date"},
+    "suites": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["manifest_hash"],
+        "properties": {
+          "manifest_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "signature": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  }
+}

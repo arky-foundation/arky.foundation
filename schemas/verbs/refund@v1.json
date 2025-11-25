@@ -1,0 +1,21 @@
+{
+  "$id": "https://arky.foundation/schemas/verbs/refund@v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verb: refund@v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payment_ref"],
+  "properties": {
+    "payment_ref": {"type": "string", "minLength": 1},
+    "amount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"type": "string"}
+      }
+    },
+    "reason": {"type": "string"}
+  }
+}

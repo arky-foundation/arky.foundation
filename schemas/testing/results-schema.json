@@ -1,0 +1,66 @@
+{
+  "$id": "https://arky.foundation/schemas/testing/results-schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["impl", "environment", "suite", "cases", "totals"],
+  "properties": {
+    "impl": {
+      "type": "object",
+      "required": ["name", "version", "language", "commit"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "language": {"type": "string"},
+        "commit": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "required": ["os", "arch", "runtime", "timestamp"],
+      "properties": {
+        "os": {"type": "string"},
+        "arch": {"type": "string"},
+        "runtime": {"type": "string"},
+        "timestamp": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "suite": {
+      "type": "object",
+      "required": ["spec_id", "level", "manifest_hash"],
+      "properties": {
+        "spec_id": {"type": "string"},
+        "level": {"type": "string"},
+        "manifest_hash": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "duration_ms"],
+        "properties": {
+          "id": {"type": "string"},
+          "status": {"type": "string", "enum": ["pass", "fail", "skip"]},
+          "reason": {"type": "string"},
+          "duration_ms": {"type": "integer"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": ["passed", "failed", "skipped", "total"],
+      "properties": {
+        "passed": {"type": "integer"},
+        "failed": {"type": "integer"},
+        "skipped": {"type": "integer"},
+        "total": {"type": "integer"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

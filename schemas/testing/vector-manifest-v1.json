@@ -1,0 +1,22 @@
+{
+  "$id": "https://arky.foundation/schemas/testing/vector-manifest-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Vectors Manifest (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["level", "spec", "vectors", "total_vectors"],
+  "properties": {
+    "level": {"type": "string", "minLength": 1},
+    "spec": {"type": "string", "minLength": 1},
+    "vectors": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        ".+\\.json$": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    },
+    "total_vectors": {"type": "integer", "minimum": 0},
+    "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},
+    "sig": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact"}
+  }
+}

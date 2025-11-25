@@ -1,0 +1,57 @@
+{
+  "$id": "https://arky.foundation/schemas/infrastructure/discovery-index-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Well-known Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["keys", "services"],
+  "properties": {
+    "issuer": {"type": "string"},
+    "keys": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"},
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/ServiceRef"}
+    },
+    "policies": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/PolicyRef"}
+    },
+    "registries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/RegistryRef"}
+    },
+    "revocations": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"},
+    "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"}
+  },
+  "$defs": {
+    "ServiceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["service_id", "service_type", "descriptor"],
+      "properties": {
+        "service_id": {"type": "string"},
+        "service_type": {"type": "string", "enum": ["notary", "settler", "registry", "policy"]},
+        "descriptor": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"}
+      }
+    },
+    "PolicyRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pack_id", "url"],
+      "properties": {
+        "pack_id": {"type": "string"},
+        "url": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"}
+      }
+    },
+    "RegistryRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace", "url"],
+      "properties": {
+        "namespace": {"type": "string"},
+        "url": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Uri"}
+      }
+    }
+  }
+}

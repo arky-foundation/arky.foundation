@@ -1,0 +1,49 @@
+{
+  "$id": "https://arky.foundation/schemas/infrastructure/revocations-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Arky Revocation List (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["list_id", "issuer", "ts", "entries", "sig"],
+  "properties": {
+    "list_id": { "type": "string", "const": "arky:revocations@v1" },
+    "issuer": { "type": "string", "format": "uri" },
+    "ts": { "$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339" },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/RevEntry" },
+      "minItems": 0
+    },
+    "cid": { "$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid" },
+    "sig": { "$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/JwsCompact" }
+  },
+  "$defs": {
+    "RevEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "revoked_at"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["jwks", "credential", "registry"] },
+        "kid": { "type": "string" },
+        "id": { "type": "string" },
+        "thumbprint": { "type": "string" },
+        "reason": { "type": "string", "enum": ["compromise", "rotation", "superseded", "policy"] },
+        "revoked_at": { "$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "jwks" } }, "required": ["kind"] },
+          "then": { "required": ["kid"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "credential" } }, "required": ["kind"] },
+          "then": { "required": ["id"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "registry" } }, "required": ["kind"] },
+          "then": { "required": ["id"] }
+        }
+      ]
+    }
+  }
+}
