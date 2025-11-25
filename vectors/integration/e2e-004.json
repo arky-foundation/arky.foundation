@@ -1,0 +1,88 @@
+{
+  "id": "e2e-004",
+  "spec": "ARKY-INTEGRATION-v1",
+  "level": "E2E",
+  "description": "INDETERMINATE flow: Missing evidence leads to indeterminate decision",
+  "context": {
+    "time": "2025-10-15T18:00:00Z",
+    "scenario": "Kernel requires evidence that doesn't exist, returns INDETERMINATE",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    }
+  },
+  "steps": [
+    {
+      "step": 1,
+      "component": "Kernel",
+      "action": "evaluate_commitment",
+      "description": "Evaluate with no matching TIM receipts",
+      "input": {
+        "kernel": {
+          "scope": "sensor-data-policy",
+          "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+          "intent": { "do": "arky:verb/control@v1" },
+          "measure": [
+            {
+              "name": "pressure",
+              "from": "sensor:pressure-01",
+              "window": { "max_age": "PT1M" },
+              "assert": "pressure > 100"
+            }
+          ],
+          "consequence": [
+            {
+              "if": "PASS",
+              "then": [
+                { "name": "arky:verb/control@v1", "args": { "device_id": "valve-01", "command": "open" } }
+              ]
+            },
+            {
+              "if": "INDETERMINATE",
+              "then": [
+                { "name": "arky:verb/signal@v1", "args": { "topic": "alerts:missing-sensor", "payload": { "sensor": "pressure-01" } } }
+              ]
+            }
+          ]
+        },
+        "receipts": []
+      },
+      "expect": {
+        "valid": true,
+        "status": "INDETERMINATE",
+        "assertions": [
+          { "name": "pressure", "result": "INDETERMINATE", "error": "no matching receipts" }
+        ],
+        "authorized_verbs": ["arky:verb/signal@v1"]
+      }
+    },
+    {
+      "step": 2,
+      "component": "Settler",
+      "action": "execute_verb",
+      "input": {
+        "request_id": "e2e-004-alert-001",
+        "commitment_cid": "{{step1.output.cid}}",
+        "verbs": [
+          {
+            "verb": "arky:verb/signal@v1",
+            "rail": "controller:alerts",
+            "args": {
+              "topic": "alerts:missing-sensor",
+              "payload_hash": "{{hash({sensor: 'pressure-01'})}}"
+            }
+          }
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "status": "success"
+      }
+    }
+  ],
+  "final_expect": {
+    "all_steps_pass": true,
+    "decision_status": "INDETERMINATE",
+    "fallback_executed": true,
+    "primary_action_blocked": true
+  }
+}

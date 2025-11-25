@@ -1,0 +1,159 @@
+{
+  "id": "e2e-001",
+  "spec": "ARKY-INTEGRATION-v1",
+  "level": "E2E",
+  "description": "Complete flow: TIM evidence -> Notary witness -> Kernel decision -> Settler execution",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "scenario": "Temperature sensor triggers cooling system payment",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json",
+      "notary_key": "fixtures/keys/ed25519-test-02.json",
+      "settler_key": "fixtures/keys/ed25519-test-03.json",
+      "rail": "fixtures/rails/ach-us-mock.json"
+    }
+  },
+  "steps": [
+    {
+      "step": 1,
+      "component": "TIM",
+      "action": "create_evidence",
+      "input": {
+        "time": { "ts": "2025-10-15T12:00:00Z" },
+        "identity": { "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp" },
+        "measurement": {
+          "name": "temperature",
+          "value": 87.5,
+          "unit": "arky:unit/temp.F",
+          "method": {
+            "type": "sensor",
+            "source": "device:datacenter-temp-01",
+            "version": "v2.1"
+          },
+          "device": "datacenter-temp-01"
+        }
+      },
+      "expect": {
+        "valid": true,
+        "has_cid": true,
+        "has_sig": true,
+        "conformance_level": "T1"
+      }
+    },
+    {
+      "step": 2,
+      "component": "Notary",
+      "action": "witness_tim",
+      "input": {
+        "tim_cid": "{{step1.output.cid}}",
+        "witnesses": ["did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"],
+        "anchor_target": "log:arky:transparency@v1"
+      },
+      "expect": {
+        "valid": true,
+        "has_witness_sig": true,
+        "has_anchor": true,
+        "conformance_level": "N1"
+      }
+    },
+    {
+      "step": 3,
+      "component": "Kernel",
+      "action": "evaluate_commitment",
+      "input": {
+        "kernel": {
+          "scope": "datacenter-cooling-policy",
+          "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+          "intent": {
+            "do": "arky:verb/pay@v1",
+            "budget": { "value": 500, "unit": "USD" }
+          },
+          "measure": [
+            {
+              "name": "temp",
+              "from": "sensor:datacenter",
+              "window": { "max_age": "PT5M" },
+              "assert": "temp > 85"
+            }
+          ],
+          "consequence": [
+            {
+              "if": "PASS",
+              "then": [
+                {
+                  "name": "arky:verb/pay@v1",
+                  "args": {
+                    "to": "acct:cooling-provider:billing",
+                    "amount": { "value": 100, "unit": "USD" },
+                    "memo": "Emergency cooling activation"
+                  }
+                }
+              ]
+            },
+            {
+              "if": "FAIL",
+              "then": [
+                {
+                  "name": "arky:verb/signal@v1",
+                  "args": {
+                    "topic": "cooling:status",
+                    "payload": { "status": "normal" }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "receipts": ["{{step1.output}}"]
+      },
+      "expect": {
+        "valid": true,
+        "status": "APPROVED",
+        "assertions": [
+          { "name": "temp", "result": "PASS" }
+        ],
+        "authorized_verbs": ["arky:verb/pay@v1"],
+        "conformance_level": "K1"
+      }
+    },
+    {
+      "step": 4,
+      "component": "Settler",
+      "action": "execute_verb",
+      "input": {
+        "request_id": "e2e-001-exec-001",
+        "commitment_cid": "{{step3.output.cid}}",
+        "verbs": [
+          {
+            "verb": "arky:verb/pay@v1",
+            "rail": "ach:us",
+            "args": {
+              "to": "acct:cooling-provider:billing",
+              "amount": { "value": 100, "unit": "USD" },
+              "memo": "Emergency cooling activation"
+            }
+          }
+        ],
+        "idempotency_key": "e2e-001-pay-001"
+      },
+      "expect": {
+        "valid": true,
+        "status": "success",
+        "has_locator": true,
+        "has_xr_sig": true,
+        "conformance_level": "S1"
+      }
+    }
+  ],
+  "final_expect": {
+    "all_steps_pass": true,
+    "chain_verifiable": true,
+    "audit_trail_complete": true,
+    "artifacts": {
+      "tim_count": 1,
+      "notary_receipts": 1,
+      "decisions": 1,
+      "execution_receipts": 1
+    }
+  }
+}

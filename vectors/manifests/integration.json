@@ -1,0 +1,43 @@
+{
+  "manifest_id": "arky:vectors:integration@v1",
+  "name": "End-to-End Integration Test Vectors",
+  "description": "Complete flow tests spanning TIM -> Notary -> Kernel -> Settler",
+  "spec_refs": [
+    "ARKY-TIM-v1",
+    "ARKY-NOTARY-v1",
+    "ARKY-KERNEL-v1",
+    "ARKY-SETTLERS-v1"
+  ],
+  "vectors": [
+    {
+      "id": "e2e-001",
+      "file": "../integration/e2e-001.json",
+      "description": "Complete flow: TIM -> Notary -> Kernel -> Settler",
+      "tags": ["happy-path", "full-flow", "payment"]
+    },
+    {
+      "id": "e2e-002",
+      "file": "../integration/e2e-002.json",
+      "description": "Multi-rail settlement across ETH and ACH",
+      "tags": ["multi-rail", "split-payment"]
+    },
+    {
+      "id": "e2e-003",
+      "file": "../integration/e2e-003.json",
+      "description": "Assertion fails, alternative consequence executes",
+      "tags": ["failure-path", "alternative-consequence"]
+    },
+    {
+      "id": "e2e-004",
+      "file": "../integration/e2e-004.json",
+      "description": "Missing evidence leads to INDETERMINATE",
+      "tags": ["indeterminate", "missing-data", "fallback"]
+    }
+  ],
+  "conformance_levels": {
+    "E2E-1": "Basic end-to-end flow validation",
+    "E2E-2": "Multi-component interaction testing",
+    "E2E-3": "Error and fallback path coverage"
+  },
+  "ts": "2025-10-15T00:00:00Z"
+}

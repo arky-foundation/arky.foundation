@@ -1,0 +1,155 @@
+{
+  "id": "e2e-002",
+  "spec": "ARKY-INTEGRATION-v1",
+  "level": "E2E",
+  "description": "Multi-rail settlement: Kernel approves, multiple settlers execute in sequence",
+  "context": {
+    "time": "2025-10-15T14:00:00Z",
+    "scenario": "AI agent authorizes payment split across ETH and ACH rails",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json",
+      "settler_key": "fixtures/keys/ed25519-test-03.json",
+      "eth_rail": "fixtures/rails/ethereum-mainnet-mock.json",
+      "ach_rail": "fixtures/rails/ach-us-mock.json"
+    }
+  },
+  "steps": [
+    {
+      "step": 1,
+      "component": "TIM",
+      "action": "create_evidence",
+      "input": {
+        "time": { "ts": "2025-10-15T14:00:00Z" },
+        "identity": { "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp" },
+        "measurement": {
+          "name": "agent_authorization",
+          "value": {
+            "action": "split_payment",
+            "total_amount": 1000,
+            "currency": "USD",
+            "splits": [
+              { "rail": "eth", "percent": 30 },
+              { "rail": "ach", "percent": 70 }
+            ]
+          },
+          "unit": "arky:unit/authorization",
+          "method": {
+            "type": "computation",
+            "source": "agent:budget-optimizer-v3",
+            "version": "3.2.1"
+          }
+        }
+      },
+      "expect": {
+        "valid": true,
+        "conformance_level": "T1"
+      }
+    },
+    {
+      "step": 2,
+      "component": "Kernel",
+      "action": "evaluate_commitment",
+      "input": {
+        "kernel": {
+          "scope": "agent-payments-policy",
+          "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+          "intent": {
+            "do": "arky:verb/pay@v1",
+            "budget": { "value": 1000, "unit": "USD" }
+          },
+          "measure": [
+            {
+              "name": "auth",
+              "assert": "auth.action == \"split_payment\""
+            }
+          ],
+          "consequence": [
+            {
+              "if": "PASS",
+              "then": [
+                {
+                  "name": "arky:verb/pay@v1",
+                  "args": {
+                    "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
+                    "amount": { "value": 300, "unit": "USD" },
+                    "rail_hint": "eth"
+                  }
+                },
+                {
+                  "name": "arky:verb/pay@v1",
+                  "args": {
+                    "to": "acct:vendor:primary",
+                    "amount": { "value": 700, "unit": "USD" },
+                    "rail_hint": "ach"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "receipts": ["{{step1.output}}"]
+      },
+      "expect": {
+        "valid": true,
+        "status": "APPROVED",
+        "authorized_verbs_count": 2
+      }
+    },
+    {
+      "step": 3,
+      "component": "Settler",
+      "action": "execute_verb",
+      "description": "Execute ETH payment",
+      "input": {
+        "request_id": "e2e-002-eth-001",
+        "commitment_cid": "{{step2.output.cid}}",
+        "verbs": [
+          {
+            "verb": "arky:verb/pay@v1",
+            "rail": "caip2:eip155:1",
+            "args": {
+              "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
+              "amount": { "value": "300000000000000000000", "unit": "wei" }
+            }
+          }
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "status": "success",
+        "rail": "caip2:eip155:1"
+      }
+    },
+    {
+      "step": 4,
+      "component": "Settler",
+      "action": "execute_verb",
+      "description": "Execute ACH payment",
+      "input": {
+        "request_id": "e2e-002-ach-001",
+        "commitment_cid": "{{step2.output.cid}}",
+        "verbs": [
+          {
+            "verb": "arky:verb/pay@v1",
+            "rail": "ach:us",
+            "args": {
+              "to": "acct:vendor:primary",
+              "amount": { "value": 700, "unit": "USD" }
+            }
+          }
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "status": "success",
+        "rail": "ach:us"
+      }
+    }
+  ],
+  "final_expect": {
+    "all_steps_pass": true,
+    "total_settled_usd": 1000,
+    "rails_used": ["caip2:eip155:1", "ach:us"],
+    "execution_receipts_count": 2
+  }
+}

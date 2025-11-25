@@ -1,0 +1,113 @@
+{
+  "id": "e2e-003",
+  "spec": "ARKY-INTEGRATION-v1",
+  "level": "E2E",
+  "description": "Failure flow: Assertion fails, alternative consequence executes",
+  "context": {
+    "time": "2025-10-15T16:00:00Z",
+    "scenario": "Temperature within normal range, no cooling payment needed",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    }
+  },
+  "steps": [
+    {
+      "step": 1,
+      "component": "TIM",
+      "action": "create_evidence",
+      "input": {
+        "time": { "ts": "2025-10-15T16:00:00Z" },
+        "identity": { "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp" },
+        "measurement": {
+          "name": "temperature",
+          "value": 72.0,
+          "unit": "arky:unit/temp.F",
+          "method": {
+            "type": "sensor",
+            "source": "device:datacenter-temp-01"
+          }
+        }
+      },
+      "expect": {
+        "valid": true
+      }
+    },
+    {
+      "step": 2,
+      "component": "Kernel",
+      "action": "evaluate_commitment",
+      "input": {
+        "kernel": {
+          "scope": "datacenter-cooling-policy",
+          "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+          "intent": { "do": "arky:verb/pay@v1" },
+          "measure": [
+            {
+              "name": "temp",
+              "assert": "temp > 85"
+            }
+          ],
+          "consequence": [
+            {
+              "if": "PASS",
+              "then": [
+                {
+                  "name": "arky:verb/pay@v1",
+                  "args": { "to": "cooling-provider", "amount": { "value": 100, "unit": "USD" } }
+                }
+              ]
+            },
+            {
+              "if": "FAIL",
+              "then": [
+                {
+                  "name": "arky:verb/signal@v1",
+                  "args": { "topic": "cooling:status", "payload": { "status": "normal", "temp": 72.0 } }
+                }
+              ]
+            }
+          ]
+        },
+        "receipts": ["{{step1.output}}"]
+      },
+      "expect": {
+        "valid": true,
+        "status": "APPROVED",
+        "assertions": [
+          { "name": "temp", "result": "FAIL" }
+        ],
+        "authorized_verbs": ["arky:verb/signal@v1"],
+        "not_authorized": ["arky:verb/pay@v1"]
+      }
+    },
+    {
+      "step": 3,
+      "component": "Settler",
+      "action": "execute_verb",
+      "input": {
+        "request_id": "e2e-003-signal-001",
+        "commitment_cid": "{{step2.output.cid}}",
+        "verbs": [
+          {
+            "verb": "arky:verb/signal@v1",
+            "rail": "controller:telemetry",
+            "args": {
+              "topic": "cooling:status",
+              "payload_hash": "{{hash(step2.output.authorized[0].args.payload)}}"
+            }
+          }
+        ]
+      },
+      "expect": {
+        "valid": true,
+        "status": "success"
+      }
+    }
+  ],
+  "final_expect": {
+    "all_steps_pass": true,
+    "payment_executed": false,
+    "signal_executed": true,
+    "audit_reason": "Temperature 72F below threshold 85F"
+  }
+}
