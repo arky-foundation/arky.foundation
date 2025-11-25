@@ -1,0 +1,64 @@
+{
+  "issuer": "https://provider.example.com",
+  "keys": "https://provider.example.com/.well-known/arky/jwks.json",
+  "services": [
+    {
+      "service_id": "urn:arky:provider:notary",
+      "service_type": "notary",
+      "descriptor": "https://provider.example.com/notary/descriptor.json"
+    },
+    {
+      "service_id": "urn:arky:provider:settler",
+      "service_type": "settler",
+      "descriptor": "https://provider.example.com/settler/descriptor.json"
+    },
+    {
+      "service_id": "urn:arky:provider:registry",
+      "service_type": "registry",
+      "descriptor": "https://provider.example.com/registry/descriptor.json"
+    },
+    {
+      "service_id": "urn:arky:provider:policy",
+      "service_type": "policy",
+      "descriptor": "https://provider.example.com/policy/descriptor.json"
+    }
+  ],
+  "policies": [
+    {
+      "pack_id": "arky:policy/global@v1",
+      "url": "https://provider.example.com/policies/global@v1.json"
+    },
+    {
+      "pack_id": "arky:policy/eu@v1",
+      "url": "https://provider.example.com/policies/eu@v1.json"
+    }
+  ],
+  "registries": [
+    {
+      "namespace": "arky:registry:units@v1",
+      "url": "https://provider.example.com/registries/units@v1.json"
+    },
+    {
+      "namespace": "arky:registry:verbs@v1",
+      "url": "https://provider.example.com/registries/verbs@v1.json"
+    },
+    {
+      "namespace": "arky:registry:rails@v1",
+      "url": "https://provider.example.com/registries/rails@v1.json"
+    },
+    {
+      "namespace": "arky:registry:devices@v1",
+      "url": "https://provider.example.com/registries/devices@v1.json"
+    },
+    {
+      "namespace": "arky:registry:attest-formats@v1",
+      "url": "https://provider.example.com/registries/attest-formats@v1.json"
+    },
+    {
+      "namespace": "arky:registry:attest-types@v1",
+      "url": "https://provider.example.com/registries/attest-types@v1.json"
+    }
+  ],
+  "revocations": "https://provider.example.com/.well-known/arky/revocations.json",
+  "ts": "2025-10-15T00:00:00Z"
+}

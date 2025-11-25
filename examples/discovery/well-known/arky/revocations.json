@@ -1,0 +1,14 @@
+{
+  "list_id": "arky:revocations@v1",
+  "issuer": "https://provider.example.com",
+  "ts": "2025-10-15T00:00:00Z",
+  "entries": [
+    {
+      "kind": "jwks",
+      "kid": "provider-key-rotated",
+      "reason": "rotation",
+      "revoked_at": "2025-10-15T23:59:59Z"
+    }
+  ],
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZXZvY2F0aW9ucyJ9.placeholder_signature_value"
+}

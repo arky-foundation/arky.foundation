@@ -1,0 +1,8 @@
+{
+  "cid_root": "zQmExampeRtCdAbcdefghijk",
+  "target": "caip2:eip155:1",
+  "locator": "tx:abcdef",
+  "ts_anchor": "2025-10-15T12:00:02Z",
+  "finality": { "status": "final", "depth": 64 },
+  "proof": { "scheme": "merkle-v1", "branch": ["zQmBranchNdeAbcdefghijk", "zQmBranchNdeBcdefghijkm"] }
+}

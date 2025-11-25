@@ -1,0 +1,16 @@
+# 429 Rate Limit Response Example
+
+HTTP/1.1 429 Too Many Requests
+Content-Type: application/arky.error+json
+RateLimit-Limit: 600
+RateLimit-Remaining: 0
+RateLimit-Reset: 60
+Retry-After: 60
+
+{
+  "@type": "ARKY:ErrorEnvelope@v1",
+  "code": "wire.rate_limited",
+  "severity": "transient",
+  "detail": "Rate limit exceeded: 600 requests per 10 minutes",
+  "retry": { "allowed": true, "after": "PT60S" }
+}

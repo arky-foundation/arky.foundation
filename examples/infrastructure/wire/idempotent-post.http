@@ -1,0 +1,26 @@
+# Idempotent POST Request Example
+
+POST /settler/execute HTTP/1.1
+Host: api.example.org
+Content-Type: application/arky.kernel+json; profile="https://arky.foundation/schemas/kernel-v1.json"
+Accept: application/arky.xr+json
+Idempotency-Key: 7a0b9f40-1a0b-4f1e-8d3c-b0aa47e2d2af
+X-Request-Id: 3d7f2b7d-8d2e-4a50-9db7-2ff3b8f0d2c0
+
+{
+  "@type": "ARKY:ExecutionRequest@v1",
+  "request_id": "req_2025-10-15_001",
+  "commitment_cid": "zQmKERNEL123...",
+  "verbs": [
+    {
+      "verb": "arky:verb:pay@v1",
+      "rail": "arky:rail:ach:us@v1",
+      "args": {
+        "from": "acct:us:routing:021000021:account:123456",
+        "to": "acct:us:routing:011401533:account:789012",
+        "amount": { "value": 250, "unit": "USD" },
+        "memo": "Payment for cloud services"
+      }
+    }
+  ]
+}

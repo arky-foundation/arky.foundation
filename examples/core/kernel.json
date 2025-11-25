@@ -1,0 +1,9 @@
+{
+  "scope": "demo",
+  "actor": "did:web:example.org",
+  "intent": { "do": "arky:verb/pay@v1" },
+  "measure": [ { "name": "cpu", "assert": "cpu > 0.8" } ],
+  "consequence": [ { "if": "PASS", "then": [ { "name": "pay", "args": { "amount": 100 } } ] } ],
+  "cid": "zQmExampleKernelCid123456789",
+  "sig": "eyJ.example.kernel.signature"
+}

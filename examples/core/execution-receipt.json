@@ -1,0 +1,10 @@
+{
+  "commitment_id": "commit-abc",
+  "verb": "arky:verb/pay@v1",
+  "rail": "ach:us",
+  "inputs_cids": ["zQmExampeTmCdAbcdefghijk"],
+  "status": "success",
+  "ts_exec": "2025-10-15T12:00:01Z",
+  "cid": "zQmExampeXrCdAbcdefghijk",
+  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJ4ciJ9.placeholder_signature_value"
+}
