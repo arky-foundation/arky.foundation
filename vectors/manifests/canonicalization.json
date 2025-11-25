@@ -1,0 +1,65 @@
+{
+  "suite": "canonicalization",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "version": "0.1.0",
+  "description": "JCS canonicalization and CID computation test vectors",
+  "levels": {
+    "C1": {
+      "name": "JCS",
+      "description": "RFC 8785 JSON Canonicalization Scheme compliance",
+      "vectors": [
+        "c1-001.json",
+        "c1-002.json",
+        "c1-003.json",
+        "c1-004.json",
+        "c1-005.json",
+        "c1-006.json"
+      ],
+      "coverage": 6,
+      "focus_areas": [
+        "Key ordering",
+        "Unicode normalization",
+        "Number serialization",
+        "Whitespace removal",
+        "Escape sequences"
+      ]
+    },
+    "C2": {
+      "name": "CID",
+      "description": "Content identifier computation",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "SHA-256 hashing",
+        "Multihash encoding",
+        "Base58-BTC encoding",
+        "CID format validation"
+      ]
+    },
+    "C3": {
+      "name": "Signature",
+      "description": "JWS Ed25519 signature coverage",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Ed25519 signing",
+        "JWS compact format",
+        "Signature verification",
+        "Key binding"
+      ]
+    }
+  },
+  "total_vectors": 6,
+  "status": {
+    "overall_coverage": "basic",
+    "ready_for_production": false,
+    "last_updated": "2025-10-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/core/tim-v1.json"
+  ],
+  "references": {
+    "spec": "../specs/core/ARKY-TIM-Canonicalization-v1.md",
+    "rfc8785": "https://www.rfc-editor.org/rfc/rfc8785"
+  }
+}

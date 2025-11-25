@@ -1,0 +1,73 @@
+{
+  "suite": "discovery",
+  "spec": "ARKY-DISCOVERY-v1",
+  "version": "0.1.0",
+  "description": "Service discovery test vectors for validating service discovery, descriptors, and revocation handling",
+  "levels": {
+    "D1": {
+      "name": "Well-knowns",
+      "description": "Validate well-known endpoint discovery",
+      "vectors": [
+        "d1-001.json",
+        "d1-002.json",
+        "d1-003.json",
+        "d1-004.json",
+        "d1-005.json",
+        "d1-006.json"
+      ],
+      "coverage": 6,
+      "focus_areas": [
+        "Well-known endpoint validation",
+        "Revocation list processing",
+        "JWKS endpoint discovery",
+        "Service directory validation",
+        "Index structure validation"
+      ]
+    },
+    "D2": {
+      "name": "Descriptors",
+      "description": "Validate service descriptor format and content",
+      "vectors": [
+        "d2-001.json"
+      ],
+      "coverage": 1,
+      "focus_areas": [
+        "Service descriptor validation",
+        "Capability verification",
+        "Endpoint validation",
+        "Security requirement checks"
+      ]
+    },
+    "D3": {
+      "name": "Advanced",
+      "description": "Validate advanced discovery features",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Dynamic service discovery",
+        "Load balancing validation",
+        "Failover testing",
+        "Performance benchmarking"
+      ]
+    }
+  },
+  "total_vectors": 7,
+  "status": {
+    "overall_coverage": "partial",
+    "ready_for_production": false,
+    "last_updated": "2025-10-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/infrastructure/discovery-index-v1.json",
+    "schemas/core/service-descriptor-v1.json"
+  ],
+  "fixtures": {
+    "revocations": "discovery/fixtures/revocations-001.json",
+    "descriptors": "fixtures/service-descriptors/"
+  },
+  "references": {
+    "spec": "../specs/infrastructure/ARKY-DISCOVERY-v1.md",
+    "examples": "../examples/service-descriptors/",
+    "schemas": "../schemas/"
+  }
+}

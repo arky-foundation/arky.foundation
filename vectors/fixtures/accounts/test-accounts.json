@@ -1,0 +1,47 @@
+{
+  "$schema": "https://arky.foundation/schemas/testing/fixture-accounts-v1.json",
+  "id": "test-accounts",
+  "description": "Test accounts for settler and payment testing",
+  "accounts": [
+    {
+      "id": "account-sender-01",
+      "identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+      "type": "sender",
+      "rails": {
+        "eip155:1": {
+          "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f0Ab1E"
+        },
+        "fiat:usd:ach": {
+          "routing": "021000021",
+          "account": "123456789"
+        }
+      }
+    },
+    {
+      "id": "account-receiver-01",
+      "identity": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP",
+      "type": "receiver",
+      "rails": {
+        "eip155:1": {
+          "address": "0x8ba1f109551bD432803012645Hac136Ddc82cF1"
+        },
+        "fiat:usd:ach": {
+          "routing": "021000021",
+          "account": "987654321"
+        }
+      }
+    },
+    {
+      "id": "account-settler-01",
+      "identity": "did:key:z6MkgYGF3thn8k1Fv4p4dWXKtsXCnLH7q9yw4QgNPULDmDKB",
+      "type": "settler",
+      "rails": {
+        "eip155:1": {
+          "address": "0xSettler1234567890abcdef1234567890abcdef"
+        }
+      }
+    }
+  ],
+  "created": "2025-10-15T00:00:00Z",
+  "warning": "TEST ACCOUNTS ONLY - DO NOT USE IN PRODUCTION"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "c1-003",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C1",
+  "description": "JCS whitespace removal - all formatting whitespace must be removed",
+  "inputs": {
+    "original_formatted": "{\n  \"key1\": \"value1\",\n  \"key2\": {\n    \"nested\": true\n  }\n}",
+    "parse_as_json": true
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"key1\":\"value1\",\"key2\":{\"nested\":true}}"
+  }
+}

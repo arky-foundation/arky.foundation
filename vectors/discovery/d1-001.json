@@ -1,0 +1,20 @@
+{
+  "id": "d1-001",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D1",
+  "description": "Valid revocations list parsing and validation",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "revocations_file": "discovery/fixtures/revocations-001.json",
+    "schema": "https://arky.foundation/schemas/revocations-v1.json"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "entries_count": 2,
+    "revoked_keys": ["key-2025-01"]
+  }
+}

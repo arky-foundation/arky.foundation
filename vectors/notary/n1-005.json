@@ -1,0 +1,30 @@
+{
+  "id": "n1-005",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Invalid TIM intake - timestamp skew exceeds limit (quarantine)",
+  "context": {
+    "time": "2025-10-15T13:00:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json",
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "tim_ts": "2025-10-15T12:00:00Z",
+    "max_skew_seconds": 300
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["notary.timestamp_skew_quarantine"],
+    "intake_accepted": false,
+    "skew_check": {
+      "tim_ts": "2025-10-15T12:00:00Z",
+      "notary_ts": "2025-10-15T13:00:00Z",
+      "skew_seconds": 3600,
+      "within_limit": false,
+      "action": "quarantine"
+    }
+  }
+}

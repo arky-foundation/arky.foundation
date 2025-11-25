@@ -1,0 +1,40 @@
+{
+  "id": "t1-001",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Valid minimal TIM with all required fields",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    }
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z"
+      },
+      "identity": {
+        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "urn:arky:unit:temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJ0aW1lIjp7InRzIjoiMjAyNS0xMC0xNVQxMjowMDowMFoifSwiaWRlbnRpdHkiOnsiaWQiOiJkaWQ6a2V5Ono2TWtpVEJ6MXltdWVwQVE0SEVIWVNGMUg4cXVHNUdMVlZRUjNkakRYM21Eb29XcCJ9LCJtZWFzdXJlbWVudCI6eyJuYW1lIjoidGVtcGVyYXR1cmUiLCJ2YWx1ZSI6MjIuNSwidW5pdCI6InVybjphcmt5OnVuaXQ6dGVtcC5DIiwibWV0aG9kIjp7InR5cGUiOiJzZW5zb3IiLCJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEifX19.MOCK_SIGNATURE"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "cid_valid": true,
+    "signature_valid": true
+  }
+}

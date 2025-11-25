@@ -1,0 +1,34 @@
+{
+  "id": "d1-002",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D1",
+  "description": "Valid well-known index structure validation",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "well_known_index": {
+      "jwks": "/.well-known/arky/jwks.json",
+      "services": [
+        {
+          "type": "notary",
+          "href": "https://notary.example/v1"
+        },
+        {
+          "type": "settler",
+          "href": "https://settler.example/v1"
+        }
+      ],
+      "cid": "zQmIndexCid12345678901234567890123456",
+      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "services_count": 2,
+    "has_jwks": true,
+    "has_signature": true
+  }
+}

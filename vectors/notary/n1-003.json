@@ -1,0 +1,23 @@
+{
+  "id": "n1-003",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Invalid TIM intake - issuer signature verification failure",
+  "context": {
+    "time": "2025-10-15T12:01:00Z",
+    "fixtures": {
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "canonical_bytes_b64": "eyJ0aW1lIjp7InRzIjoiMjAyNS0xMC0xNVQxMjowMDowMFoifSwiaWRlbnRpdHkiOnsiaWQiOiJkaWQ6a2V5Ono2TWtpVEJ6MXltdWVwQVE0SEVIWVNGMUg4cXVHNUdMVlZRUjNkakRYM21Eb29XcCJ9LCJtZWFzdXJlbWVudCI6eyJuYW1lIjoidGVtcGVyYXR1cmUiLCJ2YWx1ZSI6MjIuNSwidW5pdCI6InVybjphcmt5OnVuaXQ6dGVtcC5DIiwibWV0aG9kIjp7InR5cGUiOiJzZW5zb3IiLCJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEifX19",
+    "issuer_sig": "eyJhbGciOiJFZERTQSJ9.payload.INVALID_SIGNATURE"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["notary.signature_invalid"],
+    "intake_accepted": false,
+    "witness_generated": false
+  }
+}

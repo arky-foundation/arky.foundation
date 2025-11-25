@@ -1,0 +1,32 @@
+{
+  "id": "k1-007",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Valid commitment - identity match rule",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json"
+    }
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:identity.match",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+        "expected_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "parse_success": true,
+    "result": "ALLOW",
+    "evaluation": {
+      "tim_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+      "expected_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+      "match": true
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "s1-010",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Execution receipt contains required anchor information",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "rail": "fixtures/rails/ethereum-mainnet-mock.json",
+      "accounts": "fixtures/accounts/test-accounts.json",
+      "settler_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:pay@v1",
+    "params": {
+      "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f0Ab1E",
+      "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
+      "amount": {
+        "value": "500000000000000000",
+        "currency": "wei"
+      },
+      "rail": "eip155:1"
+    },
+    "idempotency_key": "pay-2025-10-15-010"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "SUCCESS",
+    "execution_receipt": {
+      "verb": "urn:arky:verb:pay@v1",
+      "status": "SUCCESS",
+      "has_cid": true,
+      "has_sig": true,
+      "anchor": {
+        "rail": "eip155:1",
+        "has_txid": true,
+        "finality_depth": 12
+      }
+    }
+  }
+}

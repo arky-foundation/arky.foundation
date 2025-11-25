@@ -1,0 +1,39 @@
+{
+  "id": "s1-004",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Valid refund verb execution",
+  "context": {
+    "time": "2025-10-15T12:30:00Z",
+    "fixtures": {
+      "rail": "fixtures/rails/ach-us-mock.json",
+      "accounts": "fixtures/accounts/test-accounts.json",
+      "settler_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:refund@v1",
+    "params": {
+      "original_payment_ref": "pay-2025-10-15-001",
+      "to": "account-sender-01",
+      "amount": {
+        "value": "100.00",
+        "currency": "USD"
+      },
+      "rail": "fiat:usd:ach",
+      "reason": "customer_request"
+    },
+    "idempotency_key": "refund-2025-10-15-001"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "SUCCESS",
+    "execution_receipt": {
+      "verb": "urn:arky:verb:refund@v1",
+      "status": "SUCCESS",
+      "rail": "fiat:usd:ach",
+      "rollback_window_hours": 48
+    }
+  }
+}

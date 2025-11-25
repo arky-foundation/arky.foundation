@@ -1,0 +1,21 @@
+{
+  "id": "c1-002",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C1",
+  "description": "JCS number serialization - integers and floats",
+  "inputs": {
+    "original": {
+      "integer": 42,
+      "negative": -17,
+      "float": 3.14159,
+      "zero": 0,
+      "negative_zero": -0
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"float\":3.14159,\"integer\":42,\"negative\":-17,\"negative_zero\":0,\"zero\":0}",
+    "notes": "Negative zero becomes positive zero per JCS spec"
+  }
+}

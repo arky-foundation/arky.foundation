@@ -1,0 +1,32 @@
+{
+  "id": "n1-007",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Invalid TIM intake - rate limit exceeded",
+  "context": {
+    "time": "2025-10-15T12:01:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json",
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "issuer_id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+    "rate_limit": {
+      "requests_per_minute": 100,
+      "current_count": 150
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["notary.rate_limited"],
+    "intake_accepted": false,
+    "rate_limit_check": {
+      "limit": 100,
+      "current": 150,
+      "allowed": false,
+      "retry_after_seconds": 60
+    }
+  }
+}

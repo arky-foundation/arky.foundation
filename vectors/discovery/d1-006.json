@@ -1,0 +1,37 @@
+{
+  "id": "d1-006",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D1",
+  "description": "Service directory validation - valid services list",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "services": [
+      {
+        "type": "notary",
+        "href": "https://notary.example/v1",
+        "capabilities": ["witness", "anchor"],
+        "supported_rails": ["eip155:1", "fiat:usd:ach"]
+      },
+      {
+        "type": "settler",
+        "href": "https://settler.example/v1",
+        "capabilities": ["pay", "refund", "slash"],
+        "supported_rails": ["eip155:1"]
+      },
+      {
+        "type": "registry",
+        "href": "https://registry.example/v1",
+        "capabilities": ["resolve", "list"]
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "services_count": 3,
+    "service_types": ["notary", "settler", "registry"],
+    "all_services_reachable": true
+  }
+}

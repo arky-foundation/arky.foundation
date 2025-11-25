@@ -1,0 +1,19 @@
+{
+  "id": "d2-001",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Invalid service descriptor - signature verification failure",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "descriptor_jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyJ9.aW52YWxpZF9wYXlsb2Fk.INVALID_SIGNATURE",
+    "expected_cid": "zQmExpectedCid1111111111111111111111111111"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["discovery.unverified_descriptor"],
+    "verify": false,
+    "cid_match": false
+  }
+}

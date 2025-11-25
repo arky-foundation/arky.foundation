@@ -1,0 +1,43 @@
+{
+  "$schema": "https://arky.foundation/schemas/testing/fixture-rail-v1.json",
+  "id": "ach-us-mock",
+  "description": "Mock ACH (US banking) rail for testing payment settlements",
+  "caip2": "fiat:usd:ach",
+  "type": "fiat",
+  "network": "ach",
+  "region": "US",
+  "name": "ACH US (Mock)",
+  "capabilities": {
+    "pay": true,
+    "refund": true,
+    "rollback_window_hours": 48,
+    "finality_time_seconds": 172800,
+    "supports_idempotency": true
+  },
+  "currency": {
+    "code": "USD",
+    "decimals": 2,
+    "symbol": "$"
+  },
+  "test_accounts": [
+    {
+      "routing": "021000021",
+      "account": "123456789",
+      "type": "checking",
+      "label": "test-sender"
+    },
+    {
+      "routing": "021000021",
+      "account": "987654321",
+      "type": "checking",
+      "label": "test-receiver"
+    }
+  ],
+  "limits": {
+    "min_amount": "0.01",
+    "max_amount": "1000000.00",
+    "daily_limit": "5000000.00"
+  },
+  "created": "2025-10-15T00:00:00Z",
+  "warning": "MOCK RAIL - TEST USE ONLY"
+}

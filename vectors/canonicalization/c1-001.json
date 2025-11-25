@@ -1,0 +1,19 @@
+{
+  "id": "c1-001",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C1",
+  "description": "JCS key ordering - keys must be sorted lexicographically by UTF-16 code units",
+  "inputs": {
+    "original": {
+      "zebra": 1,
+      "apple": 2,
+      "banana": 3
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"apple\":2,\"banana\":3,\"zebra\":1}",
+    "canonical_bytes_hex": "7b226170706c65223a322c2262616e616e61223a332c227a65627261223a317d"
+  }
+}

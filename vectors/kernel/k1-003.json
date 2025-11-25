@@ -1,0 +1,23 @@
+{
+  "id": "k1-003",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Invalid commitment - missing required input field",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:threshold.gt",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z"
+      }
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["kernel.parse_error"],
+    "parse_success": false,
+    "missing_inputs": ["threshold", "field"]
+  }
+}

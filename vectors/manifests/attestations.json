@@ -1,0 +1,68 @@
+{
+  "suite": "attestations",
+  "spec": "ARKY-ATTESTATION-v1",
+  "version": "0.1.0",
+  "description": "Attestation test vectors for validating attestation format processing and verification",
+  "levels": {
+    "AT1": {
+      "name": "Intake",
+      "description": "Accept and validate attestation evidence",
+      "vectors": [
+        "a1-eat-001.json",
+        "a1-sgx-001.json"
+      ],
+      "coverage": 2,
+      "focus_areas": [
+        "Attestation format validation",
+        "Evidence processing",
+        "Basic structural checks",
+        "Format compatibility"
+      ]
+    },
+    "AT2": {
+      "name": "Verify",
+      "description": "Validate chains, bindings, and freshness",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Certificate chain validation",
+        "Key binding verification",
+        "Freshness checks",
+        "Trust anchor validation"
+      ]
+    },
+    "AT3": {
+      "name": "Integrate",
+      "description": "Honor policy packs and error handling",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Policy pack integration",
+        "Error handling validation",
+        "Compliance checking",
+        "Security enforcement"
+      ]
+    }
+  },
+  "total_vectors": 2,
+  "status": {
+    "overall_coverage": "basic",
+    "ready_for_production": false,
+    "last_updated": "2025-10-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/attestations-v1.json",
+    "schemas/eat-v1.json",
+    "schemas/sgx-quote-v1.json"
+  ],
+  "supported_formats": [
+    "arky:attest/rats.eat@v1",
+    "arky:attest/tee.intel.sgx@v1",
+    "arky:attest/tpm2.quote@v1"
+  ],
+  "references": {
+    "spec": "../specs/security/ARKY-ATTESTATION-v1.md",
+    "registries": "../registries/attestations@v1.json",
+    "schemas": "../schemas/"
+  }
+}

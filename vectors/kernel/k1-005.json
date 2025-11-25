@@ -1,0 +1,35 @@
+{
+  "id": "k1-005",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Valid commitment - range check rule",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json"
+    }
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:range.within",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+        "field": "measurement.value",
+        "min": 20.0,
+        "max": 25.0
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "parse_success": true,
+    "result": "ALLOW",
+    "evaluation": {
+      "input_value": 22.5,
+      "min": 20.0,
+      "max": 25.0,
+      "within_range": true
+    }
+  }
+}

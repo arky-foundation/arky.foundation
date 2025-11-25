@@ -1,0 +1,35 @@
+{
+  "$schema": "https://arky.foundation/schemas/testing/fixture-tim-v1.json",
+  "id": "valid-tim-002",
+  "description": "Valid TIM with witness signature",
+  "tim": {
+    "time": {
+      "ts": "2025-10-15T12:05:00Z",
+      "witnesses": [
+        "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDIifQ.WITNESS_PAYLOAD.WITNESS_SIGNATURE"
+      ]
+    },
+    "identity": {
+      "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+    },
+    "measurement": {
+      "name": "humidity",
+      "value": 65.2,
+      "unit": "urn:arky:unit:humidity.percent",
+      "method": {
+        "type": "sensor",
+        "source": "device:humidity-sensor-01",
+        "version": "v1"
+      },
+      "device": "urn:arky:device:humidity-sensor-01",
+      "error": "2.0"
+    },
+    "prev": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "cid": "zQmR9WVpEu8E5FJ2Rb3x4KQHGMZPv6TJKLmNYQBFU2gKvCX",
+    "nonce": "nonce-2025-10-15-001",
+    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.TIM_PAYLOAD.TIM_SIGNATURE"
+  },
+  "signing_key_ref": "fixtures/keys/ed25519-test-01.json",
+  "witness_key_ref": "fixtures/keys/ed25519-test-02.json",
+  "created": "2025-10-15T00:00:00Z"
+}

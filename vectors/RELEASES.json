@@ -1,0 +1,180 @@
+{
+  "version": "0.1.0",
+  "release_date": "2025-10-15",
+  "description": "Arky Test Vectors Release - Phase 1 implementation with comprehensive Level 1 coverage",
+  "suites": {
+    "tim": {
+      "manifest": "manifests/tim.json",
+      "spec": "ARKY-TIM-v1",
+      "status": "basic_coverage",
+      "total_vectors": 7,
+      "levels": {
+        "T1": 7,
+        "T2": 0,
+        "T3": 0
+      }
+    },
+    "canonicalization": {
+      "manifest": "manifests/canonicalization.json",
+      "spec": "ARKY-TIM-Canonicalization-v1",
+      "status": "basic_coverage",
+      "total_vectors": 6,
+      "levels": {
+        "C1": 6,
+        "C2": 0,
+        "C3": 0
+      }
+    },
+    "kernel": {
+      "manifest": "manifests/kernel.json",
+      "spec": "ARKY-KERNEL-v1",
+      "status": "basic_coverage",
+      "total_vectors": 10,
+      "levels": {
+        "K1": 10,
+        "K2": 0,
+        "K3": 0
+      }
+    },
+    "notary": {
+      "manifest": "manifests/notary.json",
+      "spec": "ARKY-NOTARY-v1",
+      "status": "basic_coverage",
+      "total_vectors": 8,
+      "levels": {
+        "N1": 8,
+        "N2": 0,
+        "N3": 0
+      }
+    },
+    "settlers": {
+      "manifest": "manifests/settlers.json",
+      "spec": "ARKY-SETTLERS-v1",
+      "status": "basic_coverage",
+      "total_vectors": 10,
+      "levels": {
+        "S1": 10,
+        "S2": 0,
+        "S3": 0
+      }
+    },
+    "discovery": {
+      "manifest": "manifests/discovery.json",
+      "spec": "ARKY-DISCOVERY-v1",
+      "status": "partial_coverage",
+      "total_vectors": 7,
+      "levels": {
+        "D1": 6,
+        "D2": 1,
+        "D3": 0
+      }
+    },
+    "attestations": {
+      "manifest": "manifests/attestations.json",
+      "spec": "ARKY-ATTESTATION-v1",
+      "status": "basic_coverage",
+      "total_vectors": 2,
+      "levels": {
+        "AT1": 2,
+        "AT2": 0,
+        "AT3": 0
+      }
+    }
+  },
+  "changes": [
+    {
+      "version": "0.1.0",
+      "date": "2025-10-15",
+      "type": "major",
+      "description": "Phase 1 vector implementation - Level 1 coverage across all core specs",
+      "changes": [
+        "Added TIM T1 vectors (7 vectors): validation, signatures, CID, timestamps",
+        "Added Canonicalization C1 vectors (6 vectors): JCS key ordering, numbers, escaping",
+        "Added Kernel K1 vectors (10 vectors): parsing, threshold, range, identity rules",
+        "Added Notary N1 vectors (8 vectors): intake, witness, skew, rate limiting",
+        "Added Settlers S1 vectors (10 vectors): pay, refund, signal, control, slash verbs",
+        "Added Discovery D1 vectors (6 vectors): revocations, index, JWKS, services",
+        "Fixed corrupted attestation vectors",
+        "Created shared fixtures: keys, TIMs, rails, accounts",
+        "Restructured manifest format for consistency"
+      ],
+      "breaking_changes": [
+        "Discovery vectors renamed from d1-revocations-001 to d1-001 format",
+        "Attestation vectors reformatted with proper JSON structure"
+      ]
+    },
+    {
+      "version": "0.0.2",
+      "date": "2025-10-15",
+      "type": "restructure",
+      "description": "Consolidated test vector structure with improved documentation",
+      "changes": [
+        "Consolidated manifest.json files into manifests/ directory",
+        "Added comprehensive README.md with quick overview",
+        "Created examples/ directory with simplified explanations",
+        "Added testing-guide.md for developer workflow",
+        "Flattened discovery test vector organization",
+        "Removed redundant empty directories",
+        "Standardized manifest format across all suites"
+      ]
+    },
+    {
+      "version": "0.0.1",
+      "date": "2025-10-15",
+      "type": "initial",
+      "description": "Initial test vector release with basic structure",
+      "changes": [
+        "Basic test vector structure",
+        "Manifest files in each suite",
+        "Initial discovery and attestation vectors"
+      ]
+    }
+  ],
+  "total_vectors": 50,
+  "status": {
+    "overall": "development",
+    "production_ready": false,
+    "level_1_coverage": "complete",
+    "level_2_coverage": "minimal",
+    "level_3_coverage": "none",
+    "next_steps": [
+      "Add TIM T2/T3 vectors for completeness and witnessing",
+      "Add Canonicalization C2/C3 vectors for CID and signature coverage",
+      "Add Kernel K2/K3 vectors for policy and conflict handling",
+      "Add Notary N2/N3 vectors for anchoring and finality",
+      "Add Settlers S2/S3 vectors for failures and rollbacks",
+      "Add Discovery D2/D3 vectors for descriptors and advanced features",
+      "Add Attestation AT2/AT3 vectors for chains and integration",
+      "Implement automated test runner integration"
+    ]
+  },
+  "fixtures": {
+    "keys": [
+      "fixtures/keys/ed25519-test-01.json",
+      "fixtures/keys/ed25519-test-02.json",
+      "fixtures/keys/ed25519-test-03.json"
+    ],
+    "tims": [
+      "fixtures/tims/valid-tim-001.json",
+      "fixtures/tims/valid-tim-002.json"
+    ],
+    "rails": [
+      "fixtures/rails/ethereum-mainnet-mock.json",
+      "fixtures/rails/ach-us-mock.json"
+    ],
+    "accounts": [
+      "fixtures/accounts/test-accounts.json"
+    ]
+  },
+  "metadata": {
+    "maintainers": ["Arky Foundation Test Working Group"],
+    "contact": "test-wg@arky.foundation",
+    "repository": "https://github.com/arky-foundation/arky.foundation",
+    "documentation": "https://arky.foundation/vectors/",
+    "license": "CC-BY-4.0"
+  },
+  "verification": {
+    "schema_version": "1.0",
+    "signature": "<jws-compact-signature>"
+  }
+}

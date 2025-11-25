@@ -1,0 +1,36 @@
+{
+  "id": "a1-sgx-001",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT1",
+  "description": "Valid Intel SGX attestation with key binding",
+  "context": {
+    "time": "2025-10-15T10:00:00Z"
+  },
+  "inputs": {
+    "evidence": {
+      "type": "arky:attest/tee.intel.sgx@v1",
+      "fmt": "sgx-quote",
+      "payload": "AwACAAAAAAAKAA8A5yM/ecTKmUCg2zlX8GBwAAAAAAAAAAAAAAAAAAAAAFBQICBP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "nonce": "zQmY8KwcanDsJzQbZxJ5nRnH3dGRqRv8hWgB1b7u9xA",
+      "subject": {
+        "id": "did:key:z6MuAHvAyKxM6RJ7n8r3QW1Y2v3Z4KqF8nT9sE5L2hB",
+        "class": "sgx-enclave"
+      },
+      "ts": "2025-10-15T10:00:00Z"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "pass",
+    "bindings": {
+      "key": true,
+      "content": false
+    },
+    "claims": {
+      "hw_vendor": "GenuineIntel",
+      "tee": "sgx",
+      "debug": false
+    }
+  }
+}

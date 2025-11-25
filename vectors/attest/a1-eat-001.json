@@ -1,0 +1,38 @@
+{
+  "id": "a1-eat-001",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT1",
+  "description": "Valid RATS EAT attestation with key binding",
+  "context": {
+    "time": "2025-10-15T10:00:00Z"
+  },
+  "inputs": {
+    "evidence": {
+      "type": "arky:attest/rats.eat@v1",
+      "fmt": "eat-cbor",
+      "payload": "mlzc3VlcmRaWQ6a2V5On2TWtmNlRZY0QaUNwR25CclduU1lOdGhIeUJwZEdIaUI1cGRQmBVVnR3J4VnVlaWRvdmVuZG9yWG1vY2stdmVuZG9ybW9ZWxYbW9jay1tb2RlbGN0ZWVjc2d4ZG1lYXNvY29ZVggYzEzOWJjZTAzZGJlNDlhYTY3YjxODNiOGY5MmE3YzJlZGJZD1N2JY2I4ZDFhMzU2YzZiNWMyMDyMjM5ZmNYmd0ZmFsc2VsYW50aVJvbGxiYWNrdHJ1ZWRib290Z3NlY3VyZWNrZXlvY2xhc3NqZGV2aWNlX2tleWZvcmlnaW5jdGVl",
+      "nonce": "zQmY8KwcanDsJzQbZxJ5nRnH3dGRqRv8hWgB1b7u9xA",
+      "subject": {
+        "id": "did:key:z6MuAHvAyKxM6RJ7n8r3QW1Y2v3Z4KqF8nT9sE5L2hB",
+        "class": "sgx-enclave"
+      },
+      "ts": "2025-10-15T10:00:00Z"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "pass",
+    "bindings": {
+      "key": true,
+      "content": false
+    },
+    "claims": {
+      "hw_vendor": "mock-vendor",
+      "hw_model": "mock-model",
+      "tee": "sgx",
+      "debug": false,
+      "boot_state": "secure"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "t1-003",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Invalid TIM - CID mismatch (cid does not match canonical body hash)",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    }
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z"
+      },
+      "identity": {
+        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "urn:arky:unit:temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmWRONG1111111111111111111111111111111111111",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.payload.signature"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["tim.cid_mismatch"],
+    "schema_valid": true,
+    "cid_valid": false,
+    "expected_cid_prefix": "zQmYwAPJ"
+  }
+}

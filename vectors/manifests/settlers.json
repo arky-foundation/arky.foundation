@@ -1,0 +1,76 @@
+{
+  "suite": "settlers",
+  "spec": "ARKY-SETTLERS-v1",
+  "version": "0.1.0",
+  "description": "Settler verb execution test vectors for payment and action settlement",
+  "levels": {
+    "S1": {
+      "name": "Execute",
+      "description": "Basic verb execution and receipt generation",
+      "vectors": [
+        "s1-001.json",
+        "s1-002.json",
+        "s1-003.json",
+        "s1-004.json",
+        "s1-005.json",
+        "s1-006.json",
+        "s1-007.json",
+        "s1-008.json",
+        "s1-009.json",
+        "s1-010.json"
+      ],
+      "coverage": 10,
+      "focus_areas": [
+        "Pay verb execution",
+        "Refund verb execution",
+        "Execution receipt generation",
+        "Idempotency handling",
+        "Rail validation"
+      ]
+    },
+    "S2": {
+      "name": "Failure",
+      "description": "Failure handling and error classification",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Insufficient funds handling",
+        "Counterparty rejection",
+        "Timeout handling",
+        "Error envelope generation"
+      ]
+    },
+    "S3": {
+      "name": "Rollback",
+      "description": "Rollback and compensation handling",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Rollback window tracking",
+        "Compensation execution",
+        "Irreversible action handling",
+        "Cross-rail coordination"
+      ]
+    }
+  },
+  "total_vectors": 10,
+  "status": {
+    "overall_coverage": "basic",
+    "ready_for_production": false,
+    "last_updated": "2025-10-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/core/execution-receipt-v1.json",
+    "schemas/verbs/pay@v1.json",
+    "schemas/verbs/refund@v1.json"
+  ],
+  "fixtures": {
+    "keys": "fixtures/keys/",
+    "rails": "fixtures/rails/",
+    "accounts": "fixtures/accounts/"
+  },
+  "references": {
+    "spec": "../specs/core/ARKY-SETTLERS-v1.md",
+    "verbs": "../registries/verbs@v1.json"
+  }
+}

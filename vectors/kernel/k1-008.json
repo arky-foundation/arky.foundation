@@ -1,0 +1,32 @@
+{
+  "id": "k1-008",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Valid commitment - unit validation rule",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json"
+    }
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:unit.equals",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+        "expected_unit": "urn:arky:unit:temp.C"
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "parse_success": true,
+    "result": "ALLOW",
+    "evaluation": {
+      "tim_unit": "urn:arky:unit:temp.C",
+      "expected_unit": "urn:arky:unit:temp.C",
+      "match": true
+    }
+  }
+}

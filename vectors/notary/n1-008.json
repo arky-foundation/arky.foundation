@@ -1,0 +1,31 @@
+{
+  "id": "n1-008",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Valid TIM intake - policy pack validation passes",
+  "context": {
+    "time": "2025-10-15T12:01:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json",
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "policy_pack_id": "urn:arky:policy:default@v1",
+    "policy_requirements": {
+      "min_witnesses": 1,
+      "max_skew_seconds": 300,
+      "required_identity_schemes": ["did:key", "did:web"]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "intake_accepted": true,
+    "policy_check": {
+      "policy_pack_id": "urn:arky:policy:default@v1",
+      "all_requirements_met": true
+    }
+  }
+}

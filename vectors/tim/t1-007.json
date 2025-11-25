@@ -1,0 +1,19 @@
+{
+  "id": "t1-007",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Invalid TIM - forbidden NaN value in measurement",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "tim_json_string": "{\"time\":{\"ts\":\"2025-10-15T12:00:00Z\"},\"identity\":{\"id\":\"did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp\"},\"measurement\":{\"name\":\"temperature\",\"value\":NaN,\"unit\":\"urn:arky:unit:temp.C\",\"method\":{\"type\":\"sensor\",\"source\":\"device:temp-sensor-01\"}},\"cid\":\"zQmInvalid\",\"sig\":\"eyJhbGciOiJFZERTQSJ9.payload.sig\"}",
+    "parse_mode": "strict"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["tim.forbidden_value"],
+    "parse_error": true,
+    "validation_details": "NaN, Infinity, and -Infinity are forbidden in TIM values"
+  }
+}

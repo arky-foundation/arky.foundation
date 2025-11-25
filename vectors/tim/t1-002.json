@@ -1,0 +1,34 @@
+{
+  "id": "t1-002",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Invalid TIM - missing required time.ts field",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "tim": {
+      "time": {},
+      "identity": {
+        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "urn:arky:unit:temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmInvalidCidBecauseMissingTimestamp",
+      "sig": "eyJhbGciOiJFZERTQSJ9.invalid.signature"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["tim.missing_required"],
+    "schema_valid": false,
+    "missing_fields": ["time.ts"]
+  }
+}

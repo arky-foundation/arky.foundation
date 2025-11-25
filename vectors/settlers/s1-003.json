@@ -1,0 +1,21 @@
+{
+  "id": "s1-003",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Invalid verb - unknown verb type",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:nonexistent@v1",
+    "params": {
+      "some": "data"
+    },
+    "idempotency_key": "unknown-2025-10-15-001"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["settler.unknown_verb"],
+    "status": "FAILED"
+  }
+}

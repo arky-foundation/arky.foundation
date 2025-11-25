@@ -1,0 +1,36 @@
+{
+  "id": "s1-009",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Valid slash verb execution",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "rail": "fixtures/rails/ethereum-mainnet-mock.json",
+      "settler_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:slash@v1",
+    "params": {
+      "target": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP",
+      "amount": {
+        "value": "100000000000000000",
+        "currency": "wei"
+      },
+      "reason": "protocol_violation",
+      "evidence_cid": "zQmEvidenceCid12345678901234567890"
+    },
+    "idempotency_key": "slash-2025-10-15-001"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "SUCCESS",
+    "execution_receipt": {
+      "verb": "urn:arky:verb:slash@v1",
+      "status": "SUCCESS",
+      "evidence_linked": true
+    }
+  }
+}

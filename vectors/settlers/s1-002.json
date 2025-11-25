@@ -1,0 +1,30 @@
+{
+  "id": "s1-002",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Invalid pay verb - unknown rail",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "accounts": "fixtures/accounts/test-accounts.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:pay@v1",
+    "params": {
+      "from": "account-sender-01",
+      "to": "account-receiver-01",
+      "amount": {
+        "value": "100.00",
+        "currency": "USD"
+      },
+      "rail": "unknown:nonexistent"
+    },
+    "idempotency_key": "pay-2025-10-15-002"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["settler.unsupported_rail"],
+    "status": "FAILED"
+  }
+}

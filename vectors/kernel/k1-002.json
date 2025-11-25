@@ -1,0 +1,22 @@
+{
+  "id": "k1-002",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Invalid commitment - unknown rule URN",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:nonexistent.unknown",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z"
+      }
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["kernel.unknown_function"],
+    "parse_success": false
+  }
+}

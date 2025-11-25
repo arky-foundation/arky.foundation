@@ -1,0 +1,33 @@
+{
+  "id": "s1-007",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Valid signal verb execution",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "settler_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:signal@v1",
+    "params": {
+      "signal_type": "status_update",
+      "target": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+      "payload": {
+        "status": "active",
+        "message": "Service operational"
+      }
+    },
+    "idempotency_key": "signal-2025-10-15-001"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "SUCCESS",
+    "execution_receipt": {
+      "verb": "urn:arky:verb:signal@v1",
+      "status": "SUCCESS"
+    }
+  }
+}

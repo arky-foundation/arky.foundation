@@ -1,0 +1,34 @@
+{
+  "id": "s1-008",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Valid control verb execution",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "settler_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:control@v1",
+    "params": {
+      "target": "urn:arky:device:hvac-unit-01",
+      "action": "set_temperature",
+      "parameters": {
+        "value": 22,
+        "unit": "C"
+      }
+    },
+    "idempotency_key": "control-2025-10-15-001"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "SUCCESS",
+    "execution_receipt": {
+      "verb": "urn:arky:verb:control@v1",
+      "status": "SUCCESS",
+      "target": "urn:arky:device:hvac-unit-01"
+    }
+  }
+}

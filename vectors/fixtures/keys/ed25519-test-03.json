@@ -1,0 +1,23 @@
+{
+  "$schema": "https://arky.foundation/schemas/testing/fixture-key-v1.json",
+  "id": "ed25519-test-03",
+  "description": "Third test Ed25519 key pair for notary signatures - DO NOT USE IN PRODUCTION",
+  "type": "Ed25519",
+  "kid": "notary-key-2025-01",
+  "publicKey": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "PUymIqdtF_qxaAqPABSw-C-owT1KYYQbsMKFM-L9fJI",
+    "kid": "notary-key-2025-01"
+  },
+  "privateKey": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "PUymIqdtF_qxaAqPABSw-C-owT1KYYQbsMKFM-L9fJI",
+    "d": "s-lf3-1u1GTPb6JOqqYlBVWC8eYdKhXPRZkj7k3x0h8",
+    "kid": "notary-key-2025-01"
+  },
+  "did": "did:key:z6MkgYGF3thn8k1Fv4p4dWXKtsXCnLH7q9yw4QgNPULDmDKB",
+  "created": "2025-10-15T00:00:00Z",
+  "warning": "TEST KEY ONLY - NEVER USE IN PRODUCTION"
+}

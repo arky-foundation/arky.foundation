@@ -1,0 +1,24 @@
+{
+  "id": "n1-001",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Valid TIM intake - notary accepts well-formed TIM and generates witness",
+  "context": {
+    "time": "2025-10-15T12:01:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json",
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "canonical_bytes_b64": "eyJ0aW1lIjp7InRzIjoiMjAyNS0xMC0xNVQxMjowMDowMFoifSwiaWRlbnRpdHkiOnsiaWQiOiJkaWQ6a2V5Ono2TWtpVEJ6MXltdWVwQVE0SEVIWVNGMUg4cXVHNUdMVlZRUjNkakRYM21Eb29XcCJ9LCJtZWFzdXJlbWVudCI6eyJuYW1lIjoidGVtcGVyYXR1cmUiLCJ2YWx1ZSI6MjIuNSwidW5pdCI6InVybjphcmt5OnVuaXQ6dGVtcC5DIiwibWV0aG9kIjp7InR5cGUiOiJzZW5zb3IiLCJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEifX19"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "intake_accepted": true,
+    "witness_generated": true,
+    "witness_signature_format": "JWS-Ed25519"
+  }
+}

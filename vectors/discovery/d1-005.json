@@ -1,0 +1,27 @@
+{
+  "id": "d1-005",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D1",
+  "description": "Key revocation check - revoked key rejected",
+  "context": {
+    "time": "2025-10-16T00:00:00Z",
+    "fixtures": {
+      "revocations": "discovery/fixtures/revocations-001.json"
+    }
+  },
+  "inputs": {
+    "key_to_check": {
+      "kid": "key-2025-01",
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["discovery.key_revoked"],
+    "revoked": true,
+    "revocation_reason": "rotation",
+    "revoked_at": "2025-10-15T23:59:59Z"
+  }
+}

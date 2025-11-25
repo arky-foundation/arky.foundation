@@ -1,0 +1,74 @@
+{
+  "suite": "tim",
+  "spec": "ARKY-TIM-v1",
+  "version": "0.1.0",
+  "description": "Transparency Information Manifest test vectors for validating TIM structure, signatures, and witness requirements",
+  "levels": {
+    "T1": {
+      "name": "Verify",
+      "description": "Basic TIM validation and signature verification",
+      "vectors": [
+        "t1-001.json",
+        "t1-002.json",
+        "t1-003.json",
+        "t1-004.json",
+        "t1-005.json",
+        "t1-006.json",
+        "t1-007.json"
+      ],
+      "coverage": 7,
+      "focus_areas": [
+        "TIM format validation",
+        "Signature verification",
+        "Timestamp validation",
+        "Basic structure checks",
+        "CID computation",
+        "JCS canonicalization"
+      ]
+    },
+    "T2": {
+      "name": "Completeness",
+      "description": "Validate TIM completeness and relationships",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "TIM relationship validation",
+        "Causal chain verification",
+        "Completeness checks",
+        "Dependency validation",
+        "Required field enforcement"
+      ]
+    },
+    "T3": {
+      "name": "Witnessed",
+      "description": "Validate multi-witness TIM scenarios",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Multi-witness validation",
+        "Quorum verification",
+        "Witness signature checks",
+        "Consensus validation"
+      ]
+    }
+  },
+  "total_vectors": 7,
+  "status": {
+    "overall_coverage": "basic",
+    "ready_for_production": false,
+    "last_updated": "2025-10-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/core/tim-v1.json",
+    "schemas/core/common-defs-v1.json"
+  ],
+  "fixtures": {
+    "keys": "fixtures/keys/",
+    "tims": "fixtures/tims/"
+  },
+  "references": {
+    "spec": "../specs/core/ARKY-TIM-v1.md",
+    "examples": "../examples/flows/tim-basic.md",
+    "schemas": "../schemas/core/tim-v1.json"
+  }
+}

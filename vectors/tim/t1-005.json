@@ -1,0 +1,34 @@
+{
+  "id": "t1-005",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Invalid TIM - missing identity.id field",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z"
+      },
+      "identity": {},
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "urn:arky:unit:temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmInvalidNoIdentity",
+      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["tim.missing_required"],
+    "schema_valid": false,
+    "missing_fields": ["identity.id"]
+  }
+}

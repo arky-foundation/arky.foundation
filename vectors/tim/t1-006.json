@@ -1,0 +1,36 @@
+{
+  "id": "t1-006",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Invalid TIM - timestamp not RFC3339 format",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025/10/15 12:00:00"
+      },
+      "identity": {
+        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "urn:arky:unit:temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmInvalidTimestamp",
+      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["tim.timestamp_invalid"],
+    "schema_valid": false,
+    "validation_details": "time.ts must be RFC3339 UTC format"
+  }
+}

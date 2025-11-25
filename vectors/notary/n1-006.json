@@ -1,0 +1,31 @@
+{
+  "id": "n1-006",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Valid TIM intake - rate limit check passes",
+  "context": {
+    "time": "2025-10-15T12:01:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json",
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "issuer_id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+    "rate_limit": {
+      "requests_per_minute": 100,
+      "current_count": 5
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "intake_accepted": true,
+    "rate_limit_check": {
+      "limit": 100,
+      "current": 5,
+      "allowed": true
+    }
+  }
+}

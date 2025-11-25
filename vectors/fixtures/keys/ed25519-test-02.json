@@ -1,0 +1,23 @@
+{
+  "$schema": "https://arky.foundation/schemas/testing/fixture-key-v1.json",
+  "id": "ed25519-test-02",
+  "description": "Second test Ed25519 key pair for witness signatures - DO NOT USE IN PRODUCTION",
+  "type": "Ed25519",
+  "kid": "test-key-2025-02",
+  "publicKey": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "lW-SWVpDU-FHcpkNMQTuGiNqKhF-wLKfpPPzlvdZG5E",
+    "kid": "test-key-2025-02"
+  },
+  "privateKey": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "lW-SWVpDU-FHcpkNMQTuGiNqKhF-wLKfpPPzlvdZG5E",
+    "d": "4CpanBIFLh0UVaNmLdKxW5eeYLG3hPXMWU6O4qlKjnA",
+    "kid": "test-key-2025-02"
+  },
+  "did": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP",
+  "created": "2025-10-15T00:00:00Z",
+  "warning": "TEST KEY ONLY - NEVER USE IN PRODUCTION"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "k1-010",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Valid commitment - freshness check rule",
+  "context": {
+    "time": "2025-10-15T12:05:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json"
+    }
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:freshness.within",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+        "max_age_seconds": 600
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "parse_success": true,
+    "result": "ALLOW",
+    "evaluation": {
+      "tim_ts": "2025-10-15T12:00:00Z",
+      "current_time": "2025-10-15T12:05:00Z",
+      "age_seconds": 300,
+      "max_age_seconds": 600,
+      "fresh": true
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "n1-004",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N1",
+  "description": "Valid TIM intake - timestamp within acceptable skew",
+  "context": {
+    "time": "2025-10-15T12:01:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json",
+      "notary_key": "fixtures/keys/ed25519-test-03.json"
+    }
+  },
+  "inputs": {
+    "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+    "tim_ts": "2025-10-15T12:00:00Z",
+    "max_skew_seconds": 300
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "intake_accepted": true,
+    "skew_check": {
+      "tim_ts": "2025-10-15T12:00:00Z",
+      "notary_ts": "2025-10-15T12:01:00Z",
+      "skew_seconds": 60,
+      "within_limit": true
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://arky.foundation/schemas/testing/fixture-key-v1.json",
+  "id": "ed25519-test-01",
+  "description": "Test Ed25519 key pair for TIM signing - DO NOT USE IN PRODUCTION",
+  "type": "Ed25519",
+  "kid": "test-key-2025-01",
+  "publicKey": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+    "kid": "test-key-2025-01"
+  },
+  "privateKey": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+    "d": "nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A",
+    "kid": "test-key-2025-01"
+  },
+  "did": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+  "created": "2025-10-15T00:00:00Z",
+  "warning": "TEST KEY ONLY - NEVER USE IN PRODUCTION"
+}

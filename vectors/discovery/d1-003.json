@@ -1,0 +1,27 @@
+{
+  "id": "d1-003",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D1",
+  "description": "Invalid well-known index - missing required jwks field",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "well_known_index": {
+      "services": [
+        {
+          "type": "notary",
+          "href": "https://notary.example/v1"
+        }
+      ],
+      "cid": "zQmIndexCid12345678901234567890123456",
+      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["discovery.index_invalid"],
+    "schema_valid": false,
+    "missing_fields": ["jwks"]
+  }
+}

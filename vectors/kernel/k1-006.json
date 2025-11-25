@@ -1,0 +1,25 @@
+{
+  "id": "k1-006",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Invalid commitment - type mismatch in input",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:threshold.gt",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+        "field": "measurement.value",
+        "threshold": "not_a_number"
+      }
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["kernel.parse_error"],
+    "parse_success": false,
+    "type_error": "threshold must be numeric"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "d1-004",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D1",
+  "description": "Valid JWKS endpoint structure",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "jwks": {
+      "keys": [
+        {
+          "kty": "OKP",
+          "crv": "Ed25519",
+          "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+          "kid": "test-key-2025-01",
+          "use": "sig"
+        },
+        {
+          "kty": "OKP",
+          "crv": "Ed25519",
+          "x": "lW-SWVpDU-FHcpkNMQTuGiNqKhF-wLKfpPPzlvdZG5E",
+          "kid": "test-key-2025-02",
+          "use": "sig"
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "keys_count": 2,
+    "all_keys_valid": true
+  }
+}

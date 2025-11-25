@@ -1,0 +1,33 @@
+{
+  "id": "k1-009",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K1",
+  "description": "Invalid commitment - unknown unit in rule",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "tim": "fixtures/tims/valid-tim-001.json"
+    }
+  },
+  "inputs": {
+    "commitment": {
+      "rule": "urn:arky:rule:unit.equals",
+      "inputs": {
+        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+        "expected_unit": "urn:arky:unit:unknown.nonexistent"
+      }
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["kernel.unknown_unit"],
+    "parse_success": true,
+    "result": "DENY",
+    "evaluation": {
+      "tim_unit": "urn:arky:unit:temp.C",
+      "expected_unit": "urn:arky:unit:unknown.nonexistent",
+      "match": false,
+      "reason": "unknown_unit"
+    }
+  }
+}

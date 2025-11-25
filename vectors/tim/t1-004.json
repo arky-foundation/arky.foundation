@@ -1,0 +1,42 @@
+{
+  "id": "t1-004",
+  "spec": "ARKY-TIM-v1",
+  "level": "T1",
+  "description": "Invalid TIM - signature verification failure (wrong key)",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json",
+      "wrong_key": "fixtures/keys/ed25519-test-02.json"
+    }
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z"
+      },
+      "identity": {
+        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "urn:arky:unit:temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDIifQ.payload.WRONG_KEY_SIGNATURE"
+    },
+    "verification_key": "fixtures/keys/ed25519-test-01.json"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["tim.signature_invalid"],
+    "schema_valid": true,
+    "cid_valid": true,
+    "signature_valid": false
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "c1-006",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C1",
+  "description": "JCS nested object ordering - recursive key sorting",
+  "inputs": {
+    "original": {
+      "outer_z": {
+        "inner_b": 2,
+        "inner_a": 1
+      },
+      "outer_a": {
+        "deep_z": {
+          "deepest_b": "beta",
+          "deepest_a": "alpha"
+        },
+        "deep_a": "first"
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"outer_a\":{\"deep_a\":\"first\",\"deep_z\":{\"deepest_a\":\"alpha\",\"deepest_b\":\"beta\"}},\"outer_z\":{\"inner_a\":1,\"inner_b\":2}}"
+  }
+}

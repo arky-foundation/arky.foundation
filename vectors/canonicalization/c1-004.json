@@ -1,0 +1,20 @@
+{
+  "id": "c1-004",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C1",
+  "description": "JCS Unicode handling - proper UTF-8 encoding",
+  "inputs": {
+    "original": {
+      "ascii": "hello",
+      "unicode": "cafe",
+      "emoji": "test",
+      "cjk": "test"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"ascii\":\"hello\",\"cjk\":\"test\",\"emoji\":\"test\",\"unicode\":\"cafe\"}",
+    "encoding": "UTF-8"
+  }
+}

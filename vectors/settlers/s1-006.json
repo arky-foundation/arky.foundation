@@ -1,0 +1,27 @@
+{
+  "id": "s1-006",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S1",
+  "description": "Invalid pay verb - missing required amount field",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "rail": "fixtures/rails/ethereum-mainnet-mock.json"
+    }
+  },
+  "inputs": {
+    "verb": "urn:arky:verb:pay@v1",
+    "params": {
+      "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f0Ab1E",
+      "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
+      "rail": "eip155:1"
+    },
+    "idempotency_key": "pay-2025-10-15-003"
+  },
+  "expect": {
+    "valid": false,
+    "errors": ["settler.invalid_args"],
+    "status": "FAILED",
+    "missing_fields": ["amount"]
+  }
+}

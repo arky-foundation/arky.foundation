@@ -1,0 +1,19 @@
+{
+  "id": "c1-005",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C1",
+  "description": "JCS string escaping - control characters must be escaped",
+  "inputs": {
+    "original": {
+      "tab": "hello\tworld",
+      "newline": "line1\nline2",
+      "quote": "say \"hello\"",
+      "backslash": "path\\to\\file"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"backslash\":\"path\\\\to\\\\file\",\"newline\":\"line1\\nline2\",\"quote\":\"say \\\"hello\\\"\",\"tab\":\"hello\\tworld\"}"
+  }
+}

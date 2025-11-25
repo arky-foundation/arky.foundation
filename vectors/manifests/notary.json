@@ -1,0 +1,72 @@
+{
+  "suite": "notary",
+  "spec": "ARKY-NOTARY-v1",
+  "version": "0.1.0",
+  "description": "Notary witness and anchor test vectors for verifying time ordering and finality",
+  "levels": {
+    "N1": {
+      "name": "Intake",
+      "description": "TIM intake and witness signature generation",
+      "vectors": [
+        "n1-001.json",
+        "n1-002.json",
+        "n1-003.json",
+        "n1-004.json",
+        "n1-005.json",
+        "n1-006.json",
+        "n1-007.json",
+        "n1-008.json"
+      ],
+      "coverage": 8,
+      "focus_areas": [
+        "TIM intake validation",
+        "Witness signature generation",
+        "CID verification",
+        "Issuer signature verification"
+      ]
+    },
+    "N2": {
+      "name": "Anchor",
+      "description": "Batch anchoring and inclusion proofs",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Merkle tree construction",
+        "Batch anchoring",
+        "Inclusion proof generation",
+        "Multi-target anchoring"
+      ]
+    },
+    "N3": {
+      "name": "Finality",
+      "description": "Finality tracking and reorg handling",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Finality depth tracking",
+        "Reorg detection",
+        "Re-anchoring logic",
+        "Multi-anchor coordination"
+      ]
+    }
+  },
+  "total_vectors": 8,
+  "status": {
+    "overall_coverage": "basic",
+    "ready_for_production": false,
+    "last_updated": "2025-10-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/core/tim-v1.json",
+    "schemas/core/anchor-object-v1.json"
+  ],
+  "fixtures": {
+    "keys": "fixtures/keys/",
+    "tims": "fixtures/tims/",
+    "rails": "fixtures/rails/"
+  },
+  "references": {
+    "spec": "../specs/core/ARKY-NOTARY-v1.md",
+    "examples": "../examples/flows/notary-basic.md"
+  }
+}
