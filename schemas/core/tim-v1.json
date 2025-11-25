@@ -34,7 +34,25 @@
         "name": {"type": "string"},
         "value": {},
         "unit": {"type": "string"},
-        "method": {"type": "string"},
+        "method": {
+          "oneOf": [
+            {"type": "string"},
+            {
+              "type": "object",
+              "required": ["type", "source"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["sensor", "computation", "manual", "oracle", "attestation"]
+                },
+                "source": {"type": "string"},
+                "params": {"type": "object"},
+                "version": {"type": "string"}
+              }
+            }
+          ]
+        },
         "device": {"type": "string"},
         "error": {"type": "string"},
         "code": {"type": "string"},
