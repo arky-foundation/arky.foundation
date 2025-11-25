@@ -1,0 +1,15 @@
+{
+  "default_locale": "en",
+  "locales": [
+    { "lang": "en", "name": "English", "coverage": "100%" },
+    { "lang": "es-419", "name": "Spanish (LatAm)", "coverage": "0%" },
+    { "lang": "pt-BR", "name": "Portuguese (Brazil)", "coverage": "0%" },
+    { "lang": "fr", "name": "French", "coverage": "0%" },
+    { "lang": "de", "name": "German", "coverage": "0%" },
+    { "lang": "ar", "name": "Arabic", "coverage": "0%" },
+    { "lang": "zh-Hans", "name": "Chinese (Simplified)", "coverage": "0%" },
+    { "lang": "hi", "name": "Hindi", "coverage": "0%" },
+    { "lang": "ja", "name": "Japanese", "coverage": "0%" }
+  ],
+  "ts": "2025-10-15T00:00:00Z"
+}
