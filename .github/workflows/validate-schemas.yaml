@@ -1,0 +1,88 @@
+name: Validate Schemas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON syntax across repo
+        run: |
+          python - <<'PY'
+          import json, sys, glob, os
+
+          roots = (
+            'schemas',
+            'registries',
+            'policies',
+            'vectors',
+            'examples',
+          )
+
+          files = []
+          for root in roots:
+            if os.path.isdir(root):
+              files.extend(glob.glob(os.path.join(root, '**', '*.json'), recursive=True))
+
+          bad = []
+          for p in sorted(files):
+            try:
+              with open(p, 'rb') as f:
+                json.load(f)
+            except Exception as e:
+              bad.append((p, str(e)))
+
+          if bad:
+            print('Invalid JSON in:')
+            for p, e in bad:
+              print(f'- {p}: {e}')
+            sys.exit(1)
+          print(f'Validated {len(files)} JSON files.')
+          PY
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install validation deps
+        run: bun add ajv-cli@5 ajv-formats
+      - name: Ajv validate examples against schemas
+        run: |
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/core/service-descriptor-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/service-descriptors/notary/descriptor.json \
+            -d examples/service-descriptors/settler/descriptor.json
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/infrastructure/discovery-index-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/discovery/well-known/arky/index.json
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/infrastructure/revocations-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/discovery/well-known/arky/revocations.json \
+            -d examples/security/revocations/revocation-list-example.json
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/infrastructure/registries-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d "registries/*.json"
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/core/policy-pack-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d "policies/*.json"
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/core/tim-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/core/tim.json
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/core/kernel-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/core/kernel.json
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/core/execution-receipt-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/core/execution-receipt.json
+          bun ajv validate --spec=draft2020 -c ajv-formats \
+            -s schemas/core/anchor-object-v1.json \
+            -r schemas/core/common-defs-v1.json \
+            -d examples/core/anchor-object.json

@@ -1,0 +1,45 @@
+name: Spec Lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  spec-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Front matter and filename checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Checking spec front matter and filename/spec_id alignment..."
+          failed=0
+          shopt -s nullglob globstar
+          # Only check spec markdowns that follow ARKY-*.md naming
+          for f in specs/**/ARKY-*.md; do
+            base="$(basename "$f" .md)"
+            # Extract spec_id from first front-matter occurrence
+            sid=$(awk '/^spec_id:/ {print $2; exit}' "$f" || true)
+            if [[ -z "${sid:-}" ]]; then
+              echo "[FAIL] Missing spec_id in $f" >&2
+              failed=1
+              continue
+            fi
+            if [[ "$sid" != "$base" ]]; then
+              echo "[FAIL] spec_id '$sid' != filename '$base' in $f" >&2
+              failed=1
+            fi
+            # Minimal required keys sanity check
+            for key in title version status effective doc_type normative_default permalink last_updated; do
+              if ! grep -q "^$key:" "$f"; then
+                echo "[FAIL] Missing $key in $f" >&2
+                failed=1
+              fi
+            done
+          done
+          if [[ $failed -ne 0 ]]; then
+            echo "Spec lint failed." >&2
+            exit 1
+          fi
+          echo "Spec lint passed."
