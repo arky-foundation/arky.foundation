@@ -6,46 +6,81 @@
     "arky:unit/newton": {
       "urn": "arky:unit/newton",
       "symbol": "N",
-      "dimension": { "kg": 1, "m": 1, "s": -2 },
+      "dimension": {
+        "kg": 1,
+        "m": 1,
+        "s": -2
+      },
       "si_prefix": true,
-      "format": { "decimals_max": 9 },
-      "aliases": ["N"],
+      "format": {
+        "decimals_max": 9
+      },
+      "aliases": [
+        "N"
+      ],
       "notes": "SI derived unit"
     },
     "arky:unit/meter": {
       "urn": "arky:unit/meter",
       "symbol": "m",
-      "dimension": { "m": 1 },
+      "dimension": {
+        "m": 1
+      },
       "si_prefix": true,
-      "format": { "decimals_max": 9 },
-      "aliases": ["m"],
+      "format": {
+        "decimals_max": 9
+      },
+      "aliases": [
+        "m"
+      ],
       "notes": "SI base unit"
     },
     "arky:unit/second": {
       "urn": "arky:unit/second",
       "symbol": "s",
-      "dimension": { "s": 1 },
+      "dimension": {
+        "s": 1
+      },
       "si_prefix": true,
-      "format": { "decimals_max": 9 },
-      "aliases": ["s"],
+      "format": {
+        "decimals_max": 9
+      },
+      "aliases": [
+        "s"
+      ],
       "notes": "SI base unit"
     },
     "arky:unit/m-per-s": {
       "urn": "arky:unit/m-per-s",
       "symbol": "m/s",
-      "dimension": { "m": 1, "s": -1 },
+      "dimension": {
+        "m": 1,
+        "s": -1
+      },
       "si_prefix": true,
-      "format": { "decimals_max": 9 },
-      "aliases": ["ms"],
+      "format": {
+        "decimals_max": 9
+      },
+      "aliases": [
+        "ms"
+      ],
       "notes": "meters per second"
     },
     "arky:unit/watt": {
       "urn": "arky:unit/watt",
       "symbol": "W",
-      "dimension": { "kg": 1, "m": 2, "s": -3 },
+      "dimension": {
+        "kg": 1,
+        "m": 2,
+        "s": -3
+      },
       "si_prefix": true,
-      "format": { "decimals_max": 9 },
-      "aliases": ["W"],
+      "format": {
+        "decimals_max": 9
+      },
+      "aliases": [
+        "W"
+      ],
       "notes": "SI derived unit"
     },
     "arky:unit/percent": {
@@ -53,8 +88,12 @@
       "symbol": "%",
       "dimension": {},
       "si_prefix": false,
-      "format": { "decimals_max": 4 },
-      "aliases": ["%"],
+      "format": {
+        "decimals_max": 4
+      },
+      "aliases": [
+        "%"
+      ],
       "notes": "dimensionless"
     },
     "arky:unit/blocks": {
@@ -62,7 +101,9 @@
       "symbol": "blocks",
       "dimension": {},
       "si_prefix": false,
-      "format": { "decimals_max": 0 },
+      "format": {
+        "decimals_max": 0
+      },
       "aliases": [],
       "notes": "block count"
     },
@@ -71,7 +112,9 @@
       "symbol": "gas",
       "dimension": {},
       "si_prefix": false,
-      "format": { "decimals_max": 0 },
+      "format": {
+        "decimals_max": 0
+      },
       "aliases": [],
       "notes": "EVM gas units"
     },
@@ -80,17 +123,25 @@
       "symbol": "TFLOP-h",
       "basis": "flop*h",
       "si_prefix": true,
-      "format": { "decimals_max": 6 },
+      "format": {
+        "decimals_max": 6
+      },
       "aliases": [],
       "notes": "Resource unit for compute"
     },
     "arky:unit/temp.C": {
       "urn": "arky:unit/temp.C",
       "symbol": "C",
-      "dimension": { "K": 1 },
+      "dimension": {
+        "K": 1
+      },
       "si_prefix": false,
-      "format": { "decimals_max": 2 },
-      "aliases": ["celsius"],
+      "format": {
+        "decimals_max": 2
+      },
+      "aliases": [
+        "celsius"
+      ],
       "notes": "Temperature in Celsius"
     },
     "arky:unit/humidity.percent": {
@@ -98,11 +149,15 @@
       "symbol": "%RH",
       "dimension": {},
       "si_prefix": false,
-      "format": { "decimals_max": 1 },
-      "aliases": ["rh"],
+      "format": {
+        "decimals_max": 1
+      },
+      "aliases": [
+        "rh"
+      ],
       "notes": "Relative humidity percentage"
     }
   },
   "aliases": {},
-  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJhbGlhc2VzIjp7fSwiZW50cmllcyI6eyJhcmt5OnJ1L3RmbG9waCI6eyJhbGlhc2VzIjpbXSwiYmFzaXMiOiJmbG9wKmgiLCJmb3JtYXQiOnsiZGVjaW1hbHNfbWF4Ijo2fSwibm90ZXMiOiJSZXNvdXJjZSB1bml0IGZvciBjb21wdXRlIiwic2lfcHJlZml4Ijp0cnVlLCJzeW1ib2wiOiJURkxPUC1oIiwidXJuIjoiYXJreTpydS90ZmxvcGgifSwiYXJreTp1bml0L2Jsb2NrcyI6eyJhbGlhc2VzIjpbXSwiZGltZW5zaW9uIjp7fSwiZm9ybWF0Ijp7ImRlY2ltYWxzX21heCI6MH0sIm5vdGVzIjoiYmxvY2sgY291bnQiLCJzaV9wcmVmaXgiOmZhbHNlLCJzeW1ib2wiOiJibG9ja3MiLCJ1cm4iOiJhcmt5OnVuaXQvYmxvY2tzIn0sImFya3k6dW5pdC9nYXMiOnsiYWxpYXNlcyI6W10sImRpbWVuc2lvbiI6e30sImZvcm1hdCI6eyJkZWNpbWFsc19tYXgiOjB9LCJub3RlcyI6IkVWTSBnYXMgdW5pdHMiLCJzaV9wcmVmaXgiOmZhbHNlLCJzeW1ib2wiOiJnYXMiLCJ1cm4iOiJhcmt5OnVuaXQvZ2FzIn0sImFya3k6dW5pdC9odW1pZGl0eS5wZXJjZW50Ijp7ImFsaWFzZXMiOlsicmgiXSwiZGltZW5zaW9uIjp7fSwiZm9ybWF0Ijp7ImRlY2ltYWxzX21heCI6MX0sIm5vdGVzIjoiUmVsYXRpdmUgaHVtaWRpdHkgcGVyY2VudGFnZSIsInNpX3ByZWZpeCI6ZmFsc2UsInN5bWJvbCI6IiVSSCIsInVybiI6ImFya3k6dW5pdC9odW1pZGl0eS5wZXJjZW50In0sImFya3k6dW5pdC9tLXBlci1zIjp7ImFsaWFzZXMiOlsibXMiXSwiZGltZW5zaW9uIjp7Im0iOjEsInMiOi0xfSwiZm9ybWF0Ijp7ImRlY2ltYWxzX21heCI6OX0sIm5vdGVzIjoibWV0ZXJzIHBlciBzZWNvbmQiLCJzaV9wcmVmaXgiOnRydWUsInN5bWJvbCI6Im0vcyIsInVybiI6ImFya3k6dW5pdC9tLXBlci1zIn0sImFya3k6dW5pdC9tZXRlciI6eyJhbGlhc2VzIjpbIm0iXSwiZGltZW5zaW9uIjp7Im0iOjF9LCJmb3JtYXQiOnsiZGVjaW1hbHNfbWF4Ijo5fSwibm90ZXMiOiJTSSBiYXNlIHVuaXQiLCJzaV9wcmVmaXgiOnRydWUsInN5bWJvbCI6Im0iLCJ1cm4iOiJhcmt5OnVuaXQvbWV0ZXIifSwiYXJreTp1bml0L25ld3RvbiI6eyJhbGlhc2VzIjpbIk4iXSwiZGltZW5zaW9uIjp7ImtnIjoxLCJtIjoxLCJzIjotMn0sImZvcm1hdCI6eyJkZWNpbWFsc19tYXgiOjl9LCJub3RlcyI6IlNJIGRlcml2ZWQgdW5pdCIsInNpX3ByZWZpeCI6dHJ1ZSwic3ltYm9sIjoiTiIsInVybiI6ImFya3k6dW5pdC9uZXd0b24ifSwiYXJreTp1bml0L3BlcmNlbnQiOnsiYWxpYXNlcyI6WyIlIl0sImRpbWVuc2lvbiI6e30sImZvcm1hdCI6eyJkZWNpbWFsc19tYXgiOjR9LCJub3RlcyI6ImRpbWVuc2lvbmxlc3MiLCJzaV9wcmVmaXgiOmZhbHNlLCJzeW1ib2wiOiIlIiwidXJuIjoiYXJreTp1bml0L3BlcmNlbnQifSwiYXJreTp1bml0L3NlY29uZCI6eyJhbGlhc2VzIjpbInMiXSwiZGltZW5zaW9uIjp7InMiOjF9LCJmb3JtYXQiOnsiZGVjaW1hbHNfbWF4Ijo5fSwibm90ZXMiOiJTSSBiYXNlIHVuaXQiLCJzaV9wcmVmaXgiOnRydWUsInN5bWJvbCI6InMiLCJ1cm4iOiJhcmt5OnVuaXQvc2Vjb25kIn0sImFya3k6dW5pdC90ZW1wLkMiOnsiYWxpYXNlcyI6WyJjZWxzaXVzIl0sImRpbWVuc2lvbiI6eyJLIjoxfSwiZm9ybWF0Ijp7ImRlY2ltYWxzX21heCI6Mn0sIm5vdGVzIjoiVGVtcGVyYXR1cmUgaW4gQ2Vsc2l1cyIsInNpX3ByZWZpeCI6ZmFsc2UsInN5bWJvbCI6IkMiLCJ1cm4iOiJhcmt5OnVuaXQvdGVtcC5DIn0sImFya3k6dW5pdC93YXR0Ijp7ImFsaWFzZXMiOlsiVyJdLCJkaW1lbnNpb24iOnsia2ciOjEsIm0iOjIsInMiOi0zfSwiZm9ybWF0Ijp7ImRlY2ltYWxzX21heCI6OX0sIm5vdGVzIjoiU0kgZGVyaXZlZCB1bml0Iiwic2lfcHJlZml4Ijp0cnVlLCJzeW1ib2wiOiJXIiwidXJuIjoiYXJreTp1bml0L3dhdHQifX0sIm5hbWUiOiJVbml0cyAmIFJlc291cmNlcyAodjEpIiwicmVnaXN0cnlfaWQiOiJhcmt5OnJlZ2lzdHJ5OnVuaXRzQHYxIiwidHMiOiIyMDI1LTEwLTE1VDAwOjAwOjAwWiJ9.TX5TmMsTXhe7x_mqd_YIx2OL3SzzN4rTnwHqePjP-iFUKd8cgbhuhw18P2Mx_JiykkQxfRIPFiLkdCh190NwDQ"
 }

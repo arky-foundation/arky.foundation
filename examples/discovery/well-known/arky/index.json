@@ -3,22 +3,22 @@
   "keys": "https://provider.example.com/.well-known/arky/jwks.json",
   "services": [
     {
-      "service_id": "urn:arky:provider:notary",
+      "service_id": "arky:provider/notary",
       "service_type": "notary",
       "descriptor": "https://provider.example.com/notary/descriptor.json"
     },
     {
-      "service_id": "urn:arky:provider:settler",
+      "service_id": "arky:provider/settler",
       "service_type": "settler",
       "descriptor": "https://provider.example.com/settler/descriptor.json"
     },
     {
-      "service_id": "urn:arky:provider:registry",
+      "service_id": "arky:provider/registry",
       "service_type": "registry",
       "descriptor": "https://provider.example.com/registry/descriptor.json"
     },
     {
-      "service_id": "urn:arky:provider:policy",
+      "service_id": "arky:provider/policy",
       "service_type": "policy",
       "descriptor": "https://provider.example.com/policy/descriptor.json"
     }

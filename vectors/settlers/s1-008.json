@@ -10,9 +10,9 @@
     }
   },
   "inputs": {
-    "verb": "urn:arky:verb:control@v1",
+    "verb": "arky:verb/control@v1",
     "params": {
-      "target": "urn:arky:device:hvac-unit-01",
+      "target": "arky:device/hvac-unit-01",
       "action": "set_temperature",
       "parameters": {
         "value": 22,
@@ -26,9 +26,9 @@
     "errors": [],
     "status": "SUCCESS",
     "execution_receipt": {
-      "verb": "urn:arky:verb:control@v1",
+      "verb": "arky:verb/control@v1",
       "status": "SUCCESS",
-      "target": "urn:arky:device:hvac-unit-01"
+      "target": "arky:device/hvac-unit-01"
     }
   }
 }

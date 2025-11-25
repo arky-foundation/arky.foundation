@@ -1,5 +1,5 @@
 {
-  "service_id": "urn:arky:example:notary",
+  "service_id": "arky:example/notary",
   "service_type": "notary",
   "version": "1.0.0",
   "spec_ids": [

@@ -20,14 +20,14 @@
       "measurement": {
         "name": "temperature",
         "value": 22.5,
-        "unit": "urn:arky:unit:temp.C",
+        "unit": "arky:unit/temp.C",
         "method": {
           "type": "sensor",
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJ0aW1lIjp7InRzIjoiMjAyNS0xMC0xNVQxMjowMDowMFoifSwiaWRlbnRpdHkiOnsiaWQiOiJkaWQ6a2V5Ono2TWtpVEJ6MXltdWVwQVE0SEVIWVNGMUg4cXVHNUdMVlZRUjNkakRYM21Eb29XcCJ9LCJtZWFzdXJlbWVudCI6eyJuYW1lIjoidGVtcGVyYXR1cmUiLCJ2YWx1ZSI6MjIuNSwidW5pdCI6InVybjphcmt5OnVuaXQ6dGVtcC5DIiwibWV0aG9kIjp7InR5cGUiOiJzZW5zb3IiLCJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEifX19.MOCK_SIGNATURE"
+      "cid": "zQmYuqg7YHoweWnuw86L5hY7xxhh9zhPW8z6VxGvJgn7RMC",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJpZGVudGl0eSI6eyJpZCI6ImRpZDprZXk6ejZNa2lUQnoxeW11ZXBBUTRIRUhZU0YxSDhxdUc1R0xWVlFSM2RqZFgzbURvb1dwIn0sIm1lYXN1cmVtZW50Ijp7Im1ldGhvZCI6eyJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEiLCJ0eXBlIjoic2Vuc29yIn0sIm5hbWUiOiJ0ZW1wZXJhdHVyZSIsInVuaXQiOiJ1cm46YXJreTp1bml0OnRlbXAuQyIsInZhbHVlIjoyMi41fSwidGltZSI6eyJ0cyI6IjIwMjUtMTAtMTVUMTI6MDA6MDBaIn19.R10uLqB9p8TNJCuZwwdmC51wn-I3PeKRKWt-F8XNqYSNbiuMZ7BG_N1hta0pdOLAcTnYvxwB6KVAu6uvLK_VAQ"
     }
   },
   "expect": {

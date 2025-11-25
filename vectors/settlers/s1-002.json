@@ -10,7 +10,7 @@
     }
   },
   "inputs": {
-    "verb": "urn:arky:verb:pay@v1",
+    "verb": "arky:verb/pay@v1",
     "params": {
       "from": "account-sender-01",
       "to": "account-receiver-01",

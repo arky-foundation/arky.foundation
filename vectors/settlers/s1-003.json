@@ -7,7 +7,7 @@
     "time": "2025-10-15T12:00:00Z"
   },
   "inputs": {
-    "verb": "urn:arky:verb:nonexistent@v1",
+    "verb": "arky:verb/nonexistent@v1",
     "params": {
       "some": "data"
     },

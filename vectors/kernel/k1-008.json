@@ -11,10 +11,10 @@
   },
   "inputs": {
     "commitment": {
-      "rule": "urn:arky:rule:unit.equals",
+      "rule": "arky:rule/unit.equals",
       "inputs": {
         "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-        "expected_unit": "urn:arky:unit:temp.C"
+        "expected_unit": "arky:unit/temp.C"
       }
     }
   },
@@ -24,8 +24,8 @@
     "parse_success": true,
     "result": "ALLOW",
     "evaluation": {
-      "tim_unit": "urn:arky:unit:temp.C",
-      "expected_unit": "urn:arky:unit:temp.C",
+      "tim_unit": "arky:unit/temp.C",
+      "expected_unit": "arky:unit/temp.C",
       "match": true
     }
   }

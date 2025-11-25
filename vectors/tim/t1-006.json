@@ -17,19 +17,21 @@
       "measurement": {
         "name": "temperature",
         "value": 22.5,
-        "unit": "urn:arky:unit:temp.C",
+        "unit": "arky:unit/temp.C",
         "method": {
           "type": "sensor",
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmInvalidTimestamp",
-      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+      "cid": "zQmaxGt7v7LnEcBz3QU6CRrd1jR2Sguu4RSmeetQnAPhmvN",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJpZGVudGl0eSI6eyJpZCI6ImRpZDprZXk6ejZNa2lUQnoxeW11ZXBBUTRIRUhZU0YxSDhxdUc1R0xWVlFSM2RqZFgzbURvb1dwIn0sIm1lYXN1cmVtZW50Ijp7Im1ldGhvZCI6eyJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEiLCJ0eXBlIjoic2Vuc29yIn0sIm5hbWUiOiJ0ZW1wZXJhdHVyZSIsInVuaXQiOiJ1cm46YXJreTp1bml0OnRlbXAuQyIsInZhbHVlIjoyMi41fSwidGltZSI6eyJ0cyI6IjIwMjUvMTAvMTUgMTI6MDA6MDAifX0.EAjQCL3Kc6bV9UTha1R1H8B_k8J-IT5gHu2Xf_DOFRRmzyurHb8ffNPB-gTa2kNL189v2QFUw123-pH0LDAqBw"
     }
   },
   "expect": {
     "valid": false,
-    "errors": ["tim.timestamp_invalid"],
+    "errors": [
+      "tim.timestamp_invalid"
+    ],
     "schema_valid": false,
     "validation_details": "time.ts must be RFC3339 UTC format"
   }

@@ -1,5 +1,5 @@
 {
-  "service_id": "urn:arky:example:settler",
+  "service_id": "arky:example/settler",
   "service_type": "settler",
   "version": "1.0.0",
   "spec_ids": [

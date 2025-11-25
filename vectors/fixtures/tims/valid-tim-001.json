@@ -12,17 +12,17 @@
     "measurement": {
       "name": "temperature",
       "value": 22.5,
-      "unit": "urn:arky:unit:temp.C",
+      "unit": "arky:unit/temp.C",
       "method": {
         "type": "sensor",
         "source": "device:temp-sensor-01",
         "version": "v1"
       },
-      "device": "urn:arky:device:temp-sensor-01",
+      "device": "arky:device/temp-sensor-01",
       "error": "0.1"
     },
-    "cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJ0aW1lIjp7InRzIjoiMjAyNS0xMC0xNVQxMjowMDowMFoifSwiaWRlbnRpdHkiOnsiaWQiOiJkaWQ6a2V5Ono2TWtpVEJ6MXltdWVwQVE0SEVIWVNGMUg4cXVHNUdMVlZRUjNkakRYM21Eb29XcCJ9LCJtZWFzdXJlbWVudCI6eyJuYW1lIjoidGVtcGVyYXR1cmUiLCJ2YWx1ZSI6MjIuNSwidW5pdCI6InVybjphcmt5OnVuaXQ6dGVtcC5DIiwibWV0aG9kIjp7InR5cGUiOiJzZW5zb3IiLCJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEiLCJ2ZXJzaW9uIjoidjEifSwiZGV2aWNlIjoidXJuOmFya3k6ZGV2aWNlOnRlbXAtc2Vuc29yLTAxIiwiZXJyb3IiOiIwLjEifX0.MOCK_SIGNATURE_FOR_TESTING"
+    "cid": "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
+    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJpZGVudGl0eSI6eyJpZCI6ImRpZDprZXk6ejZNa2lUQnoxeW11ZXBBUTRIRUhZU0YxSDhxdUc1R0xWVlFSM2RqZFgzbURvb1dwIn0sIm1lYXN1cmVtZW50Ijp7ImRldmljZSI6ImFya3k6ZGV2aWNlL3RlbXAtc2Vuc29yLTAxIiwiZXJyb3IiOiIwLjEiLCJtZXRob2QiOnsic291cmNlIjoiZGV2aWNlOnRlbXAtc2Vuc29yLTAxIiwidHlwZSI6InNlbnNvciIsInZlcnNpb24iOiJ2MSJ9LCJuYW1lIjoidGVtcGVyYXR1cmUiLCJ1bml0IjoiYXJreTp1bml0L3RlbXAuQyIsInZhbHVlIjoyMi41fSwidGltZSI6eyJ0cyI6IjIwMjUtMTAtMTVUMTI6MDA6MDBaIn19.TQIQ2FoIgkEg2uBzJuwMq7rXrGfk9w2v-G7uM8c2ABD9tf16FQiJT4pz3wpF3LRbvFYEE88DsJ8E20QTfcu3BA"
   },
   "canonical_bytes_hex": "7b226964656e74697479223a7b226964223a226469643a6b65793a7a364d6b695442",
   "signing_key_ref": "fixtures/keys/ed25519-test-01.json",

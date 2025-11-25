@@ -12,7 +12,7 @@
     }
   },
   "inputs": {
-    "verb": "urn:arky:verb:refund@v1",
+    "verb": "arky:verb/refund@v1",
     "params": {
       "original_payment_ref": "pay-2025-10-15-001",
       "to": "account-sender-01",
@@ -30,7 +30,7 @@
     "errors": [],
     "status": "SUCCESS",
     "execution_receipt": {
-      "verb": "urn:arky:verb:refund@v1",
+      "verb": "arky:verb/refund@v1",
       "status": "SUCCESS",
       "rail": "fiat:usd:ach",
       "rollback_window_hours": 48

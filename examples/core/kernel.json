@@ -1,9 +1,28 @@
 {
   "scope": "demo",
   "actor": "did:web:example.org",
-  "intent": { "do": "arky:verb/pay@v1" },
-  "measure": [ { "name": "cpu", "assert": "cpu > 0.8" } ],
-  "consequence": [ { "if": "PASS", "then": [ { "name": "pay", "args": { "amount": 100 } } ] } ],
-  "cid": "zQmExampleKernelCid123456789",
-  "sig": "eyJ.example.kernel.signature"
+  "intent": {
+    "do": "arky:verb/pay@v1"
+  },
+  "measure": [
+    {
+      "name": "cpu",
+      "assert": "cpu > 0.8"
+    }
+  ],
+  "consequence": [
+    {
+      "if": "PASS",
+      "then": [
+        {
+          "name": "pay",
+          "args": {
+            "amount": 100
+          }
+        }
+      ]
+    }
+  ],
+  "cid": "zQmWdqVHwn3XG8qjgf5s69dPY48PbfAzXfGUfjauMT6pEG5",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJhY3RvciI6ImRpZDp3ZWI6ZXhhbXBsZS5vcmciLCJjb25zZXF1ZW5jZSI6W3siaWYiOiJQQVNTIiwidGhlbiI6W3siYXJncyI6eyJhbW91bnQiOjEwMH0sIm5hbWUiOiJwYXkifV19XSwiaW50ZW50Ijp7ImRvIjoiYXJreTp2ZXJiL3BheUB2MSJ9LCJtZWFzdXJlIjpbeyJhc3NlcnQiOiJjcHUgPiAwLjgiLCJuYW1lIjoiY3B1In1dLCJzY29wZSI6ImRlbW8ifQ.aIAPWPxeGZotzFDyiAs00muatlCY-v0O4hKw-6Jb-GiuO8ffu5wd29kdiQg-7k-_iiljDz3ygzbfsLBayTcIBQ"
 }

@@ -20,7 +20,7 @@
       "measurement": {
         "name": "temperature",
         "value": 22.5,
-        "unit": "urn:arky:unit:temp.C",
+        "unit": "arky:unit/temp.C",
         "method": {
           "type": "sensor",
           "source": "device:temp-sensor-01"

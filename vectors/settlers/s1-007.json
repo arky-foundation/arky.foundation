@@ -10,7 +10,7 @@
     }
   },
   "inputs": {
-    "verb": "urn:arky:verb:signal@v1",
+    "verb": "arky:verb/signal@v1",
     "params": {
       "signal_type": "status_update",
       "target": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
@@ -26,7 +26,7 @@
     "errors": [],
     "status": "SUCCESS",
     "execution_receipt": {
-      "verb": "urn:arky:verb:signal@v1",
+      "verb": "arky:verb/signal@v1",
       "status": "SUCCESS"
     }
   }

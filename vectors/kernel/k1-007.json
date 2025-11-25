@@ -11,7 +11,7 @@
   },
   "inputs": {
     "commitment": {
-      "rule": "urn:arky:rule:identity.match",
+      "rule": "arky:rule/identity.match",
       "inputs": {
         "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
         "expected_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"

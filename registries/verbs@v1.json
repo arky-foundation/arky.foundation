@@ -8,8 +8,15 @@
       "semantics": "Initiate a payment on a supported rail.",
       "input_schema": "https://arky.foundation/schemas/verbs/pay@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "payment", "rollback": "P2D" },
-      "rails": ["caip2:eip155:*", "sepa:eu", "ach:us"],
+      "safety": {
+        "class": "payment",
+        "rollback": "P2D"
+      },
+      "rails": [
+        "caip2:eip155:*",
+        "sepa:eu",
+        "ach:us"
+      ],
       "vectors": []
     },
     "arky:verb/refund@v1": {
@@ -17,8 +24,15 @@
       "semantics": "Return funds for a prior payment.",
       "input_schema": "https://arky.foundation/schemas/verbs/refund@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "payment", "rollback": "P7D" },
-      "rails": ["caip2:eip155:*", "sepa:eu", "ach:us"],
+      "safety": {
+        "class": "payment",
+        "rollback": "P7D"
+      },
+      "rails": [
+        "caip2:eip155:*",
+        "sepa:eu",
+        "ach:us"
+      ],
       "vectors": []
     },
     "arky:verb/slash@v1": {
@@ -26,8 +40,13 @@
       "semantics": "Slash a stake or bond per policy.",
       "input_schema": "https://arky.foundation/schemas/verbs/slash@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "custody", "rollback": "P1D" },
-      "rails": ["controller:*"],
+      "safety": {
+        "class": "custody",
+        "rollback": "P1D"
+      },
+      "rails": [
+        "controller:*"
+      ],
       "vectors": []
     },
     "arky:verb/revoke@v1": {
@@ -35,8 +54,13 @@
       "semantics": "Revoke an authorization or credential.",
       "input_schema": "https://arky.foundation/schemas/verbs/revoke@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "control", "rollback": "PT0S" },
-      "rails": ["controller:*"],
+      "safety": {
+        "class": "control",
+        "rollback": "PT0S"
+      },
+      "rails": [
+        "controller:*"
+      ],
       "vectors": []
     },
     "arky:verb/upgrade@v1": {
@@ -44,8 +68,13 @@
       "semantics": "Upgrade a contract, account, or system component.",
       "input_schema": "https://arky.foundation/schemas/verbs/upgrade@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "control", "rollback": "PT0S" },
-      "rails": ["controller:*"],
+      "safety": {
+        "class": "control",
+        "rollback": "PT0S"
+      },
+      "rails": [
+        "controller:*"
+      ],
       "vectors": []
     },
     "arky:verb/signal@v1": {
@@ -53,8 +82,13 @@
       "semantics": "Emit a governance or telemetry signal.",
       "input_schema": "https://arky.foundation/schemas/verbs/signal@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "control", "rollback": "PT0S" },
-      "rails": ["controller:*"],
+      "safety": {
+        "class": "control",
+        "rollback": "PT0S"
+      },
+      "rails": [
+        "controller:*"
+      ],
       "vectors": []
     },
     "arky:verb/control@v1": {
@@ -62,11 +96,16 @@
       "semantics": "Execute a control action per policy.",
       "input_schema": "https://arky.foundation/schemas/verbs/control@v1.json",
       "idempotency": "key:<commitment+args>",
-      "safety": { "class": "control", "rollback": "PT0S" },
-      "rails": ["controller:*"],
+      "safety": {
+        "class": "control",
+        "rollback": "PT0S"
+      },
+      "rails": [
+        "controller:*"
+      ],
       "vectors": []
     }
   },
   "aliases": {},
-  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJyZWdpc3RyeSJ9.placeholder_signature_value"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJhbGlhc2VzIjp7fSwiZW50cmllcyI6eyJhcmt5OnZlcmIvY29udHJvbEB2MSI6eyJpZGVtcG90ZW5jeSI6ImtleTo8Y29tbWl0bWVudCthcmdzPiIsImlucHV0X3NjaGVtYSI6Imh0dHBzOi8vYXJreS5mb3VuZGF0aW9uL3NjaGVtYXMvdmVyYnMvY29udHJvbEB2MS5qc29uIiwicmFpbHMiOlsiY29udHJvbGxlcjoqIl0sInNhZmV0eSI6eyJjbGFzcyI6ImNvbnRyb2wiLCJyb2xsYmFjayI6IlBUMFMifSwic2VtYW50aWNzIjoiRXhlY3V0ZSBhIGNvbnRyb2wgYWN0aW9uIHBlciBwb2xpY3kuIiwidXJuIjoiYXJreTp2ZXJiL2NvbnRyb2xAdjEiLCJ2ZWN0b3JzIjpbXX0sImFya3k6dmVyYi9wYXlAdjEiOnsiaWRlbXBvdGVuY3kiOiJrZXk6PGNvbW1pdG1lbnQrYXJncz4iLCJpbnB1dF9zY2hlbWEiOiJodHRwczovL2Fya3kuZm91bmRhdGlvbi9zY2hlbWFzL3ZlcmJzL3BheUB2MS5qc29uIiwicmFpbHMiOlsiY2FpcDI6ZWlwMTU1OioiLCJzZXBhOmV1IiwiYWNoOnVzIl0sInNhZmV0eSI6eyJjbGFzcyI6InBheW1lbnQiLCJyb2xsYmFjayI6IlAyRCJ9LCJzZW1hbnRpY3MiOiJJbml0aWF0ZSBhIHBheW1lbnQgb24gYSBzdXBwb3J0ZWQgcmFpbC4iLCJ1cm4iOiJhcmt5OnZlcmIvcGF5QHYxIiwidmVjdG9ycyI6W119LCJhcmt5OnZlcmIvcmVmdW5kQHYxIjp7ImlkZW1wb3RlbmN5Ijoia2V5Ojxjb21taXRtZW50K2FyZ3M-IiwiaW5wdXRfc2NoZW1hIjoiaHR0cHM6Ly9hcmt5LmZvdW5kYXRpb24vc2NoZW1hcy92ZXJicy9yZWZ1bmRAdjEuanNvbiIsInJhaWxzIjpbImNhaXAyOmVpcDE1NToqIiwic2VwYTpldSIsImFjaDp1cyJdLCJzYWZldHkiOnsiY2xhc3MiOiJwYXltZW50Iiwicm9sbGJhY2siOiJQN0QifSwic2VtYW50aWNzIjoiUmV0dXJuIGZ1bmRzIGZvciBhIHByaW9yIHBheW1lbnQuIiwidXJuIjoiYXJreTp2ZXJiL3JlZnVuZEB2MSIsInZlY3RvcnMiOltdfSwiYXJreTp2ZXJiL3Jldm9rZUB2MSI6eyJpZGVtcG90ZW5jeSI6ImtleTo8Y29tbWl0bWVudCthcmdzPiIsImlucHV0X3NjaGVtYSI6Imh0dHBzOi8vYXJreS5mb3VuZGF0aW9uL3NjaGVtYXMvdmVyYnMvcmV2b2tlQHYxLmpzb24iLCJyYWlscyI6WyJjb250cm9sbGVyOioiXSwic2FmZXR5Ijp7ImNsYXNzIjoiY29udHJvbCIsInJvbGxiYWNrIjoiUFQwUyJ9LCJzZW1hbnRpY3MiOiJSZXZva2UgYW4gYXV0aG9yaXphdGlvbiBvciBjcmVkZW50aWFsLiIsInVybiI6ImFya3k6dmVyYi9yZXZva2VAdjEiLCJ2ZWN0b3JzIjpbXX0sImFya3k6dmVyYi9zaWduYWxAdjEiOnsiaWRlbXBvdGVuY3kiOiJrZXk6PGNvbW1pdG1lbnQrYXJncz4iLCJpbnB1dF9zY2hlbWEiOiJodHRwczovL2Fya3kuZm91bmRhdGlvbi9zY2hlbWFzL3ZlcmJzL3NpZ25hbEB2MS5qc29uIiwicmFpbHMiOlsiY29udHJvbGxlcjoqIl0sInNhZmV0eSI6eyJjbGFzcyI6ImNvbnRyb2wiLCJyb2xsYmFjayI6IlBUMFMifSwic2VtYW50aWNzIjoiRW1pdCBhIGdvdmVybmFuY2Ugb3IgdGVsZW1ldHJ5IHNpZ25hbC4iLCJ1cm4iOiJhcmt5OnZlcmIvc2lnbmFsQHYxIiwidmVjdG9ycyI6W119LCJhcmt5OnZlcmIvc2xhc2hAdjEiOnsiaWRlbXBvdGVuY3kiOiJrZXk6PGNvbW1pdG1lbnQrYXJncz4iLCJpbnB1dF9zY2hlbWEiOiJodHRwczovL2Fya3kuZm91bmRhdGlvbi9zY2hlbWFzL3ZlcmJzL3NsYXNoQHYxLmpzb24iLCJyYWlscyI6WyJjb250cm9sbGVyOioiXSwic2FmZXR5Ijp7ImNsYXNzIjoiY3VzdG9keSIsInJvbGxiYWNrIjoiUDFEIn0sInNlbWFudGljcyI6IlNsYXNoIGEgc3Rha2Ugb3IgYm9uZCBwZXIgcG9saWN5LiIsInVybiI6ImFya3k6dmVyYi9zbGFzaEB2MSIsInZlY3RvcnMiOltdfSwiYXJreTp2ZXJiL3VwZ3JhZGVAdjEiOnsiaWRlbXBvdGVuY3kiOiJrZXk6PGNvbW1pdG1lbnQrYXJncz4iLCJpbnB1dF9zY2hlbWEiOiJodHRwczovL2Fya3kuZm91bmRhdGlvbi9zY2hlbWFzL3ZlcmJzL3VwZ3JhZGVAdjEuanNvbiIsInJhaWxzIjpbImNvbnRyb2xsZXI6KiJdLCJzYWZldHkiOnsiY2xhc3MiOiJjb250cm9sIiwicm9sbGJhY2siOiJQVDBTIn0sInNlbWFudGljcyI6IlVwZ3JhZGUgYSBjb250cmFjdCwgYWNjb3VudCwgb3Igc3lzdGVtIGNvbXBvbmVudC4iLCJ1cm4iOiJhcmt5OnZlcmIvdXBncmFkZUB2MSIsInZlY3RvcnMiOltdfX0sIm5hbWUiOiJTZXR0bGVyIFZlcmJzICh2MSkiLCJyZWdpc3RyeV9pZCI6ImFya3k6cmVnaXN0cnk6dmVyYnNAdjEiLCJ0cyI6IjIwMjUtMTAtMTVUMDA6MDA6MDBaIn0.ttJ2-S2uIMSgZ8n_iApnKwG3ruh3P_YlSQCPINb3ltcT4psZXQWKf-qY4e9H77HHcCJIxbkbhSouh-Unm65dBQ"
 }

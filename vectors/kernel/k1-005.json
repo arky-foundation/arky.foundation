@@ -11,7 +11,7 @@
   },
   "inputs": {
     "commitment": {
-      "rule": "urn:arky:rule:range.within",
+      "rule": "arky:rule/range.within",
       "inputs": {
         "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
         "field": "measurement.value",

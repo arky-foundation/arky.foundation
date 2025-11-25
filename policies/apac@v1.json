@@ -2,10 +2,14 @@
   "pack_id": "arky:policy/apac@v1",
   "version": "1.0.0",
   "rules": {
-    "privacy": { "no_pii": true },
-    "attestation": { "required": false }
+    "privacy": {
+      "no_pii": true
+    },
+    "attestation": {
+      "required": false
+    }
   },
   "overlays": {},
   "ts": "2025-10-15T00:00:00Z",
-  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJwb2xpY3kifQ.placeholder_signature_value"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJvdmVybGF5cyI6e30sInBhY2tfaWQiOiJhcmt5OnBvbGljeS9hcGFjQHYxIiwicnVsZXMiOnsiYXR0ZXN0YXRpb24iOnsicmVxdWlyZWQiOmZhbHNlfSwicHJpdmFjeSI6eyJub19waWkiOnRydWV9fSwidHMiOiIyMDI1LTEwLTE1VDAwOjAwOjAwWiIsInZlcnNpb24iOiIxLjAuMCJ9.Ym07q6wRfUvwq06d4Vf38SbxHwPNzBGFVZvptmGSkza3_Az8Q7koMhay2g2d11-_sXmlkCcRveEWrGkEphuUCw"
 }

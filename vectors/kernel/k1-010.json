@@ -11,7 +11,7 @@
   },
   "inputs": {
     "commitment": {
-      "rule": "urn:arky:rule:freshness.within",
+      "rule": "arky:rule/freshness.within",
       "inputs": {
         "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
         "max_age_seconds": 600

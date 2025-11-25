@@ -11,7 +11,7 @@
     }
   },
   "inputs": {
-    "verb": "urn:arky:verb:slash@v1",
+    "verb": "arky:verb/slash@v1",
     "params": {
       "target": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP",
       "amount": {
@@ -28,7 +28,7 @@
     "errors": [],
     "status": "SUCCESS",
     "execution_receipt": {
-      "verb": "urn:arky:verb:slash@v1",
+      "verb": "arky:verb/slash@v1",
       "status": "SUCCESS",
       "evidence_linked": true
     }

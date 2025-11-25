@@ -7,7 +7,7 @@
     "time": "2025-10-15T12:00:00Z"
   },
   "inputs": {
-    "tim_json_string": "{\"time\":{\"ts\":\"2025-10-15T12:00:00Z\"},\"identity\":{\"id\":\"did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp\"},\"measurement\":{\"name\":\"temperature\",\"value\":NaN,\"unit\":\"urn:arky:unit:temp.C\",\"method\":{\"type\":\"sensor\",\"source\":\"device:temp-sensor-01\"}},\"cid\":\"zQmInvalid\",\"sig\":\"eyJhbGciOiJFZERTQSJ9.payload.sig\"}",
+    "tim_json_string": "{\"time\":{\"ts\":\"2025-10-15T12:00:00Z\"},\"identity\":{\"id\":\"did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp\"},\"measurement\":{\"name\":\"temperature\",\"value\":NaN,\"unit\":\"arky:unit/temp.C\",\"method\":{\"type\":\"sensor\",\"source\":\"device:temp-sensor-01\"}},\"cid\":\"zQmInvalid\",\"sig\":\"eyJhbGciOiJFZERTQSJ9.payload.sig\"}",
     "parse_mode": "strict"
   },
   "expect": {

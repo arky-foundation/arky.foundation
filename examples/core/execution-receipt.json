@@ -2,9 +2,11 @@
   "commitment_id": "commit-abc",
   "verb": "arky:verb/pay@v1",
   "rail": "ach:us",
-  "inputs_cids": ["zQmExampeTmCdAbcdefghijk"],
+  "inputs_cids": [
+    "zQmExampeTmCdAbcdefghijk"
+  ],
   "status": "success",
   "ts_exec": "2025-10-15T12:00:01Z",
-  "cid": "zQmExampeXrCdAbcdefghijk",
-  "sig": "eyJhbGciOiJFZERTQSJ9.eyJzdWIiOiJ4ciJ9.placeholder_signature_value"
+  "cid": "zQmaWiMaysGokvySKmv73pxiWHuGUvMM7AGCHWbNgjnM9yU",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJjb21taXRtZW50X2lkIjoiY29tbWl0LWFiYyIsImlucHV0c19jaWRzIjpbInpRbUV4YW1wZVRtQ2RBYmNkZWZnaGlqayJdLCJyYWlsIjoiYWNoOnVzIiwic3RhdHVzIjoic3VjY2VzcyIsInRzX2V4ZWMiOiIyMDI1LTEwLTE1VDEyOjAwOjAxWiIsInZlcmIiOiJhcmt5OnZlcmIvcGF5QHYxIn0.dR7UhPrJOtp5I7pqh75-sdaWJzzYjKArhPzLz9C1pIxUfk7Laqe7NGTARu0KhGric2ezLYQVvQmeWX6tnCWDCA"
 }

@@ -12,7 +12,7 @@
     }
   },
   "inputs": {
-    "verb": "urn:arky:verb:pay@v1",
+    "verb": "arky:verb/pay@v1",
     "params": {
       "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f0Ab1E",
       "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
@@ -29,7 +29,7 @@
     "errors": [],
     "status": "SUCCESS",
     "execution_receipt": {
-      "verb": "urn:arky:verb:pay@v1",
+      "verb": "arky:verb/pay@v1",
       "status": "SUCCESS",
       "rail": "eip155:1",
       "has_anchor": true

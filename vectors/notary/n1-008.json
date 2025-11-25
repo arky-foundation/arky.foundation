@@ -12,7 +12,7 @@
   },
   "inputs": {
     "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-    "policy_pack_id": "urn:arky:policy:default@v1",
+    "policy_pack_id": "arky:policy/default@v1",
     "policy_requirements": {
       "min_witnesses": 1,
       "max_skew_seconds": 300,
@@ -24,7 +24,7 @@
     "errors": [],
     "intake_accepted": true,
     "policy_check": {
-      "policy_pack_id": "urn:arky:policy:default@v1",
+      "policy_pack_id": "arky:policy/default@v1",
       "all_requirements_met": true
     }
   }
