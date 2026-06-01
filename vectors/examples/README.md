@@ -16,7 +16,7 @@ Simplified pointers and tips for using test vectors during development.
 ## Example Flow (pseudo)
 ```typescript
 // Load a vector
-const vector = load('vectors/discovery/d1-revocations-001.json');
+const vector = load('vectors/discovery/fixtures/revocations-001.json');
 
 // Run implementation
 const result = await impl.process(vector.input);
