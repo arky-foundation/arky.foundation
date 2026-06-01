@@ -166,7 +166,7 @@ describe('New Feature', () => {
 - [ARKY-SECURITY-BPR-v1](../specs/security/ARKY-SECURITY-BPR-v1.md)
 
 ### Related RFCs
-- [RFC-0001](../0001-compatibility-matrix.md) - Compatibility Matrix
+- [RFC-0001](./0001-compatibility-matrix.md) - Compatibility Matrix
 
 ### External References
 - [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) - Key words for use in RFCs
