@@ -37,10 +37,10 @@ Copyable, minimal examples referenced by specs. No live services.
 ```
 
 Terminology: Discovery `specs/infrastructure/ARKY-DISCOVERY-v1.md`, Media Types
-`specs/infrastructure/ARKY-MEDIA-TYPES-v1.md`, schema `schemas/service-descriptor-v1.json`.
+`specs/infrastructure/ARKY-MEDIA-TYPES-v1.md`, schema `schemas/core/service-descriptor-v1.json`.
 
 ## Verify (quick)
 
-- Canonicalize body (no `cid`/`sig`), base64url JWS header `alg:EdDSA,kid` + body, verify with JWKS `examples/keys/jwks.json`.
+- Canonicalize body (no `cid`/`sig`); verify the detached-payload JWS (`b64:false`, header `alg:EdDSA,kid`) over those canonical bytes with JWKS `examples/keys/jwks.json`.
 - Recompute `cid` as base58btc(multihash(sha256(canonical_body))).
 - Use your SDK or CLI to perform verification.
