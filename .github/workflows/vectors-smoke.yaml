@@ -1,33 +1,44 @@
-name: Vectors Smoke
+name: Vectors Conformance
 
 on:
   push:
   pull_request:
 
 jobs:
-  vectors-smoke:
+  vectors-conformance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check vector manifests exist and are valid JSON
         shell: bash
         run: |
           set -euo pipefail
-          for f in vectors/RELEASES.json vectors/manifests/tim.json vectors/manifests/discovery.json vectors/manifests/attestations.json; do
+          for f in vectors/RELEASES.json vectors/manifests/tim.json vectors/manifests/discovery.json vectors/manifests/attestations.json vectors/manifests/kernel.json; do
             if [[ ! -f "$f" ]]; then
               echo "[FAIL] Missing $f" >&2
               exit 1
             fi
           done
           python3 - <<'PY'
-          import json, sys
+          import json
           for p in [
             'vectors/RELEASES.json',
             'vectors/manifests/tim.json',
             'vectors/manifests/discovery.json',
             'vectors/manifests/attestations.json',
+            'vectors/manifests/kernel.json',
           ]:
             with open(p, 'rb') as f:
               json.load(f)
           print('Vector manifests parsed successfully.')
           PY
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install tooling deps
+        run: bun install --frozen-lockfile
+
+      - name: Verify CIDs and signatures (conformance)
+        run: bun run scripts/verify-artifacts.ts

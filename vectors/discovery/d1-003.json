@@ -14,14 +14,18 @@
           "href": "https://notary.example/v1"
         }
       ],
-      "cid": "zQmIndexCid12345678901234567890123456",
-      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+      "cid": "zQmNvZGCZg2LvB5FETdqzx1h6hBXiGAhdxGbyKxZyPxjxrN",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..X1NdRIArACZtyePwNnkThmz9dnF3oPbIKtifjEjSXsrwlCmRoXy5OoAyHTm18NO43e8V24A-Bigr0n2FktTxAQ"
     }
   },
   "expect": {
     "valid": false,
-    "errors": ["discovery.index_invalid"],
+    "errors": [
+      "discovery.index_invalid"
+    ],
     "schema_valid": false,
-    "missing_fields": ["jwks"]
+    "missing_fields": [
+      "jwks"
+    ]
   }
 }

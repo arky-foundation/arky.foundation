@@ -92,7 +92,7 @@ All Arky components **MUST** implement these cryptographic requirements. Individ
 
 * JWS protected header **MUST** set `"alg":"EdDSA"`
 * `"kid"` **SHOULD** reference a discoverable key (see [ARKY-KEYS-v1](ARKY-KEYS-v1.md))
-* Non-default `"b64"` or unrecognized `"crit"` headers **MUST** be rejected
+* Arky artifact signatures use a **detached payload** (RFC 7797): the protected header **MUST** set `"b64":false` and list `"b64"` in `"crit"` (see [ARKY-TIM-Canonicalization-v1](../core/ARKY-TIM-Canonicalization-v1.md) §5). Verifiers **MUST** support this `b64:false`/`crit:["b64"]` combination and **MUST** reject any other non-default `"b64"` value or unrecognized `"crit"` member.
 * Unknown or unsupported `alg` values **MUST** be rejected
 
 ## 4. Key Classes & Lifetimes

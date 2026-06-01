@@ -73,6 +73,17 @@ Other concerns (policies, domains, settlement) are out of scope.
 
 ---
 
+## 2. Normative References
+
+- **RFC 2119 / RFC 8174** — Requirement keywords (**MUST**, **SHOULD**, **MAY**).
+- **RFC 8785** — JSON Canonicalization Scheme (JCS).
+- **RFC 7515** — JSON Web Signature (JWS).
+- **RFC 7797** — JWS Unencoded Payload Option (`b64:false`; detached payload, see §6).
+- **RFC 8037** — CFRG Elliptic Curve algorithms for JOSE (Ed25519/EdDSA).
+- **Multiformats** — multibase and multihash, as used by `cid` (see §5).
+
+---
+
 ## 3. Terminology
 
 - **TIM receipt (TIM):** A signed, content-addressed JSON object asserting a measurement by an identity at a time.
@@ -109,7 +120,7 @@ A TIM **MUST** be a JSON object with the following fields.
   - `name`: _required_ — label of the measured quantity.
   - `value`: _required_ — number | string | object (domain-defined).
   - `unit`: _conditional-required_ — **required if** `value` is numeric.
-  - `method`: _required_ — structured object with `type` (sensor|computation|manual|oracle|attestation), `source` (identifier), optional `params`, and recommended `version`. Examples: `"type":"sensor","source":"device:temp-01","version":"v2"` or `"type":"computation","source":"code@abc123","params":"alg":"sha256"`.
+  - `method`: _required_ — structured **object** with `type` (sensor|computation|manual|oracle|attestation), `source` (identifier), optional `params`, and recommended `version`. A bare string **MUST NOT** be used (the v1 schema rejects it); use `{"type":...,"source":...}`. Examples: `{"type":"sensor","source":"device:temp-01","version":"v2"}` or `{"type":"computation","source":"code@abc123","params":{"alg":"sha256"}}`.
   - `device`: _recommended_ — source instrument or topic identifier.
   - `error`: _recommended_ — uncertainty (e.g., `±0.05`, confidence interval).
   - `code`: _recommended_ — domain code (e.g., LOINC, DICOM, GS1, ROS2).
@@ -137,7 +148,16 @@ A TIM **MUST** be a JSON object with the following fields.
 **Canonicalization:** v1 **MUST** use **RFC 8785 JCS**. Canonical body = full
 TIM object **without** `cid` and `sig`.
 
-**cid:** `cid = base58btc(multihash(sha2-256, canonical_bytes))` (multihash code `0x12`, length `32`).
+**cid:** `cid = multibase('z', base58btc(multihash(sha2-256, canonical_bytes)))`
+(multihash code `0x12`, length `0x20` = 32 bytes). The value is the multibase
+prefix `z` followed by the base58btc encoding of the 34-byte multihash
+(`0x12 0x20` ‖ 32-byte digest).
+
+> **Not an IPFS CID (Informative).** Although a v1 `cid` typically renders as
+> `zQm...`, it is **not** an IPFS CIDv0/CIDv1. The leading `z` is the multibase
+> code for base58btc; the `Qm` that follows is an artifact of encoding the
+> sha2-256 multihash, not an IPFS dag-pb prefix. Implementations **MUST NOT**
+> resolve a `cid` against IPFS. Example: `zQmYuqg7YHoweWnuw86L5hY7xxhh9zhPW8z6VxGvJgn7RMC`.
 
 **Forbidden numeric values:** `NaN`, `Infinity`, `-Infinity` **MUST NOT** appear; encode as strings if necessary.
 
@@ -147,7 +167,20 @@ TIM object **without** `cid` and `sig`.
 
 **sig:** JWS (compact) with **Ed25519/EdDSA** over the canonical bytes. Public keys **MUST** be discoverable from `identity.id` per §6.1. JWS `kid` **SHOULD** reference the signing key.
 
-**witnesses:** Each entry in `time.witnesses[]` **MUST** be a JWS over the same canonical bytes.
+**Detached payload (normative):** v1 signatures **MUST** use a **detached
+payload** per **RFC 7797** (`b64:false`, with `b64` listed in the protected
+header `crit` array). The JWS payload is the JCS canonical bytes of the body
+(§5) and **MUST NOT** be embedded in the serialization. The compact form is
+therefore `<protected_header>..<signature>` — the middle (payload) segment is
+empty. This avoids carrying the body twice (once as JSON, once base64url-encoded
+inside `sig`). Verifiers reconstruct the signing input by re-canonicalizing the
+artifact's own body and supplying it as the detached payload.
+
+Protected header (minimum): `{"alg":"EdDSA","b64":false,"crit":["b64"]}`;
+`kid` **SHOULD** be present.
+
+**witnesses:** Each entry in `time.witnesses[]` **MUST** be a detached-payload
+JWS over the same canonical bytes, under the same rules as `sig`.
 
 ### 6.1 Key Discovery
 

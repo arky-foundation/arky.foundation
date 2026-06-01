@@ -26,13 +26,15 @@
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmWRONG1111111111111111111111111111111111111",
-      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.payload.signature"
+      "cid": "zQmSR6RtDE4fDaQpsegfrYMoE8hEXTPPwgNzrScgT8UWnDM",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..mb81tA6JhhjzF11BeTk9Uhu9ODJW0MnU_mzWvY-BPVnZ0KknQ1vhcb1Ux9TpSoAmGuifq6vrBP3KoznGPCl3Aw"
     }
   },
   "expect": {
     "valid": false,
-    "errors": ["tim.cid_mismatch"],
+    "errors": [
+      "tim.cid_mismatch"
+    ],
     "schema_valid": true,
     "cid_valid": false,
     "expected_cid_prefix": "zQmYwAPJ"

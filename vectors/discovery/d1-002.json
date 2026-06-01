@@ -19,8 +19,8 @@
           "href": "https://settler.example/v1"
         }
       ],
-      "cid": "zQmIndexCid12345678901234567890123456",
-      "sig": "eyJhbGciOiJFZERTQSJ9.payload.signature"
+      "cid": "zQmQJAzzUVuwRjeDEpbVu5g4GAh2ZV1vPf3SEWkHRkF9sjJ",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..7Sn2U_Jsg3yBfYj0okEPQ1EKd0W2qWu9V7pF7wgKqb_IBL_0RSOjTR6lr_qJwK7b4LKkCHHFeGoc6eZdHJXpBA"
     }
   },
   "expect": {

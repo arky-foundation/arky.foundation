@@ -47,8 +47,10 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install validation deps
-        run: bun add ajv-cli@5 ajv-formats
+      - name: Install tooling deps
+        run: |
+          bun install --frozen-lockfile
+          bun add --no-save ajv-cli@5
 
       - name: Validate service descriptors
         run: |
@@ -111,6 +113,9 @@ jobs:
             -r schemas/core/common-defs-v1.json \
             -d examples/core/kernel.json
 
+      - name: Validate Kernel vectors against schema
+        run: bun run scripts/validate-kernel-vectors.ts
+
       - name: Validate Execution Receipt examples
         run: |
           bun ajv validate --spec=draft2020 -c ajv-formats \
@@ -130,7 +135,7 @@ jobs:
           bun ajv validate --spec=draft2020 -c ajv-formats \
             -s schemas/testing/vector-suite-manifest-v1.json \
             -r schemas/core/common-defs-v1.json \
-            -d "vectors/manifests/*.json" || echo "Manifest validation skipped (schema may need update)"
+            -d "vectors/manifests/*.json"
 
       - name: Validate verb schemas
         run: |

@@ -12,36 +12,72 @@
       "name": "execute",
       "path": "/settler/execute",
       "method": "POST",
-      "media_types": ["application/arky.kernel+json"]
+      "media_types": [
+        "application/arky.kernel+json"
+      ]
     },
     {
       "name": "status",
       "path": "/settler/status/{commitment_id}",
       "method": "GET",
-      "media_types": ["application/arky.xr+json"]
+      "media_types": [
+        "application/arky.xr+json"
+      ]
     },
     {
       "name": "xr",
       "path": "/settler/xr/{cid}",
       "method": "GET",
-      "media_types": ["application/arky.xr+json"]
+      "media_types": [
+        "application/arky.xr+json"
+      ]
     }
   ],
   "capabilities": {
-    "rails_supported": ["caip2:eip155:*", "sepa:eu", "ach:us", "controller:*"],
-    "verbs_supported": ["arky:verb/pay@v1", "arky:verb/refund@v1", "arky:verb/revoke@v1"],
-    "rollback_support": {"sepa:eu": {"window": "P2D"}, "ach:us": {"window": "P2D"}},
+    "rails_supported": [
+      "caip2:eip155:*",
+      "sepa:eu",
+      "ach:us",
+      "controller:*"
+    ],
+    "verbs_supported": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1",
+      "arky:verb/revoke@v1"
+    ],
+    "rollback_support": {
+      "sepa:eu": {
+        "window": "P2D"
+      },
+      "ach:us": {
+        "window": "P2D"
+      }
+    },
     "xr_anchor": "optional",
     "idempotency": "keyed",
-    "attestation": {"required": false, "types": ["arky:attest/rats.eat@v1"]}
+    "attestation": {
+      "required": false,
+      "types": [
+        "arky:attest/rats.eat@v1"
+      ]
+    }
   },
-  "policy_defaults": {"policy_pack_id": "arky:policy/global@v1"},
+  "policy_defaults": {
+    "policy_pack_id": "arky:policy/global@v1"
+  },
   "security": {
-    "transport": ["https"],
-    "auth": ["none"],
-    "rate_limits": {"per_minute": 600, "burst": 300}
+    "transport": [
+      "https"
+    ],
+    "auth": [
+      "none"
+    ],
+    "rate_limits": {
+      "per_minute": 600,
+      "burst": 300
+    }
   },
   "ts": "2025-10-15T00:00:00Z",
-  "cid": "zQmasenT4n5wF6h9VQqEiSpibUtNyrVDi7EDK2xdcRZ5Mm2",
-  "sig": "eyJhbGciOiJFZERTQSIsImtpZCI6ImV4YW1wbGUta2V5LTEifQ.eyJjYXBhYmlsaXRpZXMiOnsiYXR0ZXN0YXRpb24iOnsicmVxdWlyZWQiOmZhbHNlLCJ0eXBlcyI6WyJhcmt5OmF0dGVzdC9yYXRzLmVhdEB2MSJdfSwiaWRlbXBvdGVuY3kiOiJrZXllZCIsInJhaWxzX3N1cHBvcnRlZCI6WyJjYWlwMjplaXAxNTU6KiIsInNlcGE6ZXUiLCJhY2g6dXMiLCJjb250cm9sbGVyOioiXSwicm9sbGJhY2tfc3VwcG9ydCI6eyJhY2g6dXMiOnsid2luZG93IjoiUDJEIn0sInNlcGE6ZXUiOnsid2luZG93IjoiUDJEIn19LCJ2ZXJic19zdXBwb3J0ZWQiOlsiYXJreTp2ZXJiL3BheUB2MSIsImFya3k6dmVyYi9yZWZ1bmRAdjEiLCJhcmt5OnZlcmIvcmV2b2tlQHYxIl0sInhyX2FuY2hvciI6Im9wdGlvbmFsIn0sImVuZHBvaW50cyI6W3sibWVkaWFfdHlwZXMiOlsiYXBwbGljYXRpb24vYXJreS5rZXJuZWwranNvbiJdLCJtZXRob2QiOiJQT1NUIiwibmFtZSI6ImV4ZWN1dGUiLCJwYXRoIjoiL3NldHRsZXIvZXhlY3V0ZSJ9LHsibWVkaWFfdHlwZXMiOlsiYXBwbGljYXRpb24vYXJreS54citqc29uIl0sIm1ldGhvZCI6IkdFVCIsIm5hbWUiOiJzdGF0dXMiLCJwYXRoIjoiL3NldHRsZXIvc3RhdHVzL3tjb21taXRtZW50X2lkfSJ9LHsibWVkaWFfdHlwZXMiOlsiYXBwbGljYXRpb24vYXJreS54citqc29uIl0sIm1ldGhvZCI6IkdFVCIsIm5hbWUiOiJ4ciIsInBhdGgiOiIvc2V0dGxlci94ci97Y2lkfSJ9XSwicG9saWN5X2RlZmF1bHRzIjp7InBvbGljeV9wYWNrX2lkIjoiYXJreTpwb2xpY3kvZ2xvYmFsQHYxIn0sInNlY3VyaXR5Ijp7ImF1dGgiOlsibm9uZSJdLCJyYXRlX2xpbWl0cyI6eyJidXJzdCI6MzAwLCJwZXJfbWludXRlIjo2MDB9LCJ0cmFuc3BvcnQiOlsiaHR0cHMiXX0sInNlcnZpY2VfaWQiOiJ1cm46YXJreTpleGFtcGxlOnNldHRsZXIiLCJzZXJ2aWNlX3R5cGUiOiJzZXR0bGVyIiwic3BlY19pZHMiOlsiQVJLWS1TRVRUTEVSUy12MSIsIkFSS1ktV0lSRS12MSIsIkFSS1ktRElTQ09WRVJZLXYxIl0sInRzIjoiMjAyNS0xMC0xNVQwMDowMDowMFoiLCJ2ZXJzaW9uIjoiMS4wLjAifQ.RM0CP3QLe_xAjQWuuWlkDS2J1gfIHVRELxvj5MGiKQh3eTqhnyTN4xXuL71z6inPFCqj-oKVZVGxGGeEqtsKAg"
+  "cid": "zQmaiJ6yZzDpoUBhsnJ1Q7r28iUr3AGfWqiwSQJpmmv6sem",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..EITQCAC7f_VebwQGzHyzBWkSVnhme5coJKrYRPakQF8wWGE5R9pZSc6-sNQecYaArbo_YSEV9WX7c-YxJd0GAQ"
 }

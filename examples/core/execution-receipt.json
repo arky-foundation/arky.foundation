@@ -3,10 +3,10 @@
   "verb": "arky:verb/pay@v1",
   "rail": "ach:us",
   "inputs_cids": [
-    "zQmExampeTmCdAbcdefghijk"
+    "zQmdcq1pkErD9UT2W2jLPmXJu1XqjErzjDNgNc5ZHowN2B3"
   ],
   "status": "success",
   "ts_exec": "2025-10-15T12:00:01Z",
-  "cid": "zQmaWiMaysGokvySKmv73pxiWHuGUvMM7AGCHWbNgjnM9yU",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJjb21taXRtZW50X2lkIjoiY29tbWl0LWFiYyIsImlucHV0c19jaWRzIjpbInpRbUV4YW1wZVRtQ2RBYmNkZWZnaGlqayJdLCJyYWlsIjoiYWNoOnVzIiwic3RhdHVzIjoic3VjY2VzcyIsInRzX2V4ZWMiOiIyMDI1LTEwLTE1VDEyOjAwOjAxWiIsInZlcmIiOiJhcmt5OnZlcmIvcGF5QHYxIn0.dR7UhPrJOtp5I7pqh75-sdaWJzzYjKArhPzLz9C1pIxUfk7Laqe7NGTARu0KhGric2ezLYQVvQmeWX6tnCWDCA"
+  "cid": "zQmdNRUPG4g8QFdnJG6qAedjMxwNBLgxNRF3vcydgXi4pYV",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..5JcJIu1r0XlULNWHyEvDSADDal6Cmmx9GwBY0SYyNjngRix57_8KgcY25AM_tQWhW7qaEGN-ShsnqL-LpTxADg"
 }

@@ -21,8 +21,8 @@
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmUTdJeHN82JBsYf4vV7CQdLhWgdEqdBg9JvA1vBrHozPF",
-      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJpZGVudGl0eSI6e30sIm1lYXN1cmVtZW50Ijp7Im1ldGhvZCI6eyJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEiLCJ0eXBlIjoic2Vuc29yIn0sIm5hbWUiOiJ0ZW1wZXJhdHVyZSIsInVuaXQiOiJ1cm46YXJreTp1bml0OnRlbXAuQyIsInZhbHVlIjoyMi41fSwidGltZSI6eyJ0cyI6IjIwMjUtMTAtMTVUMTI6MDA6MDBaIn19.8M1I2ddCXMYKvQLw6WRhJqJioWyAREJMZcN5Ih8KjFlRIxmnnMBqnV3IZdDnD9bS6A8iEu41OT9SUTZ9wb37CA"
+      "cid": "zQmNqWfnd6xo8Dbfg647LYXFU41ZkGw9XM6TbAgoFLG3yKF",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..1nS36E7CS2nwmjRQS1Rg_VH-De-45g_nLsHxKAaw-cWnoNrsKQyoHaov4nCkDAYW16Of49Apj542-8SM-6UbAw"
     }
   },
   "expect": {

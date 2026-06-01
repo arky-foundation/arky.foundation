@@ -6,19 +6,20 @@
 
     "IsoDuration": {
       "type": "string",
-      "pattern": "^P(?=.+)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
+      "description": "ISO 8601 duration with at least one component. Rejects bare 'P'/'PT' and time components without the 'T' separator.",
+      "pattern": "^P(?!$)(?!T$)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+S)?)?$"
     },
 
     "Cid": {
       "type": "string",
-      "description": "Base58-BTC(multihash(sha-256,...)) - prefix often 'z' but not enforced",
-      "pattern": "^[1-9A-HJ-NP-Za-km-z]{10,}$"
+      "description": "Arky content id: multibase('z', base58btc) of multihash(sha2-256, JCS canonical bytes). NOTE: this is NOT an IPFS CID. The leading 'z' is the multibase prefix; the remaining characters are the base58btc-encoded multihash (0x12 0x20 <32-byte digest>), which happens to render starting with 'Qm'. Example: zQmYuqg7YHoweWnuw86L5hY7xxhh9zhPW8z6VxGvJgn7RMC",
+      "pattern": "^z[1-9A-HJ-NP-Za-km-z]{44,49}$"
     },
 
     "JwsCompact": {
       "type": "string",
-      "description": "JWS compact serialization (base64url.header.payload.signature)",
-      "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$"
+      "description": "JWS compact serialization with a DETACHED payload (RFC 7515 / RFC 7797 b64:false): '<protected_header>..<signature>'. The middle (payload) segment is empty because the signed content is the artifact's own JCS canonical bytes, not re-embedded.",
+      "pattern": "^[A-Za-z0-9_-]+\\.\\.[A-Za-z0-9_-]+$"
     },
 
     "Caip2": {

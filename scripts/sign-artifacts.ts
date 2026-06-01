@@ -58,25 +58,41 @@ function computeCid(canonicalJson: string): string {
 }
 
 /**
- * Sign canonical bytes with Ed25519 using JWS compact format
+ * Sign canonical bytes with Ed25519 using JWS compact serialization with a
+ * DETACHED payload (RFC 7797, b64:false). The payload segment is left empty so
+ * the canonical body is not re-embedded inside the signature. Verifiers
+ * reconstruct the signing input from the artifact's own canonical bytes.
+ *
+ * Output shape: "<protected_header>..<signature>" (empty middle segment).
  */
 async function signJws(canonicalBytes: Uint8Array, privateKey: jose.KeyLike): Promise<string> {
   const jws = await new jose.CompactSign(canonicalBytes)
-    .setProtectedHeader({ alg: 'EdDSA', typ: 'JWS', kid: TEST_KEY.kid })
+    .setProtectedHeader({ alg: 'EdDSA', typ: 'JWS', kid: TEST_KEY.kid, b64: false, crit: ['b64'] })
     .sign(privateKey);
-  return jws;
+  // CompactSign returns "header.payload.signature"; strip the payload segment
+  // to produce the detached form "header..signature".
+  const [header, , signature] = jws.split('.');
+  return `${header}..${signature}`;
 }
 
 /**
- * Check if a signature looks like a placeholder
+ * Check if a signature needs (re)generation. This covers obvious placeholders
+ * AND legacy attached JWS (non-empty payload segment): v1 signs with a DETACHED
+ * payload, so any signature whose middle segment is non-empty is stale and must
+ * be re-signed.
  */
 function isPlaceholderSig(sig: unknown): boolean {
   if (typeof sig !== 'string') return false;
-  return sig.includes('placeholder') ||
-         sig.includes('MOCK') ||
-         sig.includes('example') ||
-         sig === 'eyJ.example.kernel.signature' ||
-         sig.length < 50; // Real JWS is much longer
+  if (sig.includes('placeholder') ||
+      sig.includes('MOCK') ||
+      sig.includes('example') ||
+      sig === 'eyJ.example.kernel.signature' ||
+      sig.length < 50) {
+    return true;
+  }
+  // Legacy attached JWS: "header.payload.signature" with a non-empty payload.
+  const parts = sig.split('.');
+  return parts.length === 3 && parts[1].length > 0;
 }
 
 /**
@@ -193,12 +209,23 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
           }
         }
 
-        // Handle test vectors with embedded kernels
-        if (json.inputs?.kernel) {
-          const kernel = json.inputs.kernel;
-          if (isPlaceholderSig(kernel.sig) || isPlaceholderCid(kernel.cid)) {
-            const signedKernel = await processSignedArtifact(kernel, privateKey);
-            json.inputs.kernel = signedKernel;
+        // Handle test vectors with an embedded signed discovery index
+        if (json.inputs?.well_known_index) {
+          const idx = json.inputs.well_known_index;
+          if (isPlaceholderSig(idx.sig) || isPlaceholderCid(idx.cid)) {
+            json.inputs.well_known_index = await processSignedArtifact(idx, privateKey);
+            updated = json;
+            console.log(`  [vector:discovery] ${relPath}`);
+          }
+        }
+
+        // Handle test vectors with embedded kernels / commitments
+        const embeddedKernel = json.inputs?.kernel ?? json.inputs?.commitment;
+        if (embeddedKernel && embeddedKernel.scope && embeddedKernel.actor && embeddedKernel.intent) {
+          if (isPlaceholderSig(embeddedKernel.sig) || isPlaceholderCid(embeddedKernel.cid)) {
+            const signedKernel = await processSignedArtifact(embeddedKernel, privateKey);
+            if (json.inputs.kernel) json.inputs.kernel = signedKernel;
+            else json.inputs.commitment = signedKernel;
             updated = json;
             console.log(`  [vector:kernel] ${relPath}`);
           }

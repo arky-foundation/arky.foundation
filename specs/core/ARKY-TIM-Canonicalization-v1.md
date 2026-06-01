@@ -85,20 +85,23 @@ TIM uses **RFC 8785 (JCS)** with the following constraints:
 * Compute `cid` over the canonical bytes:
 
 ```
-cid = Base58-BTC(Multihash(SHA-256, canonical_bytes))
+cid = multibase('z', Base58-BTC(Multihash(SHA-256, canonical_bytes)))
 ```
 
 * `canonical_bytes` are exactly the bytes emitted by §3.
+* The multihash is `0x12 0x20` ‖ the 32-byte SHA-256 digest; the result is
+  base58btc-encoded and prefixed with the multibase code `z`. This is **not** an
+  IPFS CID (see ARKY-TIM-v1 §5).
 * `cid` **MUST** be included in the signed TIM (outside the canonical body) after signing.
 
 ---
 
 ## 5. Signature & Witness Envelope
 
-* **Signature (`sig`)**: **JWS (compact)** using **Ed25519/EdDSA** over `canonical_bytes`.
-* **Protected header** **MUST** include: `{"alg": "EdDSA"}`. A `kid` **SHOULD** reference the public key (e.g., DID key id).
-* The JWS payload **MUST** be the **base64url** of `canonical_bytes` with default `b64` semantics (per RFC 7515).
-* **Witnesses**: `time.witnesses[]` **MUST** be JWS (Ed25519) over the **same** `canonical_bytes`; each **SHOULD** include `kid` resolvable from its identity method.
+* **Signature (`sig`)**: **JWS (compact)** using **Ed25519/EdDSA** over `canonical_bytes`, with a **detached payload** (RFC 7797).
+* **Protected header** **MUST** include: `{"alg": "EdDSA", "b64": false, "crit": ["b64"]}`. A `kid` **SHOULD** reference the public key (e.g., DID key id).
+* The JWS payload is `canonical_bytes` and **MUST NOT** be embedded: the compact serialization is `<protected_header>..<signature>` (empty middle segment). Verifiers supply `canonical_bytes` as the detached payload when verifying.
+* **Witnesses**: `time.witnesses[]` **MUST** be detached-payload JWS (Ed25519) over the **same** `canonical_bytes`; each **SHOULD** include `kid` resolvable from its identity method.
 
 ---
 

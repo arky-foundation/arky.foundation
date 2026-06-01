@@ -23,8 +23,8 @@
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmaxGt7v7LnEcBz3QU6CRrd1jR2Sguu4RSmeetQnAPhmvN",
-      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ.eyJpZGVudGl0eSI6eyJpZCI6ImRpZDprZXk6ejZNa2lUQnoxeW11ZXBBUTRIRUhZU0YxSDhxdUc1R0xWVlFSM2RqZFgzbURvb1dwIn0sIm1lYXN1cmVtZW50Ijp7Im1ldGhvZCI6eyJzb3VyY2UiOiJkZXZpY2U6dGVtcC1zZW5zb3ItMDEiLCJ0eXBlIjoic2Vuc29yIn0sIm5hbWUiOiJ0ZW1wZXJhdHVyZSIsInVuaXQiOiJ1cm46YXJreTp1bml0OnRlbXAuQyIsInZhbHVlIjoyMi41fSwidGltZSI6eyJ0cyI6IjIwMjUvMTAvMTUgMTI6MDA6MDAifX0.EAjQCL3Kc6bV9UTha1R1H8B_k8J-IT5gHu2Xf_DOFRRmzyurHb8ffNPB-gTa2kNL189v2QFUw123-pH0LDAqBw"
+      "cid": "zQmVVwugW4Vvra5acRvUR75zLbAjnN6S4otPwH38qYNiRgA",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..vzVqfPxucjWclTXRpSPtoGIQ5qTp1LAufKcue0wcXdKkY_dYNv-bEz1dlelgteOsqsf6ZsX-9nH8P4sU9V9sCA"
     }
   },
   "expect": {
