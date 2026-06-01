@@ -2,7 +2,7 @@
 
 Status: Accepted
 Authors: Spec WG
-Tracing: specs/ARKY-COMPAT-MATRIX-v1.md
+Tracing: governance/ARKY-COMPAT-MATRIX-v1.md
 
 ## Summary
 Publish an explicit cross-version compatibility matrix for v1 specs.
@@ -11,7 +11,7 @@ Publish an explicit cross-version compatibility matrix for v1 specs.
 Prevent downgrade and mismatch issues across independent implementations.
 
 ## Proposal
-Add `specs/governance/ARKY-COMPAT-MATRIX-v1.md` with normative tuples for v1.
+Add `governance/ARKY-COMPAT-MATRIX-v1.md` with normative tuples for v1.
 
 ## Compatibility
 No breaking changes; documentation of current expectations.
