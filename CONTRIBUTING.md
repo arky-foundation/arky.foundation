@@ -20,4 +20,4 @@ Style
 
 Security
 - Do not add secrets or PII to examples.
-- Report vulnerabilities as described in `governance/SECURITY.md`.
+- Report vulnerabilities as described in `SECURITY.md`.
