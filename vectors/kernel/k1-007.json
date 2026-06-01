@@ -2,7 +2,7 @@
   "id": "k1-007",
   "spec": "ARKY-KERNEL-v1",
   "level": "K1",
-  "description": "Valid commitment - identity match rule",
+  "description": "Valid commitment - MeasureSpec.require selects evidence; assertion passes",
   "context": {
     "time": "2025-10-15T12:00:00Z",
     "fixtures": {
@@ -11,22 +11,62 @@
   },
   "inputs": {
     "commitment": {
-      "rule": "arky:rule/identity.match",
-      "inputs": {
-        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-        "expected_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
-      }
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:web:example.org",
+      "intent": {
+        "do": "arky:verb/control@v1"
+      },
+      "measure": [
+        {
+          "name": "temp",
+          "from": "device:temp-sensor-01",
+          "assert": "temp > 20",
+          "require": {
+            "min_witnesses": 0,
+            "device_class": [
+              "arky:device/temp-sensor-01"
+            ]
+          }
+        }
+      ],
+      "consequence": [
+        {
+          "if": "PASS",
+          "then": [
+            {
+              "name": "arky:verb/control@v1",
+              "args": {
+                "target": "cooling",
+                "state": "on"
+              }
+            }
+          ]
+        }
+      ],
+      "cid": "zQmfRMzU2vGHAun1qYnh9YSuwztQpwRALzcqe1k8zgwmFDm",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..VTFx49GnwIKzjZ6wPQ7JnDILklWST9HZShIalEtuRxbhf7yXzB__KDdLbn-wGxI9IUbVdAlAISjMQ-cgpU83Aw"
     }
   },
   "expect": {
     "valid": true,
     "errors": [],
-    "parse_success": true,
-    "result": "ALLOW",
-    "evaluation": {
-      "tim_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
-      "expected_identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
-      "match": true
+    "schema_valid": true,
+    "signature_valid": true,
+    "decision": {
+      "status": "APPROVED",
+      "assertions": [
+        {
+          "name": "temp",
+          "result": "PASS",
+          "input_value": 22.5,
+          "inputs": [
+            "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm"
+          ]
+        }
+      ],
+      "authorized": [
+        "arky:verb/control@v1"
+      ]
     }
   }
 }

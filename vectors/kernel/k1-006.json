@@ -2,24 +2,32 @@
   "id": "k1-006",
   "spec": "ARKY-KERNEL-v1",
   "level": "K1",
-  "description": "Invalid commitment - type mismatch in input",
+  "description": "Schema-invalid commitment - MeasureSpec missing required 'assert' field",
   "context": {
     "time": "2025-10-15T12:00:00Z"
   },
   "inputs": {
     "commitment": {
-      "rule": "arky:rule/threshold.gt",
-      "inputs": {
-        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-        "field": "measurement.value",
-        "threshold": "not_a_number"
-      }
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:web:example.org",
+      "intent": { "do": "arky:verb/control@v1" },
+      "measure": [
+        { "name": "temp" }
+      ],
+      "consequence": [
+        {
+          "if": "PASS",
+          "then": [
+            { "name": "arky:verb/control@v1", "args": { "target": "cooling", "state": "on" } }
+          ]
+        }
+      ]
     }
   },
   "expect": {
     "valid": false,
-    "errors": ["kernel.parse_error"],
-    "parse_success": false,
-    "type_error": "threshold must be numeric"
+    "schema_valid": false,
+    "errors": ["kernel.invalid_commitment"],
+    "missing_fields": ["measure[0].assert"]
   }
 }

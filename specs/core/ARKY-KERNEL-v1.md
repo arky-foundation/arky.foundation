@@ -85,7 +85,11 @@ Effective: 2025-10-15
 
 ## 3. Data Model
 
-A Kernel Commitment **MUST** be signed and content‑addressed using the same canonicalization as TIM (JCS). Fields marked *required* are mandatory.
+A Kernel Commitment **MUST** be signed and content‑addressed using the same
+rules as TIM: JCS (RFC 8785) canonical body excluding `cid`/`sig`, `cid` as the
+multibase/base58btc multihash (see ARKY-TIM-v1 §5), and a **detached-payload**
+JWS Ed25519 `sig` (RFC 7797, `b64:false`; see ARKY-TIM-v1 §6). Fields marked
+*required* are mandatory.
 
 ```typescript
 Kernel :=
@@ -496,7 +500,7 @@ EXPIRED → terminal state (no transitions)
 
 **Requirements:**
 * Decision **MUST** list the exact TIM `cid`s that influenced each assertion.
-* Decision **MUST** be JCS‑canonicalized and content‑addressed like TIM.
+* Decision **MUST** be JCS‑canonicalized, content‑addressed, and signed with a detached-payload JWS like TIM (see ARKY-TIM-v1 §5–§6).
 * If `status = APPROVED`, `authorized` **MUST** contain at least one verb.
 * If `status != APPROVED`, `authorized` **SHOULD** be empty (no execution).
 * `AssertionResult.error` **SHOULD** explain INDETERMINATE (e.g., "no matching receipts", "unit mismatch").

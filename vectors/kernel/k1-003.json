@@ -2,22 +2,24 @@
   "id": "k1-003",
   "spec": "ARKY-KERNEL-v1",
   "level": "K1",
-  "description": "Invalid commitment - missing required input field",
+  "description": "Schema-invalid commitment - missing required 'consequence' field",
   "context": {
     "time": "2025-10-15T12:00:00Z"
   },
   "inputs": {
     "commitment": {
-      "rule": "arky:rule/threshold.gt",
-      "inputs": {
-        "tim": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z"
-      }
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:web:example.org",
+      "intent": { "do": "arky:verb/control@v1" },
+      "measure": [
+        { "name": "temp", "assert": "temp > 20" }
+      ]
     }
   },
   "expect": {
     "valid": false,
-    "errors": ["kernel.parse_error"],
-    "parse_success": false,
-    "missing_inputs": ["threshold", "field"]
+    "schema_valid": false,
+    "errors": ["kernel.invalid_commitment"],
+    "missing_fields": ["consequence"]
   }
 }
