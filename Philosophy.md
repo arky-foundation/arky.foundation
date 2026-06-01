@@ -54,7 +54,7 @@ last_updated: 2025-10-15
   "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyJ9..."
 }
 ```
-Terminology: TIM (specs/ARKY-TIM-v1.md), Units/URNs (specs/ARKY-REGISTRIES-v1.md)
+Terminology: TIM (specs/core/ARKY-TIM-v1.md), Units/URNs (specs/infrastructure/ARKY-REGISTRIES-v1.md)
 
 2) Notary (witness + anchor)
 
@@ -66,7 +66,7 @@ Terminology: TIM (specs/ARKY-TIM-v1.md), Units/URNs (specs/ARKY-REGISTRIES-v1.md
   "anchor": {"rail": "eth:1", "txid": "0xabc..."}
 }
 ```
-Terminology: Notary (specs/ARKY-NOTARY-v1.md), Anchors (specs/ARKY-TRANSLOG-v1.md)
+Terminology: Notary (specs/core/ARKY-NOTARY-v1.md), Anchors (specs/core/ARKY-TRANSLOG-v1.md)
 
 3) Decision (deterministic rule result)
 
@@ -79,7 +79,7 @@ Terminology: Notary (specs/ARKY-NOTARY-v1.md), Anchors (specs/ARKY-TRANSLOG-v1.m
   "cid": "zBase58..."
 }
 ```
-Terminology: Kernel/Decision (specs/ARKY-KERNEL-v1.md), Policy Packs (specs/ARKY-POLICY-PACKS-v1.md)
+Terminology: Kernel/Decision (specs/core/ARKY-KERNEL-v1.md), Policy Packs (specs/core/ARKY-POLICY-PACKS-v1.md)
 
 4) Execution (settle a verb) -> receipt
 
@@ -92,7 +92,7 @@ Terminology: Kernel/Decision (specs/ARKY-KERNEL-v1.md), Policy Packs (specs/ARKY
   "anchors": [{"rail": "eth:1", "txid": "0xdef..."}]
 }
 ```
-Terminology: Settlers/Verbs (specs/ARKY-SETTLERS-v1.md), Verbs Registry (specs/ARKY-REGISTRIES-v1.md)
+Terminology: Settlers/Verbs (specs/core/ARKY-SETTLERS-v1.md), Verbs Registry (specs/infrastructure/ARKY-REGISTRIES-v1.md)
 
 5) Discovery (well-known)
 
@@ -106,7 +106,7 @@ HTTP GET `/.well-known/arky/index.json` ->
   "sig": "eyJ..."
 }
 ```
-Terminology: Discovery (specs/ARKY-DISCOVERY-v1.md), Keys/JWKS (specs/ARKY-KEYS-v1.md)
+Terminology: Discovery (specs/infrastructure/ARKY-DISCOVERY-v1.md), Keys/JWKS (specs/security/ARKY-KEYS-v1.md)
 
 ---
 
@@ -161,15 +161,15 @@ Isn't
 
 ## Terminology (quick refs)
 
-- TIM - signed, canonical evidence record: `specs/ARKY-TIM-v1.md`
-- Notary - witness, order, and anchors: `specs/ARKY-NOTARY-v1.md`
-- Kernel/Decision - deterministic rule outcome: `specs/ARKY-KERNEL-v1.md`
-- Settlers - tiny verb set + receipts: `specs/ARKY-SETTLERS-v1.md`
-- Registries - stable URNs for units/verbs/rails/devices: `specs/ARKY-REGISTRIES-v1.md`
-- Discovery - well-known endpoints and signed descriptors: `specs/ARKY-DISCOVERY-v1.md`
-- Policy Packs - defaults and constraints by region/domain: `specs/ARKY-POLICY-PACKS-v1.md`
-- Errors - standard error envelope: `specs/ARKY-ERRORS-v1.md`
-- Vectors - conformance suites: `specs/ARKY-VECTORS-v1.md`
+- TIM - signed, canonical evidence record: `specs/core/ARKY-TIM-v1.md`
+- Notary - witness, order, and anchors: `specs/core/ARKY-NOTARY-v1.md`
+- Kernel/Decision - deterministic rule outcome: `specs/core/ARKY-KERNEL-v1.md`
+- Settlers - tiny verb set + receipts: `specs/core/ARKY-SETTLERS-v1.md`
+- Registries - stable URNs for units/verbs/rails/devices: `specs/infrastructure/ARKY-REGISTRIES-v1.md`
+- Discovery - well-known endpoints and signed descriptors: `specs/infrastructure/ARKY-DISCOVERY-v1.md`
+- Policy Packs - defaults and constraints by region/domain: `specs/core/ARKY-POLICY-PACKS-v1.md`
+- Errors - standard error envelope: `specs/core/ARKY-ERRORS-v1.md`
+- Vectors - conformance suites: `specs/development/ARKY-VECTORS-v1.md`
 
 ---
 
