@@ -434,7 +434,7 @@ depends_on:
 
 Shared reusable definitions referenced by other schemas.
 
-*File: [`/schemas/common-defs-v1.json`](./common-defs-v1.json)*
+*File: [`/schemas/core/common-defs-v1.json`](./core/common-defs-v1.json)*
 
 Contains: `Rfc3339`, `IsoDuration`, `Cid`, `JwsCompact`, `Caip2`, `Uri`, `Semver`.
 
@@ -444,7 +444,7 @@ Contains: `Rfc3339`, `IsoDuration`, `Cid`, `JwsCompact`, `Caip2`, `Uri`, `Semver
 
 Schema for ARKY-DISCOVERY-v1 ServiceDescriptor objects.
 
-*File: [`/schemas/service-descriptor-v1.json`](./service-descriptor-v1.json)*
+*File: [`/schemas/core/service-descriptor-v1.json`](./core/service-descriptor-v1.json)*
 
 References common-defs-v1.json and includes type-specific capabilities for:
 - Notary (anchor_targets, finality_defaults, batch_limits, etc.)
@@ -468,7 +468,7 @@ Contains ServiceRef, PolicyRef, and RegistryRef definitions for discovery.
 
 Schema for ARKY-REVOCATIONS-v1 revocation lists and individual revocation objects.
 
-*File: [`/schemas/revocations-v1.json`](./revocations-v1.json)*
+*File: [`/schemas/infrastructure/revocations-v1.json`](./infrastructure/revocations-v1.json)*
 
 Supports key revocation, credential revocation, and registry entry revocation.
 
@@ -478,7 +478,7 @@ Supports key revocation, credential revocation, and registry entry revocation.
 
 Meta-schema defining the structure of schema index documents.
 
-*File: [`/schemas/schemas-index-v1.json`](./schemas-index-v1.json)*
+*File: [`/schemas/meta/schemas-index-v1.json`](./meta/schemas-index-v1.json)*
 
 Used internally for schema discovery and versioning.
 
@@ -489,9 +489,9 @@ Used internally for schema discovery and versioning.
 Schemas for ARKY-VECTORS-v1 conformance test suites and manifests.
 
 *Files:*
-- [`/schemas/vector-manifest-v1.json`](./vector-manifest-v1.json) - Individual vector file structure
-- [`/schemas/vector-suite-manifest-v1.json`](./vector-suite-manifest-v1.json) - Suite-level manifest
-- [`/schemas/vectors-releases-v1.json`](./vectors-releases-v1.json) - Release index with hashes
+- [`/schemas/testing/vector-manifest-v1.json`](./testing/vector-manifest-v1.json) - Individual vector file structure
+- [`/schemas/testing/vector-suite-manifest-v1.json`](./testing/vector-suite-manifest-v1.json) - Suite-level manifest
+- [`/schemas/testing/vectors-releases-v1.json`](./testing/vectors-releases-v1.json) - Release index with hashes
 
 Used for conformance testing and vector distribution.
 
