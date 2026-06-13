@@ -1,0 +1,22 @@
+{
+  "id": "n2-001",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N2",
+  "description": "Merkle root over 2 cids (merkle-sha256-v1) - deterministic, recomputed by verifier",
+  "context": {
+    "algorithm": "merkle-sha256-v1",
+    "reference": "ARKY-NOTARY-v1 §5.1"
+  },
+  "inputs": {
+    "alg": "merkle-sha256-v1",
+    "cids": [
+      "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
+      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM"
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "merkle_root": "zQmbdB8Ed4p8hy1mVYvy5bezPoKcTKBwcYYwxwbeTVcfgaG"
+  }
+}

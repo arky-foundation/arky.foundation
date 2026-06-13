@@ -12,11 +12,17 @@
  *      its kid-resolved key, over the same canonical bytes.
  *   4. Compares the observed result against each vector's `expect` block.
  *
- * Coverage: TIM + Kernel vectors and fixtures; discovery vectors/fixtures; and
- * standalone signed artifacts — registries, policy packs, service descriptors,
- * revocation lists, execution receipts, and discovery indexes. Pure
- * schema/structural vectors (no cid/signature expectation) are validated by the
- * AJV schema step in CI, not here.
+ * It also executes algorithmic vectors by recomputing the result from inputs:
+ *   - Notary Merkle roots and inclusion proofs (N2, §5.1/§5.2)
+ *   - Settler idempotency-key derivation (S2, §6.1), failure cascade (S2, §4.1),
+ *     and compensation mapping (S3, §7.2)
+ * via the shared reference module in scripts/lib/merkle.ts.
+ *
+ * Coverage: TIM + Kernel vectors and fixtures; discovery vectors/fixtures;
+ * Notary + Settler vectors; and standalone signed artifacts — registries,
+ * policy packs, service descriptors, revocation lists, execution receipts, and
+ * discovery indexes. Pure schema/structural vectors (no cid/signature/algorithm
+ * expectation) are validated by the AJV schema step in CI, not here.
  *
  * Exits non-zero if any artifact fails, so CI fails on a broken vector.
  *
@@ -28,8 +34,31 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { base58btc } from 'multiformats/bases/base58';
 import { readdir, readFile } from 'fs/promises';
 import { join, relative } from 'path';
+import { merkleRoot, verifyInclusion, deriveIdempotencyKey, jcsCanonical as jcsLib, multihash } from './lib/merkle.ts';
 
 const rootDir = join(import.meta.dir, '..');
+
+/** Settler §7.2 compensation map: irreversible verb -> compensating verb. */
+const COMPENSATION_MAP: Record<string, string> = {
+  pay: 'refund',
+  slash: 'pay',
+  upgrade: 'revoke',
+  revoke: 'upgrade',
+  signal: 'signal',
+  control: 'control',
+};
+
+/** Settler §4.1 STOP_ON_FAILURE cascade: simulate XR statuses from outcomes. */
+function failureCascade(verbs: { outcome: string }[]): string[] {
+  const out: string[] = [];
+  let stopped = false;
+  for (const v of verbs) {
+    if (stopped) { out.push('skipped'); continue; }
+    out.push(v.outcome);
+    if (v.outcome === 'failed') stopped = true;
+  }
+  return out;
+}
 
 // Test keys from fixtures (DO NOT USE IN PRODUCTION). Public halves are enough
 // to verify; the private halves are only used by the signing script. The issuer
@@ -247,6 +276,76 @@ async function verifyArtifactDir(dir: string, publicKey: jose.KeyLike, label: st
   if (signed.length === 0) console.log(`  (no signed ${label})`);
 }
 
+/** Compare arrays elementwise for equality. */
+function arrayEq(a: unknown[], b: unknown[]): boolean {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
+/**
+ * Execute an algorithmic vector (Notary Merkle/inclusion, Settler idempotency/
+ * cascade/compensation) by recomputing the result from inputs and comparing to
+ * `expect`. Returns null if this vector is not an algorithmic one we handle.
+ */
+function verifyAlgorithmicVector(vector: any): { ok: boolean; detail: string } | null {
+  const { inputs = {}, expect = {} } = vector;
+
+  // Notary Merkle root (N2): expect.merkle_root over inputs.cids.
+  if (Array.isArray(inputs.cids) && typeof expect.merkle_root === 'string') {
+    const root = merkleRoot(inputs.cids);
+    const ok = root === expect.merkle_root;
+    let detail = ok ? '' : `merkle_root mismatch: computed ${root}, expected ${expect.merkle_root}`;
+    // Optionally check the documented sorted order.
+    if (ok && Array.isArray(expect.sorted_order)) {
+      const sorted = [...inputs.cids].sort((a: string, b: string) =>
+        Buffer.compare(Buffer.from(base58btc.decode(a)), Buffer.from(base58btc.decode(b))));
+      if (!arrayEq(sorted, expect.sorted_order)) detail = 'sorted_order mismatch';
+      return { ok: detail === '', detail };
+    }
+    return { ok, detail };
+  }
+
+  // Notary inclusion proof (N2): expect.inclusion_valid for leaf/path/root.
+  if (typeof inputs.leaf === 'string' && Array.isArray(inputs.path) && typeof expect.inclusion_valid === 'boolean') {
+    const valid = verifyInclusion(inputs.leaf, inputs.path, inputs.root);
+    const ok = valid === expect.inclusion_valid;
+    return { ok, detail: ok ? '' : `inclusion_valid: computed ${valid}, expected ${expect.inclusion_valid}` };
+  }
+
+  // Settler idempotency key (S2): expect.idempotency_key (+ optional args_hash).
+  if (inputs.args !== undefined && typeof inputs.verb_index === 'number' && typeof expect.idempotency_key === 'string') {
+    const key = deriveIdempotencyKey({
+      commitment_cid: inputs.commitment_cid,
+      verb: inputs.verb,
+      rail: inputs.rail,
+      args: inputs.args,
+      verb_index: inputs.verb_index,
+    });
+    let detail = key === expect.idempotency_key ? '' : `idempotency_key mismatch: computed ${key}`;
+    if (detail === '' && typeof expect.args_hash === 'string') {
+      const argsHash = multihash(new TextEncoder().encode(jcsLib(inputs.args)));
+      if (argsHash !== expect.args_hash) detail = `args_hash mismatch: computed ${argsHash}`;
+    }
+    return { ok: detail === '', detail };
+  }
+
+  // Settler failure cascade (S2): expect.xr_statuses from inputs.verbs[].outcome.
+  if (Array.isArray(inputs.verbs) && Array.isArray(expect.xr_statuses)) {
+    const statuses = failureCascade(inputs.verbs);
+    const ok = arrayEq(statuses, expect.xr_statuses);
+    return { ok, detail: ok ? '' : `xr_statuses: computed [${statuses}], expected [${expect.xr_statuses}]` };
+  }
+
+  // Settler compensation map (S3): expect.all_mappings_correct over inputs.compensations.
+  if (Array.isArray(inputs.compensations) && typeof expect.all_mappings_correct === 'boolean') {
+    const wrong = inputs.compensations.filter(
+      (c: any) => COMPENSATION_MAP[c.verb] !== c.expect_compensation);
+    const ok = (wrong.length === 0) === expect.all_mappings_correct;
+    return { ok, detail: ok ? '' : `compensation mismatch for: ${wrong.map((w: any) => w.verb).join(', ')}` };
+  }
+
+  return null;
+}
+
 /**
  * Verify a single vector file. Vectors carry an `expect` block; we honor the
  * fields relevant to T1/K1 conformance (cid_valid, signature_valid,
@@ -261,6 +360,14 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
   // === false) are validated structurally by the schema step, not here.
   if (expect.valid === false) {
     report(`${relPath} (negative vector, schema-checked elsewhere)`, true);
+    return;
+  }
+
+  // Algorithmic vectors (Notary Merkle/inclusion, Settler idempotency/cascade/
+  // compensation) are executed by recomputing from inputs and comparing.
+  const algo = verifyAlgorithmicVector(vector);
+  if (algo) {
+    report(relPath, algo.ok, algo.detail);
     return;
   }
 
@@ -321,6 +428,16 @@ async function main() {
 
   console.log('\nDiscovery fixtures:');
   await verifyArtifactDir(join(rootDir, 'vectors/discovery/fixtures'), publicKey, 'discovery fixtures');
+
+  console.log('\nNotary vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/notary'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
+
+  console.log('\nSettler vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/settlers'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
 
   console.log('\nCore examples:');
   for (const name of ['tim.json', 'kernel.json', 'execution-receipt.json']) {

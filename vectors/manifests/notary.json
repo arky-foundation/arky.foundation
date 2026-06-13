@@ -28,13 +28,18 @@
     "N2": {
       "name": "Anchor",
       "description": "Batch anchoring and inclusion proofs",
-      "vectors": [],
-      "coverage": 0,
+      "vectors": [
+        "n2-001.json",
+        "n2-002.json",
+        "n2-003.json",
+        "n2-004.json"
+      ],
+      "coverage": 4,
       "focus_areas": [
-        "Merkle tree construction",
-        "Batch anchoring",
-        "Inclusion proof generation",
-        "Multi-target anchoring"
+        "Merkle tree construction (merkle-sha256-v1)",
+        "Odd-count last-leaf duplication",
+        "Inclusion proof verification",
+        "Negative: invalid inclusion proof rejected"
       ]
     },
     "N3": {
@@ -50,7 +55,7 @@
       ]
     }
   },
-  "total_vectors": 8,
+  "total_vectors": 12,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,

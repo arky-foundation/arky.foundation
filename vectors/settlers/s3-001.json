@@ -1,0 +1,25 @@
+{
+  "id": "s3-001",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S3",
+  "description": "Compensation verb mapping for irreversible rails (§7.2)",
+  "context": {
+    "reference": "ARKY-SETTLERS-v1 §7.2",
+    "note": "When rollback is impossible, the compensating verb is determined by a fixed map."
+  },
+  "inputs": {
+    "compensations": [
+      { "verb": "pay", "expect_compensation": "refund" },
+      { "verb": "slash", "expect_compensation": "pay" },
+      { "verb": "upgrade", "expect_compensation": "revoke" },
+      { "verb": "revoke", "expect_compensation": "upgrade" },
+      { "verb": "signal", "expect_compensation": "signal" },
+      { "verb": "control", "expect_compensation": "control" }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "all_mappings_correct": true
+  }
+}

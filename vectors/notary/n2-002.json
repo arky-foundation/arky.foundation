@@ -1,0 +1,29 @@
+{
+  "id": "n2-002",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N2",
+  "description": "Merkle root over 3 cids - odd count duplicates last leaf (§5.1 step 2)",
+  "context": {
+    "algorithm": "merkle-sha256-v1",
+    "reference": "ARKY-NOTARY-v1 §5.1",
+    "note": "Cids are sorted bytewise then the last is duplicated to pad to even count."
+  },
+  "inputs": {
+    "alg": "merkle-sha256-v1",
+    "cids": [
+      "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
+      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM",
+      "zQmWahgQ4Cx2AFFwwmmXCi4tZ4H4pFwU6URh8NFqTN6bLDJ"
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "merkle_root": "zQmcj9qKdSDBKt3HHf3W7tFrgpeC6xZ8K33kiq9DPTM4Xbe",
+    "sorted_order": [
+      "zQmWahgQ4Cx2AFFwwmmXCi4tZ4H4pFwU6URh8NFqTN6bLDJ",
+      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM",
+      "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm"
+    ]
+  }
+}

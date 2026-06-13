@@ -1,0 +1,25 @@
+{
+  "id": "s2-002",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S2",
+  "description": "Failure cascade STOP_ON_FAILURE - verbs after a failure are skipped (§4.1)",
+  "context": {
+    "reference": "ARKY-SETTLERS-v1 §4.1",
+    "note": "verb[1] fails; verb[0] already succeeded; verbs[2..] become skipped with settler.prior_verb_failed."
+  },
+  "inputs": {
+    "execution_mode": "stop_on_failure",
+    "verbs": [
+      { "verb": "arky:verb/pay@v1", "outcome": "success" },
+      { "verb": "arky:verb/pay@v1", "outcome": "failed" },
+      { "verb": "arky:verb/signal@v1", "outcome": "success" },
+      { "verb": "arky:verb/control@v1", "outcome": "success" }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "xr_statuses": ["success", "failed", "skipped", "skipped"],
+    "skipped_error_code": "settler.prior_verb_failed"
+  }
+}

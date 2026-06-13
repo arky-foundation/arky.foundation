@@ -1,0 +1,26 @@
+{
+  "id": "s2-001",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S2",
+  "description": "Idempotency key derivation when client omits idempotency_key (§6.1)",
+  "context": {
+    "reference": "ARKY-SETTLERS-v1 §6.1",
+    "note": "key = mh(JCS({args_hash, commitment_cid, rail, verb, verb_index})); recomputed by verifier."
+  },
+  "inputs": {
+    "commitment_cid": "zQmXFJ9QhRYZRPiWYeRBqoYuGey19PGoQNXRi5RSVdAmWwD",
+    "verb": "arky:verb/pay@v1",
+    "rail": "arky:rail/ach:us@v1",
+    "verb_index": 0,
+    "args": {
+      "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
+      "amount": { "value": 1, "unit": "ETH" }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "args_hash": "zQmYXeuZwLm83qFNwo4e42G3w46wpY8FoGxfxb7TbNzCKDf",
+    "idempotency_key": "zQmVBtzxkYPLRn48N7TLLfsz8hKU6ViXKAKnZhwiyjVksQc"
+  }
+}

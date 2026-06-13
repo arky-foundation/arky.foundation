@@ -1,0 +1,24 @@
+{
+  "id": "n2-003",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N2",
+  "description": "Inclusion proof verification - leaf folds with sibling to claimed root (§5.2)",
+  "context": {
+    "algorithm": "merkle-sha256-v1",
+    "reference": "ARKY-NOTARY-v1 §5.2",
+    "note": "Proof for the first cid of n2-001's 2-leaf tree; path holds the sibling cid."
+  },
+  "inputs": {
+    "alg": "merkle-sha256-v1",
+    "leaf": "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
+    "path": [
+      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM"
+    ],
+    "root": "zQmbdB8Ed4p8hy1mVYvy5bezPoKcTKBwcYYwxwbeTVcfgaG"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "inclusion_valid": true
+  }
+}

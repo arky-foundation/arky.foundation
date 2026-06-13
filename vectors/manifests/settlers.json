@@ -31,29 +31,33 @@
     "S2": {
       "name": "Failure",
       "description": "Failure handling and error classification",
-      "vectors": [],
-      "coverage": 0,
+      "vectors": [
+        "s2-001.json",
+        "s2-002.json"
+      ],
+      "coverage": 2,
       "focus_areas": [
-        "Insufficient funds handling",
-        "Counterparty rejection",
-        "Timeout handling",
+        "Idempotency key derivation (§6.1)",
+        "Failure cascade STOP_ON_FAILURE / skipped verbs (§4.1)",
         "Error envelope generation"
       ]
     },
     "S3": {
       "name": "Rollback",
       "description": "Rollback and compensation handling",
-      "vectors": [],
-      "coverage": 0,
+      "vectors": [
+        "s3-001.json"
+      ],
+      "coverage": 1,
       "focus_areas": [
+        "Compensation verb mapping (§7.2)",
         "Rollback window tracking",
-        "Compensation execution",
         "Irreversible action handling",
         "Cross-rail coordination"
       ]
     }
   },
-  "total_vectors": 10,
+  "total_vectors": 13,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,
