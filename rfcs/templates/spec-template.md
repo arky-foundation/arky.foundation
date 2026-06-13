@@ -208,8 +208,8 @@ describe('New Feature Integration', () => {
 ## References
 
 ### Related Specifications
-- [ARKY-KERNEL-v1](../specs/core/ARKY-KERNEL-v1.md)
-- [ARKY-SECURITY-BPR-v1](../specs/security/ARKY-SECURITY-BPR-v1.md)
+- [ARKY-KERNEL-v1](../../specs/core/ARKY-KERNEL-v1.md)
+- [ARKY-SECURITY-BPR-v1](../../specs/security/ARKY-SECURITY-BPR-v1.md)
 
 ### Related RFCs
 - [RFC-0001](../0001-compatibility-matrix.md) - Compatibility Matrix

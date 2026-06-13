@@ -322,15 +322,15 @@ describe('[Entry Name] Functionality', () => {
 ## References
 
 ### Registry Documentation
-- [Registries Spec](../specs/infrastructure/ARKY-REGISTRIES-v1.md)
-- [Registry Structure Guide](../registries/examples/README.md)
+- [Registries Spec](../../specs/infrastructure/ARKY-REGISTRIES-v1.md)
+- [Registry Structure Guide](../../registries/examples/README.md)
 
 ### Related RFCs
 - [RFC-XXXX](../XXXX-related-rfc.md) - Related registry change
 
 ### Schema Documentation
 - [JSON Schema Specification](https://json-schema.org/)
-- [Registry Schema Patterns](../schemas/registry-patterns.md)
+- [Registry Schema Patterns](../../schemas/infrastructure/registries-v1.json)
 
 ---
 

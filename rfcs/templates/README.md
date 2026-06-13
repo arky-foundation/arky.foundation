@@ -248,7 +248,7 @@ No security or privacy implications.
 
 ## References
 - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) - Date and time format
-- [ARKY-TIM-v1](../specs/core/ARKY-TIM-v1.md) - TIM specification
+- [ARKY-TIM-v1](../../specs/core/ARKY-TIM-v1.md) - TIM specification
 ```
 
 ### Complex RFC Example
@@ -457,8 +457,8 @@ describe('Batch Processing', () => {
 
 ## References
 ### Related Specifications
-- [ARKY-KERNEL-v1](../specs/core/ARKY-KERNEL-v1.md)
-- [ARKY-REGISTRY-VERBS-v1](../specs/infrastructure/ARKY-REGISTRY-VERBS-v1.md)
+- [ARKY-KERNEL-v1](../../specs/core/ARKY-KERNEL-v1.md)
+- [ARKY-REGISTRY-VERBS-v1](../../specs/infrastructure/ARKY-REGISTRY-VERBS-v1.md)
 
 ### Related RFCs
 - [RFC-0001](../0001-compatibility-matrix.md) - Compatibility Matrix
