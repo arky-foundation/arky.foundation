@@ -5,9 +5,18 @@
  * Turns "vectors over vibes" into an automated check. For every signed
  * artifact and test vector this script:
  *   1. Recomputes the content id (cid) via JCS (RFC 8785) + multihash(sha2-256)
- *      and base58btc multibase encoding.
- *   2. Verifies the detached JWS (RFC 7797, b64:false) over the canonical body.
- *   3. Compares the observed result against each vector's `expect` block.
+ *      and base58btc multibase encoding (artifacts without a cid are sig-only).
+ *   2. Verifies the detached JWS (RFC 7797, b64:false) over the canonical body
+ *      (which excludes cid, sig, and time.witnesses).
+ *   3. Verifies each detached-payload witness JWS in time.witnesses[] against
+ *      its kid-resolved key, over the same canonical bytes.
+ *   4. Compares the observed result against each vector's `expect` block.
+ *
+ * Coverage: TIM + Kernel vectors and fixtures; discovery vectors/fixtures; and
+ * standalone signed artifacts — registries, policy packs, service descriptors,
+ * revocation lists, execution receipts, and discovery indexes. Pure
+ * schema/structural vectors (no cid/signature expectation) are validated by the
+ * AJV schema step in CI, not here.
  *
  * Exits non-zero if any artifact fails, so CI fails on a broken vector.
  *
@@ -133,6 +142,7 @@ function computeCid(canonicalJson: string): string {
 }
 
 interface CheckResult {
+  hasCid: boolean;
   cidMatch: boolean;
   sigValid: boolean;
   witnessesValid: boolean;
@@ -143,8 +153,13 @@ interface CheckResult {
 }
 
 /**
- * Verify one signed artifact (TIM, kernel commitment, receipt, etc.).
- * The canonical body is the object minus `cid` and `sig`.
+ * Verify one signed artifact (TIM, kernel commitment, receipt, registry,
+ * policy pack, service descriptor, revocation list, discovery index, ...).
+ * The canonical body is the object minus `cid`, `sig`, and `time.witnesses`.
+ *
+ * Some artifacts (registries, policy packs, revocation lists) are signed but
+ * NOT content-addressed — they carry `sig` without `cid`. For those, the cid
+ * check is reported as n/a (hasCid=false) rather than a failure.
  */
 async function verifyArtifact(
   artifact: Record<string, unknown>,
@@ -156,7 +171,8 @@ async function verifyArtifact(
   const body = stripWitnesses(rest);
   const canonical = jcsCanonical(body);
   const computedCid = computeCid(canonical);
-  const cidMatch = storedCid === computedCid;
+  const hasCid = storedCid !== undefined;
+  const cidMatch = hasCid ? storedCid === computedCid : true;
 
   let sigValid = false;
   let detail = '';
@@ -185,7 +201,7 @@ async function verifyArtifact(
     detail = detail ? `${detail}; ${failures.join('; ')}` : failures.join('; ');
   }
 
-  return { cidMatch, sigValid, witnessesValid, witnessCount, computedCid, storedCid: String(storedCid), detail };
+  return { hasCid, cidMatch, sigValid, witnessesValid, witnessCount, computedCid, storedCid: String(storedCid), detail };
 }
 
 let passCount = 0;
@@ -201,6 +217,36 @@ function report(label: string, ok: boolean, detail = '') {
   }
 }
 
+/** Report a CheckResult against a labelled artifact, with consistent detail. */
+function reportArtifact(label: string, res: CheckResult) {
+  const cidOk = !res.hasCid || res.cidMatch;
+  const ok = cidOk && res.sigValid && res.witnessesValid;
+  const witLabel = res.witnessCount > 0 ? ` (+${res.witnessCount} witness)` : '';
+  const cidPart = res.hasCid ? (res.cidMatch ? 'ok' : `mismatch (computed ${res.computedCid})`) : 'n/a';
+  const detail = ok ? '' :
+    `cid ${cidPart}; sig ${res.sigValid ? 'ok' : 'invalid'}; ` +
+    `witnesses ${res.witnessesValid ? 'ok' : 'invalid'}${res.detail ? ` — ${res.detail}` : ''}`;
+  report(`${label}${witLabel}`, ok, detail);
+}
+
+/**
+ * Verify every standalone signed artifact in a directory (registries, policies,
+ * service descriptors, revocation lists, execution receipts, ...). Files
+ * without a `sig` are skipped. Returns nothing; reports per file.
+ */
+async function verifyArtifactDir(dir: string, publicKey: jose.KeyLike, label: string) {
+  const files = (await listJson(dir)).sort();
+  const signed: string[] = [];
+  for (const f of files) {
+    const artifact = JSON.parse(await readFile(f, 'utf-8'));
+    if (typeof artifact?.sig !== 'string') continue; // unsigned (e.g. schema, index template)
+    signed.push(f);
+    const res = await verifyArtifact(artifact, publicKey);
+    reportArtifact(relative(rootDir, f), res);
+  }
+  if (signed.length === 0) console.log(`  (no signed ${label})`);
+}
+
 /**
  * Verify a single vector file. Vectors carry an `expect` block; we honor the
  * fields relevant to T1/K1 conformance (cid_valid, signature_valid,
@@ -211,10 +257,6 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
   const vector = JSON.parse(await readFile(path, 'utf-8'));
   const expect = vector.expect ?? {};
 
-  // Locate the embedded signed artifact: TIM vectors use inputs.tim,
-  // kernel vectors use inputs.commitment.
-  const artifact = vector.inputs?.tim ?? vector.inputs?.commitment;
-
   // Vectors that intentionally describe invalid/unsigned inputs (expect.valid
   // === false) are validated structurally by the schema step, not here.
   if (expect.valid === false) {
@@ -222,29 +264,25 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
     return;
   }
 
-  if (!artifact || typeof artifact !== 'object' || !('sig' in artifact)) {
-    report(`${relPath}`, false, 'no signed artifact found in inputs');
+  // Only vectors that assert a crypto property are verified here. Pure
+  // schema/structural vectors (e.g. JWKS shape, service-list counts) carry no
+  // cid/signature expectation and are validated by the AJV step in CI.
+  const hasCryptoExpectation =
+    expect.cid_valid === true || expect.signature_valid === true || expect.has_signature === true;
+  if (!hasCryptoExpectation) {
+    report(`${relPath} (schema-only, checked elsewhere)`, true);
     return;
   }
 
-  const res = await verifyArtifact(artifact as Record<string, unknown>, publicKey);
-
-  // expect.cid_valid (TIM) — recompute and compare.
-  if (expect.cid_valid === true || expect.signature_valid === true || expect.valid === true) {
-    const cidOk = res.cidMatch;
-    const sigOk = res.sigValid;
-    const witOk = res.witnessesValid;
-    const ok = cidOk && sigOk && witOk;
-    const witLabel = res.witnessCount > 0 ? ` (+${res.witnessCount} witness)` : '';
-    const detail = ok
-      ? ''
-      : `cid ${cidOk ? 'ok' : `mismatch (computed ${res.computedCid}, stored ${res.storedCid})`}; ` +
-        `sig ${sigOk ? 'ok' : 'invalid'}; ` +
-        `witnesses ${witOk ? 'ok' : 'invalid'} — ${res.detail}`;
-    report(`${relPath}${witLabel}`, ok, detail);
-  } else {
-    report(`${relPath} (no crypto expectations)`, true);
+  // Locate the embedded signed artifact: TIM vectors use inputs.tim, kernel
+  // vectors use inputs.commitment, discovery vectors use inputs.well_known_index.
+  const artifact = vector.inputs?.tim ?? vector.inputs?.commitment ?? vector.inputs?.well_known_index;
+  if (!artifact || typeof artifact !== 'object' || !('sig' in artifact)) {
+    report(`${relPath}`, false, 'crypto expectation set but no signed artifact in inputs');
+    return;
   }
+
+  reportArtifact(relPath, await verifyArtifact(artifact as Record<string, unknown>, publicKey));
 }
 
 async function listJson(dir: string): Promise<string[]> {
@@ -274,27 +312,40 @@ async function main() {
     await verifyVector(f, publicKey);
   }
 
-  console.log('\nCore examples:');
-  for (const name of ['tim.json', 'kernel.json']) {
-    const path = join(rootDir, 'examples/core', name);
-    const relPath = relative(rootDir, path);
-    const artifact = JSON.parse(await readFile(path, 'utf-8'));
-    const res = await verifyArtifact(artifact, publicKey);
-    const ok = res.cidMatch && res.sigValid && res.witnessesValid;
-    report(relPath, ok, ok ? '' :
-      `cid ${res.cidMatch ? 'ok' : 'mismatch'}; sig ${res.sigValid ? 'ok' : 'invalid'}; witnesses ${res.witnessesValid ? 'ok' : 'invalid'} — ${res.detail}`);
+  console.log('\nDiscovery vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/discovery'))).sort()) {
+    // fixtures/ holds standalone signed artifacts (not vectors); verified below.
+    if (f.includes(`${join('discovery', 'fixtures')}`)) continue;
+    await verifyVector(f, publicKey);
   }
+
+  console.log('\nDiscovery fixtures:');
+  await verifyArtifactDir(join(rootDir, 'vectors/discovery/fixtures'), publicKey, 'discovery fixtures');
+
+  console.log('\nCore examples:');
+  for (const name of ['tim.json', 'kernel.json', 'execution-receipt.json']) {
+    const path = join(rootDir, 'examples/core', name);
+    const artifact = JSON.parse(await readFile(path, 'utf-8'));
+    reportArtifact(relative(rootDir, path), await verifyArtifact(artifact, publicKey));
+  }
+
+  console.log('\nRegistries:');
+  await verifyArtifactDir(join(rootDir, 'registries'), publicKey, 'registries');
+
+  console.log('\nPolicy packs:');
+  await verifyArtifactDir(join(rootDir, 'policies'), publicKey, 'policy packs');
+
+  console.log('\nService descriptors:');
+  await verifyArtifactDir(join(rootDir, 'examples/service-descriptors'), publicKey, 'service descriptors');
+
+  console.log('\nRevocation lists:');
+  await verifyArtifactDir(join(rootDir, 'examples/security/revocations'), publicKey, 'revocation lists');
 
   console.log('\nTIM fixtures:');
   for (const f of (await listJson(join(rootDir, 'vectors/fixtures/tims'))).sort()) {
-    const relPath = relative(rootDir, f);
     const fixture = JSON.parse(await readFile(f, 'utf-8'));
     if (!fixture.tim?.sig) continue;
-    const res = await verifyArtifact(fixture.tim, publicKey);
-    const ok = res.cidMatch && res.sigValid && res.witnessesValid;
-    const witLabel = res.witnessCount > 0 ? ` (+${res.witnessCount} witness)` : '';
-    report(`${relPath}${witLabel}`, ok, ok ? '' :
-      `cid ${res.cidMatch ? 'ok' : `mismatch (computed ${res.computedCid})`}; sig ${res.sigValid ? 'ok' : 'invalid'}; witnesses ${res.witnessesValid ? 'ok' : 'invalid'} — ${res.detail}`);
+    reportArtifact(relative(rootDir, f), await verifyArtifact(fixture.tim, publicKey));
   }
 
   console.log(`\n${passCount} passed, ${failCount} failed.`);
