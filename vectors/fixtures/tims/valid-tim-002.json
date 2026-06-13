@@ -6,7 +6,7 @@
     "time": {
       "ts": "2025-10-15T12:05:00Z",
       "witnesses": [
-        "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDIifQ.WITNESS_PAYLOAD.WITNESS_SIGNATURE"
+        "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDIiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..eloHG2VHD45Igmmak32IxyBbjj1x2A9gse2rvuEoLUB1F9y1Qxjb6OpOaT5Id2OA7aKfuT_Z0teECbnc8SLtBA"
       ]
     },
     "identity": {
@@ -26,8 +26,8 @@
     },
     "prev": "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
     "nonce": "nonce-2025-10-15-001",
-    "cid": "zQmXU1t5uZHEEAktEZE4RvDc8voCP4NgPnEb7vP5XCoXJZb",
-    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..3tJFUaMHWBDVxNfUndyzaozR-fnLVBfXUXSMK0oeIRIWaNwlmWDEAnzphYImbcdYST1ELq_qo0RtW4woRIKrAQ"
+    "cid": "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM",
+    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..G0_hjxR3RwaShXcX7hgVlrc030EY0d3meWzSCJCqs_Uk_xWqxVa1eIl2yyT6_TCrDZOKlVgjl3v4hRgYu03yCg"
   },
   "signing_key_ref": "fixtures/keys/ed25519-test-01.json",
   "witness_key_ref": "fixtures/keys/ed25519-test-02.json",

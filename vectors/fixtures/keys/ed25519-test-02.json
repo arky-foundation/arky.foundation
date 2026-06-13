@@ -7,17 +7,17 @@
   "publicKey": {
     "kty": "OKP",
     "crv": "Ed25519",
-    "x": "lW-SWVpDU-FHcpkNMQTuGiNqKhF-wLKfpPPzlvdZG5E",
+    "x": "e_vAtyLIHAXMh1TRvhFUNrvifhH5ZzXKGwGKk9zgB9I",
     "kid": "test-key-2025-02"
   },
   "privateKey": {
     "kty": "OKP",
     "crv": "Ed25519",
-    "x": "lW-SWVpDU-FHcpkNMQTuGiNqKhF-wLKfpPPzlvdZG5E",
+    "x": "e_vAtyLIHAXMh1TRvhFUNrvifhH5ZzXKGwGKk9zgB9I",
     "d": "4CpanBIFLh0UVaNmLdKxW5eeYLG3hPXMWU6O4qlKjnA",
     "kid": "test-key-2025-02"
   },
-  "did": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP",
+  "did": "did:key:z6MknoEqtdkGTu2VUdAc6jPMfGAZbJ332qV94tR3EFD7Nd85",
   "created": "2025-10-15T00:00:00Z",
   "warning": "TEST KEY ONLY - NEVER USE IN PRODUCTION"
 }

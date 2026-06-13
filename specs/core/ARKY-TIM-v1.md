@@ -2,7 +2,7 @@
 spec_id: ARKY-TIM-v1
 title: Arky — TIM Core
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative
@@ -45,7 +45,7 @@ last_updated: 2025-10-15
 Spec ID: ARKY-TIM-v1
 Effective: 2025-10-15
 
-**Status:** v1 (Stable)
+**Status:** v1 (Review)
 
 **All sections are normative unless labeled _Informative_.** Companion docs
 (profiles, examples, vectors, implementer notes) are published separately.
@@ -146,7 +146,12 @@ A TIM **MUST** be a JSON object with the following fields.
 ## 5. Canonicalization & Content Addressing
 
 **Canonicalization:** v1 **MUST** use **RFC 8785 JCS**. Canonical body = full
-TIM object **without** `cid` and `sig`.
+TIM object **without** `cid`, `sig`, and `time.witnesses`. Witness signatures are
+co-signed over this same canonical body and appended to `time.witnesses[]`
+afterwards (§6); excluding them keeps the issuer's and every witness's signing
+input identical and avoids the circularity of signing bytes that contain the
+signature itself. If `time` would be left empty after removing `witnesses`, the
+`time` object **MUST** be omitted from the canonical body.
 
 **cid:** `cid = multibase('z', base58btc(multihash(sha2-256, canonical_bytes)))`
 (multihash code `0x12`, length `0x20` = 32 bytes). The value is the multibase

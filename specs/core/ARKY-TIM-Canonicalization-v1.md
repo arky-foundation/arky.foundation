@@ -3,7 +3,7 @@
 spec_id: ARKY-TIM-Canonicalization-v1
 title: Arky — TIM Canonicalization
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative
@@ -54,7 +54,15 @@ Effective: 2025-10-15
 
 ## 2. Canonical Body
 
-* The **canonical body** is the unsigned TIM object **with the fields `cid` and `sig` removed**.
+* The **canonical body** is the unsigned TIM object **with the fields `cid`, `sig`, and `time.witnesses` removed**.
+* `time.witnesses` is excluded because witness signatures are computed over the
+  canonical body and **appended afterwards** (see ARKY-NOTARY-v1 §4.2). Including
+  them would be circular: a witness JWS cannot sign bytes that already contain
+  that same JWS. Excluding them lets the issuer and every witness sign **identical
+  bytes**, and lets a Notary append a witness without invalidating `cid`, `sig`,
+  or any prior witness.
+* If `time` contains only `witnesses`, the now-empty `time` object **MUST** be
+  omitted from the canonical body (no empty `time:{}` placeholder).
 * Implementations **MUST** serialize the canonical body as **canonical JSON** per §3 before hashing and signing.
 
 ---
@@ -63,7 +71,7 @@ Effective: 2025-10-15
 
 TIM uses **RFC 8785 (JCS)** with the following constraints:
 
-1. **Object key ordering**: lexicographic (bytewise) by UTF‑8 code units.
+1. **Object key ordering**: per RFC 8785 §3.2.3 — sort by the **UTF‑16 code units** of each member name (i.e., the order JavaScript `Array.prototype.sort` produces over keys). This is the JCS rule and is **not** the same as a UTF‑8 bytewise sort: the two diverge for code points outside the Basic Multilingual Plane (e.g., emoji, CJK Extension B), so implementations **MUST** use UTF‑16 ordering to interoperate.
 2. **Unique keys**: duplicate member names **MUST NOT** appear.
 3. **Whitespace**: no insignificant whitespace.
 4. **Strings**: UTF‑8; no Unicode normalization beyond JSON escapes; escape per RFC 8259 only.
@@ -107,7 +115,7 @@ cid = multibase('z', Base58-BTC(Multihash(SHA-256, canonical_bytes)))
 
 ## 6. Field Inclusion Rules
 
-* The canonical body **MUST** contain every field present in the TIM except `cid` and `sig`.
+* The canonical body **MUST** contain every field present in the TIM except `cid`, `sig`, and `time.witnesses` (see §2).
 * Optional fields **MUST** be omitted entirely if absent; no `null` placeholders.
 * Empty arrays/objects **MUST** be serialized if present.
 * Implementations **MUST** reject receipts containing unknown top‑level fields unless a Profile explicitly allows them.
@@ -127,7 +135,7 @@ cid = multibase('z', Base58-BTC(Multihash(SHA-256, canonical_bytes)))
 * Do not reinterpret numbers across languages (e.g., integer vs. float widening). Use the exact JCS formatting.
 * Ensure JSON libraries do not reorder keys or insert whitespace in canonical mode.
 * Reject non‑finite numbers.
-* Treat key comparators as bytewise UTF‑8; locale‑dependent collation **MUST NOT** be used.
+* Treat key comparators as RFC 8785 UTF‑16 code‑unit ordering (§3 item 1); locale‑dependent collation and UTF‑8 bytewise sorts **MUST NOT** be used.
 
 ---
 

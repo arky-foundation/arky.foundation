@@ -14,13 +14,23 @@ import { base58btc } from 'multiformats/bases/base58';
 import { readdir, readFile, writeFile } from 'fs/promises';
 import { join, relative } from 'path';
 
-// Test key from fixtures (DO NOT USE IN PRODUCTION)
+// Test key from fixtures (DO NOT USE IN PRODUCTION) — issuer key (key-01).
 const TEST_KEY = {
   kty: 'OKP',
   crv: 'Ed25519',
   x: '11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo',
   d: 'nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A',
   kid: 'test-key-2025-01'
+};
+
+// Second test key (key-02) used to co-sign witness signatures. DO NOT USE IN
+// PRODUCTION. See vectors/fixtures/keys/ed25519-test-02.json.
+const TEST_WITNESS_KEY = {
+  kty: 'OKP',
+  crv: 'Ed25519',
+  x: 'e_vAtyLIHAXMh1TRvhFUNrvifhH5ZzXKGwGKk9zgB9I',
+  d: '4CpanBIFLh0UVaNmLdKxW5eeYLG3hPXMWU6O4qlKjnA',
+  kid: 'test-key-2025-02'
 };
 
 /**
@@ -65,14 +75,34 @@ function computeCid(canonicalJson: string): string {
  *
  * Output shape: "<protected_header>..<signature>" (empty middle segment).
  */
-async function signJws(canonicalBytes: Uint8Array, privateKey: jose.KeyLike): Promise<string> {
+async function signJws(canonicalBytes: Uint8Array, privateKey: jose.KeyLike, kid: string = TEST_KEY.kid): Promise<string> {
   const jws = await new jose.CompactSign(canonicalBytes)
-    .setProtectedHeader({ alg: 'EdDSA', typ: 'JWS', kid: TEST_KEY.kid, b64: false, crit: ['b64'] })
+    .setProtectedHeader({ alg: 'EdDSA', typ: 'JWS', kid, b64: false, crit: ['b64'] })
     .sign(privateKey);
   // CompactSign returns "header.payload.signature"; strip the payload segment
   // to produce the detached form "header..signature".
   const [header, , signature] = jws.split('.');
   return `${header}..${signature}`;
+}
+
+/**
+ * Build the canonical body of a TIM: the object minus `cid`, `sig`, and
+ * `time.witnesses` (see ARKY-TIM-Canonicalization-v1 §2). Witnesses are
+ * co-signed over these same bytes and appended afterwards. If `time` is left
+ * empty, it is omitted entirely.
+ */
+function timCanonicalBody(tim: Record<string, unknown>): Record<string, unknown> {
+  const { cid: _c, sig: _s, ...rest } = tim;
+  const time = rest.time as Record<string, unknown> | undefined;
+  if (time && 'witnesses' in time) {
+    const { witnesses: _w, ...timeRest } = time;
+    if (Object.keys(timeRest).length === 0) {
+      const { time: _t, ...noTime } = rest;
+      return noTime;
+    }
+    return { ...rest, time: timeRest };
+  }
+  return rest;
 }
 
 /**
@@ -96,6 +126,17 @@ function isPlaceholderSig(sig: unknown): boolean {
 }
 
 /**
+ * Check whether a TIM's witnesses need (re)signing: any entry that is a
+ * placeholder or a legacy attached JWS (non-empty payload segment) is stale.
+ */
+function hasPlaceholderWitness(tim: Record<string, unknown>): boolean {
+  const time = tim.time as Record<string, unknown> | undefined;
+  const witnesses = time?.witnesses;
+  if (!Array.isArray(witnesses)) return false;
+  return witnesses.some((w) => isPlaceholderSig(w));
+}
+
+/**
  * Check if a CID looks like a placeholder
  */
 function isPlaceholderCid(cid: unknown): boolean {
@@ -109,19 +150,24 @@ function isPlaceholderCid(cid: unknown): boolean {
 /**
  * Process a TIM object: compute cid and sign
  */
-async function processTim(tim: Record<string, unknown>, privateKey: jose.KeyLike): Promise<Record<string, unknown>> {
-  // Remove existing cid and sig for canonical body
-  const { cid: _, sig: __, ...body } = tim;
-
-  // Canonicalize and compute CID
+async function processTim(tim: Record<string, unknown>, privateKey: jose.KeyLike, witnessKey?: jose.KeyLike): Promise<Record<string, unknown>> {
+  // Canonical body excludes cid, sig, and time.witnesses (Canonicalization §2).
+  const body = timCanonicalBody(tim);
   const canonical = jcsCanonical(body);
   const newCid = computeCid(canonical);
-
-  // Sign canonical bytes
   const canonicalBytes = new TextEncoder().encode(canonical);
   const newSig = await signJws(canonicalBytes, privateKey);
 
-  return { ...body, cid: newCid, sig: newSig };
+  // If the TIM carries witnesses, co-sign the SAME canonical bytes with the
+  // witness key and rebuild time.witnesses[]. Placeholder witnesses are
+  // replaced with real detached JWS so T3/N3 conformance is actually exercised.
+  const time = tim.time as Record<string, unknown> | undefined;
+  const result: Record<string, unknown> = { ...tim, cid: newCid, sig: newSig };
+  if (time && Array.isArray(time.witnesses) && witnessKey) {
+    const witnessSig = await signJws(canonicalBytes, witnessKey, TEST_WITNESS_KEY.kid);
+    result.time = { ...time, witnesses: time.witnesses.map(() => witnessSig) };
+  }
+  return result;
 }
 
 /**
@@ -145,7 +191,7 @@ async function processSignedArtifact(artifact: Record<string, unknown>, privateK
 /**
  * Process files in a directory recursively
  */
-async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: string): Promise<number> {
+async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: string, witnessKey: jose.KeyLike): Promise<number> {
   let count = 0;
   const entries = await readdir(dir, { withFileTypes: true });
 
@@ -153,7 +199,7 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
     const fullPath = join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      count += await processDirectory(fullPath, privateKey, rootDir);
+      count += await processDirectory(fullPath, privateKey, rootDir, witnessKey);
     } else if (entry.name.endsWith('.json')) {
       const relPath = relative(rootDir, fullPath);
 
@@ -174,10 +220,13 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         const needsSign = hasSig && isPlaceholderSig(json.sig);
         const needsCid = hasCid && isPlaceholderCid(json.cid);
 
-        if (needsSign || needsCid) {
-          if (json.time && json.identity && json.measurement) {
+        const isTim = json.time && json.identity && json.measurement;
+        const needsWitnessResign = isTim && hasPlaceholderWitness(json);
+
+        if (needsSign || needsCid || needsWitnessResign) {
+          if (isTim) {
             // TIM
-            updated = await processTim(json, privateKey);
+            updated = await processTim(json, privateKey, witnessKey);
             console.log(`  [tim] ${relPath}`);
           } else if (json.registry_id || json.pack_id) {
             // Registry or policy pack
@@ -201,8 +250,8 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         // Handle test vectors with embedded TIMs
         if (json.inputs?.tim) {
           const tim = json.inputs.tim;
-          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid)) {
-            const signedTim = await processTim(tim, privateKey);
+          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid) || hasPlaceholderWitness(tim)) {
+            const signedTim = await processTim(tim, privateKey, witnessKey);
             json.inputs.tim = signedTim;
             updated = json;
             console.log(`  [vector:tim] ${relPath}`);
@@ -234,8 +283,8 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         // Handle fixture files with embedded TIMs
         if (json.tim && json.tim.time && json.tim.identity && json.tim.measurement) {
           const tim = json.tim;
-          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid)) {
-            const signedTim = await processTim(tim, privateKey);
+          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid) || hasPlaceholderWitness(tim)) {
+            const signedTim = await processTim(tim, privateKey, witnessKey);
             json.tim = signedTim;
             updated = json;
             console.log(`  [fixture:tim] ${relPath}`);
@@ -259,8 +308,9 @@ async function main() {
   console.log('Arky Artifact Signing Script');
   console.log('============================\n');
 
-  // Import private key
+  // Import keys: issuer (key-01) and witness (key-02).
   const privateKey = await jose.importJWK(TEST_KEY, 'EdDSA');
+  const witnessKey = await jose.importJWK(TEST_WITNESS_KEY, 'EdDSA');
 
   const rootDir = join(import.meta.dir, '..');
 
@@ -270,19 +320,19 @@ async function main() {
 
   // Process registries
   console.log('Registries:');
-  total += await processDirectory(join(rootDir, 'registries'), privateKey, rootDir);
+  total += await processDirectory(join(rootDir, 'registries'), privateKey, rootDir, witnessKey);
 
   // Process policies
   console.log('\nPolicies:');
-  total += await processDirectory(join(rootDir, 'policies'), privateKey, rootDir);
+  total += await processDirectory(join(rootDir, 'policies'), privateKey, rootDir, witnessKey);
 
   // Process examples
   console.log('\nExamples:');
-  total += await processDirectory(join(rootDir, 'examples'), privateKey, rootDir);
+  total += await processDirectory(join(rootDir, 'examples'), privateKey, rootDir, witnessKey);
 
   // Process vectors
   console.log('\nVectors:');
-  total += await processDirectory(join(rootDir, 'vectors'), privateKey, rootDir);
+  total += await processDirectory(join(rootDir, 'vectors'), privateKey, rootDir, witnessKey);
 
   console.log(`\nDone! Signed ${total} artifacts.`);
 }

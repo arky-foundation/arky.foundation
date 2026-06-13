@@ -22,13 +22,74 @@ import { join, relative } from 'path';
 
 const rootDir = join(import.meta.dir, '..');
 
-// Test key from fixtures (DO NOT USE IN PRODUCTION). Public half is enough to
-// verify; the private half is only used by the signing script.
+// Test keys from fixtures (DO NOT USE IN PRODUCTION). Public halves are enough
+// to verify; the private halves are only used by the signing script. The issuer
+// signs with key-01; witnesses are co-signed with key-02 (see
+// vectors/fixtures/keys/*). Keys are indexed by their JWS `kid` so witness
+// signatures can be resolved independently of the issuer key.
 const TEST_PUBLIC_JWK = {
   kty: 'OKP',
   crv: 'Ed25519',
   x: '11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo',
 };
+
+const TEST_PUBLIC_KEYS_BY_KID: Record<string, jose.JWK> = {
+  'test-key-2025-01': { kty: 'OKP', crv: 'Ed25519', x: '11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo' },
+  'test-key-2025-02': { kty: 'OKP', crv: 'Ed25519', x: 'e_vAtyLIHAXMh1TRvhFUNrvifhH5ZzXKGwGKk9zgB9I' },
+};
+
+/** Resolve a witness public key from the JWS protected header `kid`. */
+async function resolveWitnessKey(sig: string): Promise<jose.KeyLike | undefined> {
+  try {
+    const { kid } = jose.decodeProtectedHeader(sig);
+    if (typeof kid !== 'string') return undefined;
+    const jwk = TEST_PUBLIC_KEYS_BY_KID[kid];
+    if (!jwk) return undefined;
+    return (await jose.importJWK(jwk, 'EdDSA')) as jose.KeyLike;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Verify all detached-payload witness JWS in `time.witnesses[]` over the SAME
+ * canonical bytes as the issuer signature (TIM §6, Notary §3). Returns the
+ * number verified and a list of failures. An empty/absent witness list is OK.
+ */
+async function verifyWitnesses(
+  artifact: Record<string, unknown>,
+  canonical: string,
+): Promise<{ count: number; failures: string[] }> {
+  const time = artifact.time as Record<string, unknown> | undefined;
+  const witnesses = time?.witnesses;
+  const failures: string[] = [];
+  if (!Array.isArray(witnesses)) return { count: 0, failures };
+
+  const payload = new TextEncoder().encode(canonical);
+  for (let i = 0; i < witnesses.length; i++) {
+    const w = witnesses[i];
+    if (typeof w !== 'string' || w.split('.').length !== 3) {
+      failures.push(`witness[${i}]: not a compact JWS`);
+      continue;
+    }
+    const [header, mid, signature] = w.split('.');
+    if (mid.length !== 0) {
+      failures.push(`witness[${i}]: payload segment must be empty (detached, RFC 7797)`);
+      continue;
+    }
+    const key = await resolveWitnessKey(w);
+    if (!key) {
+      failures.push(`witness[${i}]: unresolvable kid`);
+      continue;
+    }
+    try {
+      await jose.flattenedVerify({ protected: header, signature, payload }, key, { crit: { b64: true } });
+    } catch (err) {
+      failures.push(`witness[${i}]: ${(err as Error).message}`);
+    }
+  }
+  return { count: witnesses.length, failures };
+}
 
 /** JCS (RFC 8785): lexicographically sorted keys, no whitespace. */
 function jcsCanonical(obj: unknown): string {
@@ -47,6 +108,22 @@ function jcsCanonical(obj: unknown): string {
   return '{' + pairs.join(',') + '}';
 }
 
+/**
+ * Remove `time.witnesses` from a TIM body (Canonicalization §2). Witnesses are
+ * appended after signing, so they are not part of the canonical body. If `time`
+ * becomes empty, drop it entirely (no empty `time:{}` placeholder).
+ */
+function stripWitnesses(rest: Record<string, unknown>): Record<string, unknown> {
+  const time = rest.time as Record<string, unknown> | undefined;
+  if (!time || !('witnesses' in time)) return rest;
+  const { witnesses: _w, ...timeRest } = time;
+  if (Object.keys(timeRest).length === 0) {
+    const { time: _t, ...noTime } = rest;
+    return noTime;
+  }
+  return { ...rest, time: timeRest };
+}
+
 /** cid = base58btc(multihash(sha2-256, canonical_bytes)). */
 function computeCid(canonicalJson: string): string {
   const bytes = new TextEncoder().encode(canonicalJson);
@@ -58,6 +135,8 @@ function computeCid(canonicalJson: string): string {
 interface CheckResult {
   cidMatch: boolean;
   sigValid: boolean;
+  witnessesValid: boolean;
+  witnessCount: number;
   computedCid: string;
   storedCid: string;
   detail: string;
@@ -71,7 +150,10 @@ async function verifyArtifact(
   artifact: Record<string, unknown>,
   publicKey: jose.KeyLike,
 ): Promise<CheckResult> {
-  const { cid: storedCid, sig, ...body } = artifact;
+  const { cid: storedCid, sig, ...rest } = artifact;
+  // Canonical body excludes cid, sig, and time.witnesses (Canonicalization §2):
+  // witnesses co-sign these same bytes and are appended afterwards.
+  const body = stripWitnesses(rest);
   const canonical = jcsCanonical(body);
   const computedCid = computeCid(canonical);
   const cidMatch = storedCid === computedCid;
@@ -95,7 +177,15 @@ async function verifyArtifact(
     detail = 'sig missing or not detached-compact form';
   }
 
-  return { cidMatch, sigValid, computedCid, storedCid: String(storedCid), detail };
+  // Witnesses (if any) co-sign the SAME canonical bytes (TIM §6 / Notary §3).
+  // Read the witness list from the original artifact (body has it stripped).
+  const { count: witnessCount, failures } = await verifyWitnesses(artifact, canonical);
+  const witnessesValid = failures.length === 0;
+  if (!witnessesValid) {
+    detail = detail ? `${detail}; ${failures.join('; ')}` : failures.join('; ');
+  }
+
+  return { cidMatch, sigValid, witnessesValid, witnessCount, computedCid, storedCid: String(storedCid), detail };
 }
 
 let passCount = 0;
@@ -143,12 +233,15 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
   if (expect.cid_valid === true || expect.signature_valid === true || expect.valid === true) {
     const cidOk = res.cidMatch;
     const sigOk = res.sigValid;
-    const ok = cidOk && sigOk;
+    const witOk = res.witnessesValid;
+    const ok = cidOk && sigOk && witOk;
+    const witLabel = res.witnessCount > 0 ? ` (+${res.witnessCount} witness)` : '';
     const detail = ok
       ? ''
       : `cid ${cidOk ? 'ok' : `mismatch (computed ${res.computedCid}, stored ${res.storedCid})`}; ` +
-        `sig ${sigOk ? 'ok' : `invalid (${res.detail})`}`;
-    report(`${relPath}`, ok, detail);
+        `sig ${sigOk ? 'ok' : 'invalid'}; ` +
+        `witnesses ${witOk ? 'ok' : 'invalid'} — ${res.detail}`;
+    report(`${relPath}${witLabel}`, ok, detail);
   } else {
     report(`${relPath} (no crypto expectations)`, true);
   }
@@ -187,9 +280,9 @@ async function main() {
     const relPath = relative(rootDir, path);
     const artifact = JSON.parse(await readFile(path, 'utf-8'));
     const res = await verifyArtifact(artifact, publicKey);
-    report(relPath, res.cidMatch && res.sigValid,
-      res.cidMatch && res.sigValid ? '' :
-      `cid ${res.cidMatch ? 'ok' : 'mismatch'}; sig ${res.sigValid ? 'ok' : `invalid (${res.detail})`}`);
+    const ok = res.cidMatch && res.sigValid && res.witnessesValid;
+    report(relPath, ok, ok ? '' :
+      `cid ${res.cidMatch ? 'ok' : 'mismatch'}; sig ${res.sigValid ? 'ok' : 'invalid'}; witnesses ${res.witnessesValid ? 'ok' : 'invalid'} — ${res.detail}`);
   }
 
   console.log('\nTIM fixtures:');
@@ -198,9 +291,10 @@ async function main() {
     const fixture = JSON.parse(await readFile(f, 'utf-8'));
     if (!fixture.tim?.sig) continue;
     const res = await verifyArtifact(fixture.tim, publicKey);
-    report(relPath, res.cidMatch && res.sigValid,
-      res.cidMatch && res.sigValid ? '' :
-      `cid ${res.cidMatch ? 'ok' : `mismatch (computed ${res.computedCid})`}; sig ${res.sigValid ? 'ok' : `invalid (${res.detail})`}`);
+    const ok = res.cidMatch && res.sigValid && res.witnessesValid;
+    const witLabel = res.witnessCount > 0 ? ` (+${res.witnessCount} witness)` : '';
+    report(`${relPath}${witLabel}`, ok, ok ? '' :
+      `cid ${res.cidMatch ? 'ok' : `mismatch (computed ${res.computedCid})`}; sig ${res.sigValid ? 'ok' : 'invalid'}; witnesses ${res.witnessesValid ? 'ok' : 'invalid'} — ${res.detail}`);
   }
 
   console.log(`\n${passCount} passed, ${failCount} failed.`);
