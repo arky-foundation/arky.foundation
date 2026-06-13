@@ -43,3 +43,12 @@ jobs:
             exit 1
           fi
           echo "Spec lint passed."
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install tooling deps
+        run: bun install --frozen-lockfile
+
+      - name: Check relative links
+        run: bun run scripts/check-links.ts

@@ -14,7 +14,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in vectors/RELEASES.json vectors/manifests/tim.json vectors/manifests/discovery.json vectors/manifests/attestations.json vectors/manifests/kernel.json; do
+          for f in vectors/RELEASES.json vectors/manifests/tim.json vectors/manifests/discovery.json vectors/manifests/attestations.json vectors/manifests/kernel.json vectors/manifests/notary.json vectors/manifests/settlers.json vectors/manifests/canonicalization.json vectors/manifests/integration.json; do
             if [[ ! -f "$f" ]]; then
               echo "[FAIL] Missing $f" >&2
               exit 1
@@ -28,6 +28,10 @@ jobs:
             'vectors/manifests/discovery.json',
             'vectors/manifests/attestations.json',
             'vectors/manifests/kernel.json',
+            'vectors/manifests/notary.json',
+            'vectors/manifests/settlers.json',
+            'vectors/manifests/canonicalization.json',
+            'vectors/manifests/integration.json',
           ]:
             with open(p, 'rb') as f:
               json.load(f)
@@ -40,5 +44,5 @@ jobs:
       - name: Install tooling deps
         run: bun install --frozen-lockfile
 
-      - name: Verify CIDs and signatures (conformance)
+      - name: Verify CIDs, signatures, and algorithmic vectors (conformance)
         run: bun run scripts/verify-artifacts.ts
