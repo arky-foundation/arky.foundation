@@ -2,7 +2,7 @@
 spec_id: ARKY-GOVERNANCE-v1
 title: Arky — Governance & RFC Process
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true

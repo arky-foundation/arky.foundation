@@ -3,7 +3,7 @@
 spec_id: ARKY-SECURITY-BPR-v1
 title: Arky — Security & Key Management Best Practices
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative

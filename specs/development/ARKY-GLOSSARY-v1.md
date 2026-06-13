@@ -2,7 +2,7 @@
 spec_id: ARKY-GLOSSARY-v1
 title: Arky — Terminology & Style Guide
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative

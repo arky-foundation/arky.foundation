@@ -2,7 +2,7 @@
 spec_id: ARKY-EXAMPLES-v1
 title: Arky — Examples & Tutorials
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: guide
 normative_default: false

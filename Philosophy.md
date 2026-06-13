@@ -2,7 +2,7 @@
 spec_id: ARKY-PHILOSOPHY
 title: Arky - Philosophy
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: overview
 normative_default: false  # Informative document

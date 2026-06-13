@@ -3,7 +3,7 @@
 spec_id: ARKY-IMPLEMENTER-GUIDE-v1
 title: Arky - Implementers' Guide
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: guide
 normative_default: false  # this guide is Informative; specs remain the source of truth

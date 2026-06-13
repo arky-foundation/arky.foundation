@@ -2,7 +2,7 @@
 spec_id: ARKY-VECTORS-MAINTAINERS-v1
 title: Arky — Vectors Maintainers Guide
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: guide
 normative_default: false  # Informative; ARKY-VECTORS-v1 remains normative

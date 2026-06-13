@@ -2,7 +2,7 @@
 spec_id: ARKY-SDK-v1
 title: Arky — SDK Requirements & Conformance
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true

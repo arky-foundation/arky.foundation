@@ -3,7 +3,7 @@
 spec_id: ARKY-NOTARY-v1
 title: Arky — Notary
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative

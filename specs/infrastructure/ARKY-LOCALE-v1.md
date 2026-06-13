@@ -2,7 +2,7 @@
 spec_id: ARKY-LOCALE-v1
 title: Arky — Localization & Internationalization
 version: v1
-status: stable
+status: review
 effective: 2025-10-15
 doc_type: specification
 normative_default: true
