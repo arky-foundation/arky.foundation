@@ -1,0 +1,22 @@
+{
+  "name": "arky-foundation-tooling",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Maintenance and conformance tooling for the Arky specs (not a reference implementation).",
+  "type": "module",
+  "scripts": {
+    "sign": "bun run scripts/sign-artifacts.ts",
+    "verify": "bun run scripts/verify-artifacts.ts",
+    "check-links": "bun run scripts/check-links.ts",
+    "validate-kernel": "bun run scripts/validate-kernel-vectors.ts",
+    "validate": "bun run scripts/validate.ts",
+    "fix-urns": "bun run scripts/fix-urns.ts"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.5.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "jose": "^5.9.6",
+    "multiformats": "^13.3.0"
+  }
+}
