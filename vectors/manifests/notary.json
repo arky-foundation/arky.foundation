@@ -47,18 +47,18 @@
       "description": "Finality tracking and reorg handling",
       "vectors": [
         "n3-001.json",
-        "n3-002.json"
+        "n3-002.json",
+        "n3-003.json"
       ],
-      "coverage": 2,
+      "coverage": 3,
       "focus_areas": [
         "Finality depth = max(registry, policy floor, override) (§4.4)",
         "Negative: override below policy floor rejected",
-        "Reorg detection",
-        "Re-anchoring logic"
+        "Reorg remediation: reorged + re-anchor vs finality_violated (§4.4)"
       ]
     }
   },
-  "total_vectors": 14,
+  "total_vectors": 15,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,

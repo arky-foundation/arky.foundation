@@ -34,7 +34,7 @@ dependency and is not part of `validate`.
 
 `bun run verify` does more than schema-shape checking — it **recomputes**
 results from inputs and compares them to each vector's `expect` block. Of the
-current checks, roughly 44 are actively executed crypto/algorithm checks; the
+current checks, roughly 45 are actively executed crypto/algorithm checks; the
 rest are negative vectors or pure schema-shape vectors deferred to the AJV step.
 
 **Cryptographic checks**
@@ -54,8 +54,9 @@ rest are negative vectors or pure schema-shape vectors deferred to the AJV step.
   bytewise sort, odd-count last-leaf duplication) and inclusion-proof
   verification (§5.1/§5.2), including a negative bad-proof case.
 - **Notary finality (N3)**: depth = max(registry, policy floor, request override)
-  (§4.4), and the negative case where an override below the policy floor is a
-  `notary.policy_violation`.
+  (§4.4); the negative case where an override below the policy floor is a
+  `notary.policy_violation`; and reorg remediation (depth < finality →
+  `reorged` + re-anchor; depth ≥ finality → `finality_violated`, no re-anchor).
 - **Settler (S2/S3)**: idempotency-key derivation (§6.1), the STOP_ON_FAILURE
   failure cascade / skipped verbs (§4.1), the compensation verb map (§7.2), and
   the XR state-machine transitions including window/rail-capability edges (§5.2).

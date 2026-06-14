@@ -1,0 +1,23 @@
+{
+  "id": "n3-003",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N3",
+  "description": "Reorg remediation: reorged + re-anchor below finality, finality_violated at/above (§4.4)",
+  "context": {
+    "reference": "ARKY-NOTARY-v1 §4.4",
+    "note": "reorg_depth < finality_depth -> reorged (re-anchor, no alert); reorg_depth >= finality_depth -> finality_violated (no re-anchor, critical alert). The boundary (equal) is finality_violated."
+  },
+  "inputs": {
+    "cases": [
+      { "reorg_depth": 3, "finality_depth": 12, "expect_status": "reorged", "expect_reanchor": true, "expect_alert": false },
+      { "reorg_depth": 11, "finality_depth": 12, "expect_status": "reorged", "expect_reanchor": true, "expect_alert": false },
+      { "reorg_depth": 12, "finality_depth": 12, "expect_status": "finality_violated", "expect_reanchor": false, "expect_alert": true },
+      { "reorg_depth": 30, "finality_depth": 12, "expect_status": "finality_violated", "expect_reanchor": false, "expect_alert": true }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "all_reorg_outcomes_correct": true
+  }
+}

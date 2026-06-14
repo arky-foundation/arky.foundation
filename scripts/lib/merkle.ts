@@ -140,6 +140,21 @@ export function finalityDepth(input: {
 }
 
 /**
+ * Notary reorg remediation per ARKY-NOTARY-v1 §4.4. The decision pivots on
+ * whether the reorg depth is below the finality depth:
+ *   - depth <  finality_depth: status "reorged", re-anchor, no critical alert
+ *   - depth >= finality_depth: status "finality_violated", NO re-anchor, alert
+ */
+export function reorgOutcome(
+  reorgDepth: number,
+  finalityDepthValue: number,
+): { status: 'reorged' | 'finality_violated'; reanchor: boolean; alert: boolean } {
+  return reorgDepth < finalityDepthValue
+    ? { status: 'reorged', reanchor: true, alert: false }
+    : { status: 'finality_violated', reanchor: false, alert: true };
+}
+
+/**
  * Settler XR state-machine guard per ARKY-SETTLERS-v1 §5.2. `context` carries
  * withinRollbackWindow and railSupportsRollback for the conditional edges.
  */

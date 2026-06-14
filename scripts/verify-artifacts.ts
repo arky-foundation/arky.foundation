@@ -17,7 +17,8 @@
  *   - Notary Merkle roots and inclusion proofs (N2, §5.1/§5.2)
  *   - Settler idempotency-key derivation (S2, §6.1), failure cascade (S2, §4.1),
  *     compensation mapping (S3, §7.2), and XR state transitions (S3, §5.2)
- *   - Notary finality depth max() and policy-floor violations (N3, §4.4)
+ *   - Notary finality depth max(), policy-floor violations, and reorg
+ *     remediation (reorged vs finality_violated) (N3, §4.4)
  * via the shared reference module in scripts/lib/merkle.ts.
  *
  * Coverage: TIM + Kernel + Canonicalization vectors and fixtures; discovery
@@ -36,7 +37,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { base58btc } from 'multiformats/bases/base58';
 import { readdir, readFile } from 'fs/promises';
 import { join, relative } from 'path';
-import { merkleRoot, verifyInclusion, deriveIdempotencyKey, jcsCanonical as jcsLib, multihash, finalityDepth, canTransition } from './lib/merkle.ts';
+import { merkleRoot, verifyInclusion, deriveIdempotencyKey, jcsCanonical as jcsLib, multihash, finalityDepth, canTransition, reorgOutcome } from './lib/merkle.ts';
 
 const rootDir = join(import.meta.dir, '..');
 
@@ -353,6 +354,17 @@ function verifyAlgorithmicVector(vector: any): { ok: boolean; detail: string } |
     });
     const ok = (wrong.length === 0) === expect.all_depths_correct;
     return { ok, detail: ok ? '' : `depth mismatch in ${wrong.length} case(s)` };
+  }
+
+  // Notary reorg remediation (N3): expect.all_reorg_outcomes_correct.
+  if (Array.isArray(inputs.cases) && typeof expect.all_reorg_outcomes_correct === 'boolean') {
+    const wrong = inputs.cases.filter((c: any) => {
+      const o = reorgOutcome(c.reorg_depth, c.finality_depth);
+      return o.status !== c.expect_status || o.reanchor !== c.expect_reanchor || o.alert !== c.expect_alert;
+    });
+    const ok = (wrong.length === 0) === expect.all_reorg_outcomes_correct;
+    const names = wrong.map((w: any) => `d${w.reorg_depth}/f${w.finality_depth}`).join(', ');
+    return { ok, detail: ok ? '' : `reorg outcome mismatch: ${names}` };
   }
 
   // Notary finality policy violation (N3): override below the pack floor.
