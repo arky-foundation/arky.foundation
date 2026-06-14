@@ -13,16 +13,17 @@
  *   4. Compares the observed result against each vector's `expect` block.
  *
  * It also executes algorithmic vectors by recomputing the result from inputs:
+ *   - Canonicalization JCS bytes (C1, RFC 8785) vs expect.canonical_json/_hex
  *   - Notary Merkle roots and inclusion proofs (N2, §5.1/§5.2)
  *   - Settler idempotency-key derivation (S2, §6.1), failure cascade (S2, §4.1),
  *     and compensation mapping (S3, §7.2)
  * via the shared reference module in scripts/lib/merkle.ts.
  *
- * Coverage: TIM + Kernel vectors and fixtures; discovery vectors/fixtures;
- * Notary + Settler vectors; and standalone signed artifacts — registries,
- * policy packs, service descriptors, revocation lists, execution receipts, and
- * discovery indexes. Pure schema/structural vectors (no cid/signature/algorithm
- * expectation) are validated by the AJV schema step in CI, not here.
+ * Coverage: TIM + Kernel + Canonicalization vectors and fixtures; discovery
+ * vectors/fixtures; Notary + Settler vectors; and standalone signed artifacts —
+ * registries, policy packs, service descriptors, revocation lists, execution
+ * receipts, and discovery indexes. Pure schema/structural vectors (no cid/
+ * signature/algorithm expectation) are validated by the AJV step in CI, not here.
  *
  * Exits non-zero if any artifact fails, so CI fails on a broken vector.
  *
@@ -347,6 +348,36 @@ function verifyAlgorithmicVector(vector: any): { ok: boolean; detail: string } |
 }
 
 /**
+ * Execute a canonicalization (C1) vector: recompute JCS canonical bytes from
+ * the input and compare to expect.canonical_json (and canonical_bytes_hex when
+ * present). Input is either inputs.original (an object) or inputs.original_
+ * formatted (a JSON string to parse first).
+ */
+function verifyCanonVector(vector: any): { ok: boolean; detail: string } | null {
+  const { inputs = {}, expect = {} } = vector;
+  if (typeof expect.canonical_json !== 'string') return null;
+
+  let input: unknown;
+  if (inputs.original !== undefined) input = inputs.original;
+  else if (typeof inputs.original_formatted === 'string') {
+    try { input = JSON.parse(inputs.original_formatted); }
+    catch (e) { return { ok: false, detail: `bad original_formatted: ${(e as Error).message}` }; }
+  } else return { ok: false, detail: 'no canonicalization input (original / original_formatted)' };
+
+  const canonical = jcsLib(input);
+  if (canonical !== expect.canonical_json) {
+    return { ok: false, detail: `canonical_json mismatch:\n   got: ${canonical}\n   exp: ${expect.canonical_json}` };
+  }
+  if (typeof expect.canonical_bytes_hex === 'string') {
+    const hex = Buffer.from(new TextEncoder().encode(canonical)).toString('hex');
+    if (hex !== expect.canonical_bytes_hex) {
+      return { ok: false, detail: `canonical_bytes_hex mismatch: computed ${hex}` };
+    }
+  }
+  return { ok: true, detail: '' };
+}
+
+/**
  * Verify a single vector file. Vectors carry an `expect` block; we honor the
  * fields relevant to T1/K1 conformance (cid_valid, signature_valid,
  * schema_valid is left to the AJV step in CI).
@@ -360,6 +391,13 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
   // === false) are validated structurally by the schema step, not here.
   if (expect.valid === false) {
     report(`${relPath} (negative vector, schema-checked elsewhere)`, true);
+    return;
+  }
+
+  // Canonicalization (C1) vectors: recompute JCS bytes and compare.
+  const canon = verifyCanonVector(vector);
+  if (canon) {
+    report(relPath, canon.ok, canon.detail);
     return;
   }
 
@@ -411,6 +449,11 @@ async function main() {
 
   console.log('TIM vectors:');
   for (const f of (await listJson(join(rootDir, 'vectors/tim'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
+
+  console.log('\nCanonicalization vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/canonicalization'))).sort()) {
     await verifyVector(f, publicKey);
   }
 
