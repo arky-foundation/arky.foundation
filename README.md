@@ -115,8 +115,19 @@ sequenceDiagram
 - `governance/` — Versioning, governance policy
 - `rfcs/` — Change proposals and templates
 
+## Validation
+```sh
+bun install
+bun run validate
+```
+Runs JSON syntax, the conformance verifier (recomputes cids, verifies
+signatures + witnesses, executes canonicalization/Merkle/idempotency vectors),
+Kernel‑vs‑schema, and the link checker. See `CONFORMANCE.md` for exact claims
+and per‑check meaning.
+
 ## Contribute
 - Changes: `CONTRIBUTING.md`
+- Conformance: `CONFORMANCE.md`
 - Versioning: `governance/VERSIONING.md`
 - Security: `SECURITY.md`
 - Governance: `governance/ARKY-GOVERNANCE-v1.md`
