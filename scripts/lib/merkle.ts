@@ -116,3 +116,44 @@ export function deriveIdempotencyKey(input: {
   };
   return multihash(new TextEncoder().encode(jcsCanonical(components)));
 }
+
+/**
+ * Notary finality depth per ARKY-NOTARY-v1 §4.4:
+ *   depth = max(registry_default, policy_pack_minimum, request_override)
+ * A request override below the policy-pack floor is a policy violation (the
+ * caller surfaces notary.policy_violation); this returns { depth, violation }.
+ */
+export function finalityDepth(input: {
+  registry_default: number;
+  policy_pack_minimum?: number;
+  request_override?: number;
+}): { depth: number; violation: boolean } {
+  const floor = input.policy_pack_minimum ?? 0;
+  const violation =
+    input.request_override !== undefined && input.request_override < floor;
+  const depth = Math.max(
+    input.registry_default,
+    floor,
+    input.request_override ?? 0,
+  );
+  return { depth, violation };
+}
+
+/**
+ * Settler XR state-machine guard per ARKY-SETTLERS-v1 §5.2. `context` carries
+ * withinRollbackWindow and railSupportsRollback for the conditional edges.
+ */
+export function canTransition(
+  from: string,
+  to: string,
+  context: { withinRollbackWindow?: boolean; railSupportsRollback?: boolean } = {},
+): boolean {
+  const transitions: Record<string, string[]> = {
+    pending: ['success', 'failed', 'rolled_back'],
+    success: context.withinRollbackWindow ? ['rolled_back'] : [],
+    failed: context.railSupportsRollback ? ['rolled_back'] : [],
+    rolled_back: [],
+    skipped: [],
+  };
+  return transitions[from]?.includes(to) ?? false;
+}

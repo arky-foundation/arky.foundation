@@ -1,0 +1,29 @@
+{
+  "id": "s3-002",
+  "spec": "ARKY-SETTLERS-v1",
+  "level": "S3",
+  "description": "XR state-machine transitions, including rollback-window and rail-capability edges (§5.2)",
+  "context": {
+    "reference": "ARKY-SETTLERS-v1 §5.2",
+    "note": "success->rolled_back only within the rollback window; failed->rolled_back only if the rail supports rollback. Verifier evaluates each transition."
+  },
+  "inputs": {
+    "transitions": [
+      { "from": "pending", "to": "success", "expect_allowed": true },
+      { "from": "pending", "to": "failed", "expect_allowed": true },
+      { "from": "pending", "to": "rolled_back", "expect_allowed": true },
+      { "from": "success", "to": "rolled_back", "context": { "withinRollbackWindow": true }, "expect_allowed": true },
+      { "from": "success", "to": "rolled_back", "context": { "withinRollbackWindow": false }, "expect_allowed": false },
+      { "from": "failed", "to": "rolled_back", "context": { "railSupportsRollback": true }, "expect_allowed": true },
+      { "from": "failed", "to": "rolled_back", "context": { "railSupportsRollback": false }, "expect_allowed": false },
+      { "from": "success", "to": "pending", "expect_allowed": false },
+      { "from": "rolled_back", "to": "success", "expect_allowed": false },
+      { "from": "skipped", "to": "success", "expect_allowed": false }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "all_transitions_correct": true
+  }
+}

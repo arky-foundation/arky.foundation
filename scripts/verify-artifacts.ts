@@ -16,7 +16,8 @@
  *   - Canonicalization JCS bytes (C1, RFC 8785) vs expect.canonical_json/_hex
  *   - Notary Merkle roots and inclusion proofs (N2, §5.1/§5.2)
  *   - Settler idempotency-key derivation (S2, §6.1), failure cascade (S2, §4.1),
- *     and compensation mapping (S3, §7.2)
+ *     compensation mapping (S3, §7.2), and XR state transitions (S3, §5.2)
+ *   - Notary finality depth max() and policy-floor violations (N3, §4.4)
  * via the shared reference module in scripts/lib/merkle.ts.
  *
  * Coverage: TIM + Kernel + Canonicalization vectors and fixtures; discovery
@@ -35,7 +36,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { base58btc } from 'multiformats/bases/base58';
 import { readdir, readFile } from 'fs/promises';
 import { join, relative } from 'path';
-import { merkleRoot, verifyInclusion, deriveIdempotencyKey, jcsCanonical as jcsLib, multihash } from './lib/merkle.ts';
+import { merkleRoot, verifyInclusion, deriveIdempotencyKey, jcsCanonical as jcsLib, multihash, finalityDepth, canTransition } from './lib/merkle.ts';
 
 const rootDir = join(import.meta.dir, '..');
 
@@ -342,6 +343,33 @@ function verifyAlgorithmicVector(vector: any): { ok: boolean; detail: string } |
       (c: any) => COMPENSATION_MAP[c.verb] !== c.expect_compensation);
     const ok = (wrong.length === 0) === expect.all_mappings_correct;
     return { ok, detail: ok ? '' : `compensation mismatch for: ${wrong.map((w: any) => w.verb).join(', ')}` };
+  }
+
+  // Notary finality depth, multiple cases (N3): expect.all_depths_correct.
+  if (Array.isArray(inputs.cases) && typeof expect.all_depths_correct === 'boolean') {
+    const wrong = inputs.cases.filter((c: any) => {
+      const { depth, violation } = finalityDepth(c);
+      return violation || depth !== c.expect_depth;
+    });
+    const ok = (wrong.length === 0) === expect.all_depths_correct;
+    return { ok, detail: ok ? '' : `depth mismatch in ${wrong.length} case(s)` };
+  }
+
+  // Notary finality policy violation (N3): override below the pack floor.
+  if (inputs.request_override !== undefined && typeof expect.policy_violation === 'boolean'
+      && inputs.cases === undefined) {
+    const { violation } = finalityDepth(inputs);
+    const ok = violation === expect.policy_violation;
+    return { ok, detail: ok ? '' : `policy_violation: computed ${violation}, expected ${expect.policy_violation}` };
+  }
+
+  // Settler XR state transitions (S3): expect.all_transitions_correct.
+  if (Array.isArray(inputs.transitions) && typeof expect.all_transitions_correct === 'boolean') {
+    const wrong = inputs.transitions.filter(
+      (t: any) => canTransition(t.from, t.to, t.context ?? {}) !== t.expect_allowed);
+    const ok = (wrong.length === 0) === expect.all_transitions_correct;
+    const names = wrong.map((w: any) => `${w.from}->${w.to}`).join(', ');
+    return { ok, detail: ok ? '' : `transition mismatch: ${names}` };
   }
 
   return null;

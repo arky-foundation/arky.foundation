@@ -45,17 +45,20 @@
     "N3": {
       "name": "Finality",
       "description": "Finality tracking and reorg handling",
-      "vectors": [],
-      "coverage": 0,
+      "vectors": [
+        "n3-001.json",
+        "n3-002.json"
+      ],
+      "coverage": 2,
       "focus_areas": [
-        "Finality depth tracking",
+        "Finality depth = max(registry, policy floor, override) (§4.4)",
+        "Negative: override below policy floor rejected",
         "Reorg detection",
-        "Re-anchoring logic",
-        "Multi-anchor coordination"
+        "Re-anchoring logic"
       ]
     }
   },
-  "total_vectors": 12,
+  "total_vectors": 14,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,

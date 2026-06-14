@@ -1,0 +1,21 @@
+{
+  "id": "n3-002",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N3",
+  "description": "Request override below policy-pack floor is rejected (notary.policy_violation) (§4.4)",
+  "context": {
+    "reference": "ARKY-NOTARY-v1 §4.4",
+    "note": "request_override (15) < policy_pack_minimum (20) -> violation; the Notary MUST reject."
+  },
+  "inputs": {
+    "registry_default": 12,
+    "policy_pack_minimum": 20,
+    "request_override": 15
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "policy_violation": true,
+    "error_code": "notary.policy_violation"
+  }
+}

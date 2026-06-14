@@ -46,18 +46,19 @@
       "name": "Rollback",
       "description": "Rollback and compensation handling",
       "vectors": [
-        "s3-001.json"
+        "s3-001.json",
+        "s3-002.json"
       ],
-      "coverage": 1,
+      "coverage": 2,
       "focus_areas": [
         "Compensation verb mapping (§7.2)",
-        "Rollback window tracking",
+        "XR state-machine transitions, window & rail-capability edges (§5.2)",
         "Irreversible action handling",
         "Cross-rail coordination"
       ]
     }
   },
-  "total_vectors": 13,
+  "total_vectors": 14,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,

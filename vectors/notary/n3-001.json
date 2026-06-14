@@ -1,0 +1,23 @@
+{
+  "id": "n3-001",
+  "spec": "ARKY-NOTARY-v1",
+  "level": "N3",
+  "description": "Finality depth = max(registry_default, policy_pack_minimum, request_override) (§4.4)",
+  "context": {
+    "reference": "ARKY-NOTARY-v1 §4.4",
+    "note": "Policy-pack depth is a floor; request override may only increase. Verifier recomputes each case. All cases here are non-violating (override >= floor)."
+  },
+  "inputs": {
+    "cases": [
+      { "registry_default": 12, "policy_pack_minimum": 6, "request_override": 30, "expect_depth": 30 },
+      { "registry_default": 12, "policy_pack_minimum": 20, "request_override": 25, "expect_depth": 25 },
+      { "registry_default": 64, "policy_pack_minimum": 6, "expect_depth": 64 },
+      { "registry_default": 1, "expect_depth": 1 }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "all_depths_correct": true
+  }
+}

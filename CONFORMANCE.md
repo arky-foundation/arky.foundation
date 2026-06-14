@@ -34,7 +34,7 @@ dependency and is not part of `validate`.
 
 `bun run verify` does more than schema-shape checking — it **recomputes**
 results from inputs and compares them to each vector's `expect` block. Of the
-current checks, roughly 40 are actively executed crypto/algorithm checks; the
+current checks, roughly 44 are actively executed crypto/algorithm checks; the
 rest are negative vectors or pure schema-shape vectors deferred to the AJV step.
 
 **Cryptographic checks**
@@ -53,8 +53,12 @@ rest are negative vectors or pure schema-shape vectors deferred to the AJV step.
 - **Notary Merkle (N2)**: Merkle root over a cid set (profile `merkle-sha256-v1`,
   bytewise sort, odd-count last-leaf duplication) and inclusion-proof
   verification (§5.1/§5.2), including a negative bad-proof case.
+- **Notary finality (N3)**: depth = max(registry, policy floor, request override)
+  (§4.4), and the negative case where an override below the policy floor is a
+  `notary.policy_violation`.
 - **Settler (S2/S3)**: idempotency-key derivation (§6.1), the STOP_ON_FAILURE
-  failure cascade / skipped verbs (§4.1), and the compensation verb map (§7.2).
+  failure cascade / skipped verbs (§4.1), the compensation verb map (§7.2), and
+  the XR state-machine transitions including window/rail-capability edges (§5.2).
 
 Vectors whose `expect.valid` is `false`, or that assert only schema/structure
 (e.g. JWKS shape, service-list counts), are validated by the AJV schema step,
@@ -67,8 +71,8 @@ not re-executed here.
 | TIM Canonicalization | C1 canonicalize, C2 hash+sign, C3 cross-verify | C1 (6) |
 | TIM | T1 verify, T2 completeness, T3 witnessed | T1 + witness fixture |
 | Kernel | K1 eval, K2 policy-aware, K3 orchestrated | K1 |
-| Notary | N1 witness, N2 anchor, N3 multi-anchor/DTN | N1 + N2 (Merkle/inclusion) |
-| Settlers | 1 basic, 2 anchored, 3 multi-rail | S1 + S2/S3 (idempotency/cascade/compensation) |
+| Notary | N1 witness, N2 anchor, N3 multi-anchor/DTN | N1 + N2 (Merkle/inclusion) + N3 (finality depth) |
+| Settlers | 1 basic, 2 anchored, 3 multi-rail | S1 + S2 (idempotency/cascade) + S3 (compensation/transitions) |
 
 A product **MAY** claim a level only if it passes the Foundation vectors for
 that level. Empty levels in the manifests (`coverage: 0`) are future work.
