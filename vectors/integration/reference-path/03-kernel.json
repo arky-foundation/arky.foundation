@@ -1,0 +1,42 @@
+{
+  "scope": "arky:scope/datacenter.cooling",
+  "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+  "intent": {
+    "do": "arky:verb/pay@v1",
+    "budget": {
+      "value": 500,
+      "unit": "USD"
+    }
+  },
+  "measure": [
+    {
+      "name": "temp",
+      "from": "sensor:datacenter",
+      "window": {
+        "max_age": "PT5M"
+      },
+      "assert": "temp > 85"
+    }
+  ],
+  "consequence": [
+    {
+      "if": "PASS",
+      "then": [
+        {
+          "name": "arky:verb/pay@v1",
+          "args": {
+            "to": "acct:cooling-provider:billing",
+            "amount": {
+              "value": 100,
+              "unit": "USD"
+            },
+            "memo": "Emergency cooling activation"
+          }
+        }
+      ]
+    }
+  ],
+  "nonce": "ref-path-kernel-001",
+  "cid": "zQmX5WB3FC5DhFPDWJputQJd5q39kpZLx8RNvP2zMMDU9fG",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..nes4c-IDIp061Q3No13Nm-2RUQ2SlA_XgY5UWhyROObXrx2DIIfIxRKLToVS79NVBAKvelV5hcWH881wFe6wCg"
+}

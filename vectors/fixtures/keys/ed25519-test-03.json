@@ -7,17 +7,17 @@
   "publicKey": {
     "kty": "OKP",
     "crv": "Ed25519",
-    "x": "PUymIqdtF_qxaAqPABSw-C-owT1KYYQbsMKFM-L9fJI",
+    "x": "HDl_cQgT9vSiYMsH8q1dOdyb5prCuQYuRVBRhTTk1P8",
     "kid": "notary-key-2025-01"
   },
   "privateKey": {
     "kty": "OKP",
     "crv": "Ed25519",
-    "x": "PUymIqdtF_qxaAqPABSw-C-owT1KYYQbsMKFM-L9fJI",
+    "x": "HDl_cQgT9vSiYMsH8q1dOdyb5prCuQYuRVBRhTTk1P8",
     "d": "s-lf3-1u1GTPb6JOqqYlBVWC8eYdKhXPRZkj7k3x0h8",
     "kid": "notary-key-2025-01"
   },
-  "did": "did:key:z6MkgYGF3thn8k1Fv4p4dWXKtsXCnLH7q9yw4QgNPULDmDKB",
+  "did": "did:key:z6MkgMSK56Y2B4VWFacKCMgNSe7ZsTuSnq717hwL2b1uZPjc",
   "created": "2025-10-15T00:00:00Z",
   "warning": "TEST KEY ONLY - NEVER USE IN PRODUCTION"
 }

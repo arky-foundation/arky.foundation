@@ -22,10 +22,11 @@
  * via the shared reference module in scripts/lib/merkle.ts.
  *
  * Coverage: TIM + Kernel + Canonicalization vectors and fixtures; discovery
- * vectors/fixtures; Notary + Settler vectors; and standalone signed artifacts —
- * registries, policy packs, service descriptors, revocation lists, execution
- * receipts, and discovery indexes. Pure schema/structural vectors (no cid/
- * signature/algorithm expectation) are validated by the AJV step in CI, not here.
+ * vectors/fixtures; Notary + Settler vectors; the end-to-end reference path
+ * (chain-linkage walk); and standalone signed artifacts — registries, policy
+ * packs, service descriptors, revocation lists, execution receipts, and
+ * discovery indexes. Pure schema/structural vectors (no cid/signature/algorithm
+ * expectation) are validated by the AJV step in CI, not here.
  *
  * Exits non-zero if any artifact fails, so CI fails on a broken vector.
  *
@@ -77,6 +78,7 @@ const TEST_PUBLIC_JWK = {
 const TEST_PUBLIC_KEYS_BY_KID: Record<string, jose.JWK> = {
   'test-key-2025-01': { kty: 'OKP', crv: 'Ed25519', x: '11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo' },
   'test-key-2025-02': { kty: 'OKP', crv: 'Ed25519', x: 'e_vAtyLIHAXMh1TRvhFUNrvifhH5ZzXKGwGKk9zgB9I' },
+  'notary-key-2025-01': { kty: 'OKP', crv: 'Ed25519', x: 'HDl_cQgT9vSiYMsH8q1dOdyb5prCuQYuRVBRhTTk1P8' },
 };
 
 /** Resolve a witness public key from the JWS protected header `kid`. */
@@ -481,6 +483,59 @@ async function listJson(dir: string): Promise<string[]> {
   return out;
 }
 
+/** Read a dotted/indexed path like "assertions[0].inputs[0]" from an object. */
+function readPath(obj: any, path: string): unknown {
+  return path.split('.').reduce((acc: any, seg: string) => {
+    if (acc == null) return undefined;
+    const m = seg.match(/^([^[]+)((\[\d+\])*)$/);
+    if (!m) return undefined;
+    let cur = acc[m[1]];
+    for (const idx of m[2].match(/\d+/g) ?? []) cur = cur?.[Number(idx)];
+    return cur;
+  }, obj);
+}
+
+/**
+ * Verify the end-to-end reference path: each artifact's cid + sig (and TIM
+ * witness) verify against their kid-resolved keys, AND every cross-link in
+ * chain.json resolves to the referenced artifact's real cid. This proves the
+ * loop holds together as one chain, not five disconnected artifacts.
+ */
+async function verifyReferencePath() {
+  const dir = join(rootDir, 'vectors/integration/reference-path');
+  const chainPath = join(dir, 'chain.json');
+  let chain: any;
+  try { chain = JSON.parse(await readFile(chainPath, 'utf-8')); }
+  catch { console.log('  (no reference path generated)'); return; }
+
+  // 1. Each artifact verifies against its own signing key (resolved by kid).
+  const loaded: Record<string, any> = {};
+  for (const [role, file] of Object.entries(chain.artifacts as Record<string, string>)) {
+    const artifact = JSON.parse(await readFile(join(dir, file), 'utf-8'));
+    loaded[role] = artifact;
+    const key = await resolveWitnessKey(artifact.sig as string); // resolves any kid in our test map
+    if (!key) { report(`reference-path/${file}`, false, 'unresolvable signing kid'); continue; }
+    const res = await verifyArtifact(artifact, key);
+    reportArtifact(`reference-path/${file}`, res);
+  }
+
+  // 2. Every declared cross-link matches the referenced artifact's real cid.
+  let linkFailures = 0;
+  for (const link of chain.links as Array<{ from: string; to: string; value: string }>) {
+    const fromRole = link.from.split('.')[0];
+    const actual = readPath(loaded[fromRole], link.from.slice(fromRole.length + 1));
+    const toRole = link.to.split('.')[0];
+    const target = loaded[toRole]?.cid;
+    const ok = actual === link.value && target === link.value;
+    if (!ok) {
+      linkFailures++;
+      report(`reference-path link ${link.from} -> ${link.to}`, false,
+        `got ${actual}; target cid ${target}; expected ${link.value}`);
+    }
+  }
+  report(`reference-path chain linkage (${(chain.links as unknown[]).length} links)`, linkFailures === 0);
+}
+
 async function main() {
   console.log('Arky Conformance Verifier');
   console.log('=========================\n');
@@ -521,6 +576,9 @@ async function main() {
   for (const f of (await listJson(join(rootDir, 'vectors/settlers'))).sort()) {
     await verifyVector(f, publicKey);
   }
+
+  console.log('\nEnd-to-end reference path:');
+  await verifyReferencePath();
 
   console.log('\nCore examples:');
   for (const name of ['tim.json', 'kernel.json', 'execution-receipt.json']) {

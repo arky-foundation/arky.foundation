@@ -10,6 +10,7 @@
     "check-links": "bun run scripts/check-links.ts",
     "validate-kernel": "bun run scripts/validate-kernel-vectors.ts",
     "validate": "bun run scripts/validate.ts",
+    "gen-reference-path": "bun run scripts/gen-reference-path.ts",
     "fix-urns": "bun run scripts/fix-urns.ts"
   },
   "dependencies": {

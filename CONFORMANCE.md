@@ -65,6 +65,17 @@ Vectors whose `expect.valid` is `false`, or that assert only schema/structure
 (e.g. JWKS shape, service-list counts), are validated by the AJV schema step,
 not re-executed here.
 
+## End-to-end reference path
+
+`vectors/integration/reference-path/` is one fully-materialized vertical —
+TIM → Notary anchor → Kernel decision → Settler XR — where every artifact is
+really signed and references the previous by its real `cid`. The verifier walks
+it: each artifact's cid/sig/witness verifies against its `kid`-resolved key, and
+every cross-link in `chain.json` must resolve to the referenced artifact's real
+cid. Tampering any reference fails on both the signature and the linkage check.
+Regenerate with `bun run gen-reference-path` (deterministic); see that folder's
+README for the scenario and content IDs.
+
 ## Conformance levels (from the specs)
 
 | Suite | Levels | Executable vectors today |

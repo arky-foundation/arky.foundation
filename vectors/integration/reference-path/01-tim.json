@@ -1,0 +1,25 @@
+{
+  "time": {
+    "ts": "2025-10-15T14:30:00Z",
+    "witnesses": [
+      "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6Im5vdGFyeS1rZXktMjAyNS0wMSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..nBh0R6_jWqsduonL36ZOPKZG3vEbCMuhk4MhdK92rjV5odP9RI_umgEb_14OAO71J7ltgZtMz9ByNC08bcFpAA"
+    ]
+  },
+  "identity": {
+    "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+  },
+  "measurement": {
+    "name": "temperature",
+    "value": 87.5,
+    "unit": "arky:unit/temp.F",
+    "method": {
+      "type": "sensor",
+      "source": "device:datacenter-temp-01",
+      "version": "v2.1"
+    },
+    "device": "datacenter-temp-01"
+  },
+  "nonce": "ref-path-tim-001",
+  "cid": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..yynFHRR61999cBQEQYXcEYEJmORSbfn0YpLMeS0_5vi1MUUjXJqEaI9-qb88DK0IpnfYPBDXND_esyVAbZjwDQ"
+}

@@ -1,0 +1,55 @@
+{
+  "id": "reference-path-001",
+  "description": "End-to-end: TIM -> Notary anchor -> Kernel decision -> Settler XR, fully signed and cross-linked.",
+  "scenario": "Datacenter temperature 87.5°F (> 85 threshold) authorizes a $100 cooling payment.",
+  "keys": {
+    "issuer": "fixtures/keys/ed25519-test-01.json",
+    "notary": "fixtures/keys/ed25519-test-03.json"
+  },
+  "artifacts": {
+    "tim": "01-tim.json",
+    "anchor": "02-anchor.json",
+    "kernel": "03-kernel.json",
+    "decision": "04-decision.json",
+    "xr": "05-xr.json"
+  },
+  "cids": {
+    "tim": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ",
+    "anchor": "zQmetr8yKwhyZ48f9JkAcLbqTUeFhy6Jh54c3BGdz5ZEjAm",
+    "kernel": "zQmX5WB3FC5DhFPDWJputQJd5q39kpZLx8RNvP2zMMDU9fG",
+    "decision": "zQmP5ruZwRSd3bk64NjmSkPF9PAa4BY78RA5mubGZbiCzLn",
+    "xr": "zQmQpr9usXHjgXyUPqHFieepSyEMfhpk6JErtqAX99XUfCq"
+  },
+  "links": [
+    {
+      "from": "anchor.witnessed_cid",
+      "to": "tim.cid",
+      "value": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ"
+    },
+    {
+      "from": "anchor.proof.leaf",
+      "to": "tim.cid",
+      "value": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ"
+    },
+    {
+      "from": "decision.assertions[0].inputs[0]",
+      "to": "tim.cid",
+      "value": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ"
+    },
+    {
+      "from": "decision.kernel_cid",
+      "to": "kernel.cid",
+      "value": "zQmX5WB3FC5DhFPDWJputQJd5q39kpZLx8RNvP2zMMDU9fG"
+    },
+    {
+      "from": "xr.commitment_cid",
+      "to": "kernel.cid",
+      "value": "zQmX5WB3FC5DhFPDWJputQJd5q39kpZLx8RNvP2zMMDU9fG"
+    },
+    {
+      "from": "xr.decision_cid",
+      "to": "decision.cid",
+      "value": "zQmP5ruZwRSd3bk64NjmSkPF9PAa4BY78RA5mubGZbiCzLn"
+    }
+  ]
+}
