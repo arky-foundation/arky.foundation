@@ -64,21 +64,22 @@ Effective: 2025-10-15
 
 ## 3. Pack Model
 
-A Pack **MUST** conform to the following model. JSON schema is authoritative.
+A Pack **MUST** conform to the following model. The JSON Schema
+(`schemas/core/policy-pack-v1.json`) is authoritative; the enforcement field
+paths consumed by Kernel, Notary, and Settlers (e.g. `witness_policy.min_witnesses`,
+`finality_policy.chains`, `limits.amount_caps`, `rollback.window_hours`,
+`rails.allowed`, `compliance.kyc_required`, `anchoring.targets`,
+`privacy.retention_days`) are defined there and used verbatim by §6.
 
 ```json
 {
-  "pack_id": "arky:policy:<region>@v1",
+  "pack_id": "arky:policy/<region>@v1",
   "name": "<human-readable>",
+  "version": "1.0.0",
   "region": {
     "locales": ["en-US", "es-419"],
     "jurisdictions": ["US", "CA"],
     "sector": ["general"]
-  },
-  "metadata": {
-    "version": "1.0.0",
-    "issuer": "did:web:arky.foundation",
-    "ts": "2025-10-15T00:00:00Z"
   },
   "identity_proofs": {
     "allowed_methods": ["did:web", "did:key", "x509"],
@@ -89,6 +90,7 @@ A Pack **MUST** conform to the following model. JSON schema is authoritative.
     "selective_disclosure": true,
     "public_anchor_fields": ["cid"],
     "redaction_rules": ["no-phi", "no-pii"],
+    "no_pii": true,
     "retention_days": 365
   },
   "residency": {
@@ -103,51 +105,53 @@ A Pack **MUST** conform to the following model. JSON schema is authoritative.
   },
   "finality_policy": {
     "chains": {
-      "eip155:1": {"depth": 64},
+      "caip2:eip155:1": {"depth": 64},
       "solana:mainnet": {"depth": 150}
     }
   },
-  "rollback_policy": {
-    "rails": {
-      "sepa:eu": {"window": "P2D"},
-      "ach:us": {"window": "P2D"},
-      "eip155:*": {"window": "P0D"}
-    }
-  },
-  "dispute": {
-    "venues": ["icc", "court"],
-    "arb_rules": ["uncitral"]
-  },
-  "export_controls": {
-    "restricted": ["ITAR"],
-    "require_screening": true
-  },
-  "logging": {
-    "immutable_journal": true,
-    "public_transparency": false
-  },
-  "time_policy": {
-    "clock_skew_max": "PT90S",
-    "freshness_max": "PT10M",
-    "accept_exp_default": "PT2H"
+  "rollback": {
+    "window_hours": 48,
+    "allowed_verbs": ["arky:verb/pay@v1", "arky:verb/refund@v1"]
   },
   "anchoring": {
     "targets": ["caip2:eip155:1", "solana:mainnet", "log:arky:transparency@v1"],
     "multi_anchor_required": true
   },
-  "verbs_rails": {
-    "allowed_verbs": ["arky:verb/pay","arky:verb/refund","arky:verb/slash","arky:verb/revoke","arky:verb/upgrade","arky:verb/signal","arky:verb/control"],
-    "allowed_rails": ["caip2:*","sepa:eu","ach:us","custody:*","hw:*"],
-    "experimental_verbs_allowlist": ["arky:verb/x-contracts.freeze@v1"]
+  "rails": {
+    "allowed": ["caip2:*", "sepa:eu", "ach:us", "custody:*", "hw:*"],
+    "experimental_allowlist": ["x-contracts.freeze"]
+  },
+  "verbs": {
+    "allowed": ["arky:verb/pay@v1", "arky:verb/refund@v1", "arky:verb/slash@v1", "arky:verb/revoke@v1", "arky:verb/upgrade@v1", "arky:verb/signal@v1", "arky:verb/control@v1"]
   },
   "limits": {
     "amount_caps": [
-      {"verb": "arky:verb/pay", "rail": "sepa:eu", "asset": "EUR", "max": 50000}
+      {"verb": "arky:verb/pay@v1", "rail": "sepa:eu", "asset": "EUR", "max": 50000}
     ],
     "rate_limits": {"per_minute": 120, "burst": 240},
-    "two_person_control": ["arky:verb/slash","arky:verb/revoke"]
+    "two_person_control": ["arky:verb/slash@v1", "arky:verb/revoke@v1"]
   },
-  "extends": "arky:policy:global@v1",
+  "compliance": {
+    "kyc_required": true,
+    "sanctions_screening": true,
+    "export_controls": ["ITAR"]
+  },
+  "attestation": {
+    "required": false,
+    "types": ["arky:attest/rats.eat@v1"]
+  },
+  "revocations": {"enforce": true},
+  "time_policy": {
+    "clock_skew_max": "PT90S",
+    "freshness_max": "PT10M",
+    "accept_exp_default": "PT2H"
+  },
+  "logging": {
+    "immutable_journal": true,
+    "public_transparency": false
+  },
+  "extends": "arky:policy/global@v1",
+  "ts": "2025-10-15T00:00:00Z",
   "sig": "<jws-compact>"
 }
 ```
@@ -157,7 +161,7 @@ A Pack **MUST** conform to the following model. JSON schema is authoritative.
 * `pack_id` **MUST** be globally unique and versioned.
 * `sig` **MUST** be a JWS (Ed25519) over the canonical JSON (JCS).
 * `finality_policy.chains` **MUST** use **CAIP‑2** identifiers.
-* `rollback_policy.rails` **MUST** use registered rail identifiers.
+* `rails.allowed` **MUST** use registered rail identifiers (globs permitted).
 * `privacy.public_anchor_fields` **MUST NOT** allow PHI/PII fields.
 
 ---

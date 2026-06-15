@@ -1,19 +1,92 @@
 {
   "pack_id": "arky:policy/eu@v1",
+  "name": "Arky EU Regional Policy Pack",
   "version": "1.0.0",
-  "rules": {
-    "privacy": {
-      "no_pii": true,
-      "data_residency": "EU"
-    },
-    "attestation": {
-      "required": true,
-      "types": [
-        "arky:attest/rats.eat@v1"
-      ]
-    }
+  "extends": "arky:policy/global@v1",
+  "region": {
+    "locales": [
+      "en-GB",
+      "de-DE",
+      "fr-FR"
+    ],
+    "jurisdictions": [
+      "EU"
+    ],
+    "sector": [
+      "general"
+    ]
+  },
+  "privacy": {
+    "selective_disclosure": true,
+    "public_anchor_fields": [
+      "cid"
+    ],
+    "redaction_rules": [
+      "no-phi",
+      "no-pii"
+    ],
+    "no_pii": true,
+    "retention_days": 365
+  },
+  "residency": {
+    "store_in": [
+      "EU"
+    ],
+    "share_out": [
+      "EU"
+    ],
+    "legal_basis": [
+      "contract",
+      "consent"
+    ]
+  },
+  "witness_policy": {
+    "min_witnesses": 2,
+    "classes": [
+      "notary",
+      "auditor"
+    ],
+    "independence": true
+  },
+  "rollback": {
+    "window_hours": 1344,
+    "allowed_verbs": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ]
+  },
+  "rails": {
+    "allowed": [
+      "caip2:*",
+      "sepa:eu",
+      "custody:*"
+    ]
+  },
+  "limits": {
+    "amount_caps": [
+      {
+        "verb": "arky:verb/pay@v1",
+        "rail": "sepa:eu",
+        "asset": "EUR",
+        "max": 50000
+      }
+    ],
+    "two_person_control": [
+      "arky:verb/slash@v1",
+      "arky:verb/revoke@v1"
+    ]
+  },
+  "compliance": {
+    "kyc_required": true,
+    "sanctions_screening": true
+  },
+  "attestation": {
+    "required": true,
+    "types": [
+      "arky:attest/rats.eat@v1"
+    ]
   },
   "overlays": {},
   "ts": "2025-10-15T00:00:00Z",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ.._9L52o8JQ8LXs1-sUCC3Iu8ROvnmPKMERqbLtC3ZgsExnMfElkg54Mkw49XF9dhe3CTIfm23235C6dul_4t6CQ"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..kTu7a6ApHA9sOcGPLtb4aiIYWxEAWjBGTJt9n3LB9T-JqsbNDxAgLk8D-8j1AyTDDqkYvo2TAyl5bF5ftLCjDg"
 }

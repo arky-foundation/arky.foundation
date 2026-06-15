@@ -217,10 +217,16 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         // Detect artifact type and process accordingly
         const hasSig = 'sig' in json;
         const hasCid = 'cid' in json;
-        const needsSign = hasSig && isPlaceholderSig(json.sig);
+        const isTim = json.time && json.identity && json.measurement;
+        // Recognized top-level signable artifacts (besides TIM).
+        const isSignableType = Boolean(
+          json.registry_id || json.pack_id ||
+          (json.scope && json.actor && json.intent) ||
+          (json.request_id && json.verb && json.rail));
+        // Sign when the sig is a placeholder OR absent on a signable artifact.
+        const needsSign = (hasSig && isPlaceholderSig(json.sig)) || ((isTim || isSignableType) && !hasSig);
         const needsCid = hasCid && isPlaceholderCid(json.cid);
 
-        const isTim = json.time && json.identity && json.measurement;
         const needsWitnessResign = isTim && hasPlaceholderWitness(json);
 
         if (needsSign || needsCid || needsWitnessResign) {

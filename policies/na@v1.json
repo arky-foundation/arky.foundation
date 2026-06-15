@@ -1,15 +1,62 @@
 {
   "pack_id": "arky:policy/na@v1",
+  "name": "Arky North America Regional Policy Pack",
   "version": "1.0.0",
-  "rules": {
-    "privacy": {
-      "no_pii": true
-    },
-    "attestation": {
-      "required": false
-    }
+  "extends": "arky:policy/global@v1",
+  "region": {
+    "locales": [
+      "en-US",
+      "es-419",
+      "fr-CA"
+    ],
+    "jurisdictions": [
+      "US",
+      "CA"
+    ],
+    "sector": [
+      "general"
+    ]
+  },
+  "privacy": {
+    "no_pii": true,
+    "retention_days": 365
+  },
+  "rollback": {
+    "window_hours": 48,
+    "allowed_verbs": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ]
+  },
+  "rails": {
+    "allowed": [
+      "caip2:*",
+      "ach:us",
+      "custody:*"
+    ]
+  },
+  "limits": {
+    "amount_caps": [
+      {
+        "verb": "arky:verb/pay@v1",
+        "rail": "ach:us",
+        "asset": "USD",
+        "max": 100000
+      }
+    ],
+    "two_person_control": [
+      "arky:verb/slash@v1",
+      "arky:verb/revoke@v1"
+    ]
+  },
+  "compliance": {
+    "kyc_required": false,
+    "sanctions_screening": true
+  },
+  "attestation": {
+    "required": false
   },
   "overlays": {},
   "ts": "2025-10-15T00:00:00Z",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..C8oRg_TcLsMtMAH2YluiQo_1CRIOh3w9zKaaVKmr_mcKBhI7L--QKcfi5fq6pGzxD_huwW-xYR6arnbcRHeSBQ"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..xYiJfQ2-eZ7XooYm9qaifi7Ky72UKgWx-mDj6M2YIzea3fi-BOpiVe3BDZpHcHwKtK6qkkvYsWA1z-FuAoKvDA"
 }

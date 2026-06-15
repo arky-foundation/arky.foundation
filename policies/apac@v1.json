@@ -1,15 +1,55 @@
 {
   "pack_id": "arky:policy/apac@v1",
+  "name": "Arky APAC Regional Policy Pack",
   "version": "1.0.0",
-  "rules": {
-    "privacy": {
-      "no_pii": true
-    },
-    "attestation": {
-      "required": false
-    }
+  "extends": "arky:policy/global@v1",
+  "region": {
+    "locales": [
+      "en-AU",
+      "ja-JP",
+      "ko-KR"
+    ],
+    "jurisdictions": [
+      "AU",
+      "JP",
+      "SG"
+    ],
+    "sector": [
+      "general"
+    ]
+  },
+  "privacy": {
+    "no_pii": true,
+    "retention_days": 365
+  },
+  "rollback": {
+    "window_hours": 48,
+    "allowed_verbs": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ]
+  },
+  "rails": {
+    "allowed": [
+      "caip2:*",
+      "custody:*",
+      "hw:*"
+    ]
+  },
+  "limits": {
+    "two_person_control": [
+      "arky:verb/slash@v1",
+      "arky:verb/revoke@v1"
+    ]
+  },
+  "compliance": {
+    "kyc_required": false,
+    "sanctions_screening": true
+  },
+  "attestation": {
+    "required": false
   },
   "overlays": {},
   "ts": "2025-10-15T00:00:00Z",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..BXnekm88ABFN3E8jZzyxYEnKkgV6Q9f2CYpp3hwKv79KgEINMGeQmZ6ARV4PTp75xJ-2RvHydb3cOgpuN74yCQ"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..owJwD6Z-UZoZ8S7ssHtoLzn9DqWoZj35pc4iZ1dv-MYEjOTd7ej39Fs3Wtnjw2Ojy0ZcyY5vmlgONh-47zHBDQ"
 }

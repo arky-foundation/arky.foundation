@@ -2,16 +2,190 @@
   "$id": "https://arky.foundation/schemas/core/policy-pack-v1.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Arky Policy Pack (v1)",
+  "description": "Structured Policy Pack per ARKY-POLICY-PACKS-v1 §3. The enforcement field paths consumed by Kernel/Notary/Settlers (witness_policy.min_witnesses, finality_policy.chains, limits.amount_caps, rollback.window_hours, rails.allowed, compliance.kyc_required, anchoring.targets, privacy.retention_days) are defined here.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["pack_id", "version", "rules", "ts", "sig"],
+  "required": ["pack_id", "version", "ts", "sig"],
   "properties": {
     "pack_id": {
       "type": "string",
       "pattern": "^arky:policy[/:]?[a-z0-9._-]+@v[0-9]+$"
     },
+    "name": {"type": "string"},
     "version": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Semver"},
-    "rules": {"type": "object", "additionalProperties": true},
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "locales": {"type": "array", "items": {"type": "string"}},
+        "jurisdictions": {"type": "array", "items": {"type": "string"}},
+        "sector": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "identity_proofs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed_methods": {"type": "array", "items": {"type": "string"}},
+        "account_ids": {"type": "array", "items": {"type": "string"}},
+        "credential_profiles": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "selective_disclosure": {"type": "boolean"},
+        "public_anchor_fields": {"type": "array", "items": {"type": "string"}},
+        "redaction_rules": {"type": "array", "items": {"type": "string"}},
+        "no_pii": {"type": "boolean"},
+        "retention_days": {"type": "integer", "minimum": 0}
+      }
+    },
+    "residency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "store_in": {"type": "array", "items": {"type": "string"}},
+        "share_out": {"type": "array", "items": {"type": "string"}},
+        "legal_basis": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "witness_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_witnesses": {"type": "integer", "minimum": 0},
+        "classes": {"type": "array", "items": {"type": "string"}},
+        "independence": {"type": "boolean"}
+      }
+    },
+    "finality_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chains": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["depth"],
+            "properties": {"depth": {"type": "integer", "minimum": 0}}
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "window_hours": {"type": "number", "minimum": 0},
+        "allowed_verbs": {"type": "array", "items": {"type": "string"}},
+        "rails": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {"window": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/IsoDuration"}}
+          }
+        }
+      }
+    },
+    "anchoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "targets": {"type": "array", "items": {"type": "string"}},
+        "multi_anchor_required": {"type": "boolean"}
+      }
+    },
+    "rails": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {"type": "array", "items": {"type": "string"}},
+        "experimental_allowlist": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "verbs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed": {"type": "array", "items": {"type": "string"}},
+        "experimental_allowlist": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amount_caps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["verb", "max"],
+            "properties": {
+              "verb": {"type": "string"},
+              "rail": {"type": "string"},
+              "asset": {"type": "string"},
+              "max": {"type": "number", "minimum": 0}
+            }
+          }
+        },
+        "rate_limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "per_minute": {"type": "integer", "minimum": 0},
+            "burst": {"type": "integer", "minimum": 0}
+          }
+        },
+        "two_person_control": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kyc_required": {"type": "boolean"},
+        "sanctions_screening": {"type": "boolean"},
+        "export_controls": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "required": {"type": "boolean"},
+        "types": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "revocations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enforce": {"type": "boolean"}
+      }
+    },
+    "time_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "clock_skew_max": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/IsoDuration"},
+        "freshness_max": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/IsoDuration"},
+        "accept_exp_default": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/IsoDuration"}
+      }
+    },
+    "logging": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "immutable_journal": {"type": "boolean"},
+        "public_transparency": {"type": "boolean"}
+      }
+    },
+    "extends": {"type": "string"},
     "overlays": {"type": "object", "additionalProperties": true},
     "ts": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Rfc3339"},
     "cid": {"$ref": "https://arky.foundation/schemas/common-defs-v1.json#/$defs/Cid"},

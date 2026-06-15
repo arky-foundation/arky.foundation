@@ -1,34 +1,119 @@
 {
   "pack_id": "arky:policy/global@v1",
+  "name": "Arky Global Baseline Policy Pack",
   "version": "1.0.0",
-  "rules": {
-    "tim": {
-      "numeric_units_required": true,
-      "min_witnesses": 2,
-      "privacy": {
-        "no_pii": true
-      }
-    },
-    "notary": {
-      "finality": {
-        "default_depths": {
-          "caip2:eip155:1": 64,
-          "solana:mainnet": 150
-        }
+  "region": {
+    "locales": [
+      "en-US"
+    ],
+    "jurisdictions": [
+      "*"
+    ],
+    "sector": [
+      "general"
+    ]
+  },
+  "privacy": {
+    "selective_disclosure": true,
+    "public_anchor_fields": [
+      "cid"
+    ],
+    "redaction_rules": [
+      "no-phi",
+      "no-pii"
+    ],
+    "no_pii": true,
+    "retention_days": 365
+  },
+  "witness_policy": {
+    "min_witnesses": 2,
+    "classes": [
+      "notary"
+    ],
+    "independence": true
+  },
+  "finality_policy": {
+    "chains": {
+      "caip2:eip155:1": {
+        "depth": 64
       },
-      "dtn_ordering": true
-    },
-    "attestation": {
-      "required": false,
-      "types": [
-        "arky:attest/rats.eat@v1"
-      ]
-    },
-    "revocations": {
-      "enforce": true
+      "solana:mainnet": {
+        "depth": 150
+      }
     }
+  },
+  "rollback": {
+    "window_hours": 48,
+    "allowed_verbs": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ]
+  },
+  "anchoring": {
+    "targets": [
+      "caip2:eip155:1",
+      "solana:mainnet",
+      "log:arky:transparency@v1"
+    ],
+    "multi_anchor_required": false
+  },
+  "rails": {
+    "allowed": [
+      "caip2:*",
+      "ach:us",
+      "sepa:eu",
+      "custody:*",
+      "hw:*"
+    ]
+  },
+  "verbs": {
+    "allowed": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1",
+      "arky:verb/slash@v1",
+      "arky:verb/revoke@v1",
+      "arky:verb/upgrade@v1",
+      "arky:verb/signal@v1",
+      "arky:verb/control@v1"
+    ]
+  },
+  "limits": {
+    "amount_caps": [
+      {
+        "verb": "arky:verb/pay@v1",
+        "rail": "ach:us",
+        "asset": "USD",
+        "max": 100000
+      }
+    ],
+    "rate_limits": {
+      "per_minute": 120,
+      "burst": 240
+    },
+    "two_person_control": [
+      "arky:verb/slash@v1",
+      "arky:verb/revoke@v1"
+    ]
+  },
+  "compliance": {
+    "kyc_required": false,
+    "sanctions_screening": true
+  },
+  "attestation": {
+    "required": false,
+    "types": [
+      "arky:attest/rats.eat@v1"
+    ]
+  },
+  "revocations": {
+    "enforce": true
+  },
+  "time_policy": {
+    "clock_skew_max": "PT90S",
+    "freshness_max": "PT10M",
+    "accept_exp_default": "PT2H"
   },
   "overlays": {},
   "ts": "2025-10-15T00:00:00Z",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..0GZFO2aSYnguxxQl-kqLZisSTmUxO4i21lLx49PTczTVtRECuue0sMuNYkYiNQXvW3XRYspyMckS85cp4OL6Bw"
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..Nt9AiPgtp0q2UNfjExeavr0V1fQk1d92-1a4g2WA6Gx535wJSAcQ1Qhl3_Yx95CnnR2Q8-vt8OzqfkgA9h38Ag"
 }
