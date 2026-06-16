@@ -14,16 +14,15 @@
   "inputs": {
     "verb": "arky:verb/refund@v1",
     "params": {
-      "original_payment_ref": "pay-2025-10-15-001",
-      "to": "account-sender-01",
       "amount": {
-        "value": "100.00",
-        "currency": "USD"
+        "value": 100.0,
+        "unit": "USD"
       },
-      "rail": "fiat:usd:ach",
-      "reason": "customer_request"
+      "reason": "customer_request",
+      "payment_ref": "pay-2025-10-15-001"
     },
-    "idempotency_key": "refund-2025-10-15-001"
+    "idempotency_key": "refund-2025-10-15-001",
+    "rail": "fiat:usd:ach"
   },
   "expect": {
     "valid": true,

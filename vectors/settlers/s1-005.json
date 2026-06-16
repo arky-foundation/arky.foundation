@@ -13,16 +13,15 @@
   "inputs": {
     "verb": "arky:verb/pay@v1",
     "params": {
-      "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f0Ab1E",
       "to": "0x8ba1f109551bD432803012645Hac136Ddc82cF1",
       "amount": {
-        "value": "1000000000000000000",
-        "currency": "wei"
-      },
-      "rail": "eip155:1"
+        "value": 1000000000000000000,
+        "unit": "wei"
+      }
     },
     "idempotency_key": "pay-2025-10-15-001",
-    "previous_execution_exists": true
+    "previous_execution_exists": true,
+    "rail": "eip155:1"
   },
   "expect": {
     "valid": true,

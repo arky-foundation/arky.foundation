@@ -12,9 +12,8 @@
   "inputs": {
     "verb": "arky:verb/control@v1",
     "params": {
-      "target": "arky:device/hvac-unit-01",
       "action": "set_temperature",
-      "parameters": {
+      "params": {
         "value": 22,
         "unit": "C"
       }

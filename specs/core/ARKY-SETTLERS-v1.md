@@ -132,22 +132,28 @@ A Settler **MUST** implement a minimal, portable set of verbs (namespace `conseq
 
 **3.2 Verb Argument Schemas**
 
-All verbs **MUST** validate arguments against these schemas:
+All verbs **MUST** validate arguments against the per-verb JSON Schemas in
+`schemas/verbs/*.json`, which are **authoritative**. The required/optional
+fields are summarized below; the schemas use `additionalProperties: false`, so
+arguments **MUST** contain only the listed fields.
 
-| Verb | Required Args | Optional Args | Key Rules |
-|---|---|---|---|
-| **pay@v1** | `to`, `amount{value,unit}` | `from`, `memo` (≤256 chars), `escrow_release{escrow_id,conditions_met[]}` | amount.value > 0, finite |
-| **refund@v1** | `to`, `amount{value,unit}` | `original_tx`, `reason` (≤256 chars), `partial` (bool) | amount.value > 0 |
-| **slash@v1** | `from`, `to`, `reason`, amount XOR percent | `collateral_id` | Exactly one of `amount` or `percent` (0-100) |
-| **revoke@v1** | `capability_id` | `scope`, `effective_at` (RFC3339), `reason` (≤256 chars) | — |
-| **upgrade@v1** | `capability_id`, `level` | `scope`, `expires_at` (RFC3339), `conditions[]` | level = string | number |
-| **signal@v1** | `topic`, `payload_hash` | `payload`, `timestamp` (RFC3339), `metadata` | hash = multibase-multihash |
-| **control@v1** | `device_id`, `command` | `params`, `safety_bounds{max_duration_ms,max_force,max_temp,emergency_stop_enabled}`, `confirmation_required` (bool) | For physical systems, safety_bounds recommended |
+| Verb | Required Args | Optional Args |
+|---|---|---|
+| **pay@v1** | `to`, `amount{value,unit}` | `reference`, `metadata` |
+| **refund@v1** | `payment_ref` | `amount{value,unit}`, `reason` |
+| **slash@v1** | `subject`, `amount{value,unit}` | `reason` |
+| **revoke@v1** | `subject` | `credential`, `reason` |
+| **upgrade@v1** | `target`, `version` | `params` |
+| **signal@v1** | `channel` | `payload` |
+| **control@v1** | `action` | `params` |
+
+Request-level fields (`rail`, `idempotency_key`, `deadline`, `max_fee`) are part
+of the **ExecutionRequest** (§2.1), **not** the verb arguments.
 
 **General rules:**
-- All `amount.value` fields **MUST** be positive, finite
-- Unknown fields **SHOULD** be rejected
-- Settlers **MUST** validate before pre-checks
+- Arguments **MUST** validate against the verb's schema (`additionalProperties:
+  false`); unknown fields **MUST** be rejected (`settler.invalid_args`).
+- Settlers **MUST** validate arguments before pre-checks.
 
 **3.3 Extensibility & Namespaces**
 

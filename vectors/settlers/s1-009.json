@@ -13,13 +13,12 @@
   "inputs": {
     "verb": "arky:verb/slash@v1",
     "params": {
-      "target": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP",
       "amount": {
-        "value": "100000000000000000",
-        "currency": "wei"
+        "value": 100000000000000000,
+        "unit": "wei"
       },
       "reason": "protocol_violation",
-      "evidence_cid": "zQmEvidenceCid12345678901234567890"
+      "subject": "did:key:z6MknGc3ocHs3zdPiJbnaaqDi5mkjLHGw11g5vLz25VhC5ZP"
     },
     "idempotency_key": "slash-2025-10-15-001"
   },

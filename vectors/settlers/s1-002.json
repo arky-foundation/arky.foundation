@@ -17,14 +17,16 @@
       "amount": {
         "value": "100.00",
         "currency": "USD"
-      },
-      "rail": "unknown:nonexistent"
+      }
     },
-    "idempotency_key": "pay-2025-10-15-002"
+    "idempotency_key": "pay-2025-10-15-002",
+    "rail": "unknown:nonexistent"
   },
   "expect": {
     "valid": false,
-    "errors": ["settler.unsupported_rail"],
+    "errors": [
+      "settler.unsupported_rail"
+    ],
     "status": "FAILED"
   }
 }

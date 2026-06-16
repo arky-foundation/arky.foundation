@@ -12,12 +12,11 @@
   "inputs": {
     "verb": "arky:verb/signal@v1",
     "params": {
-      "signal_type": "status_update",
-      "target": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
       "payload": {
         "status": "active",
         "message": "Service operational"
-      }
+      },
+      "channel": "status_update"
     },
     "idempotency_key": "signal-2025-10-15-001"
   },

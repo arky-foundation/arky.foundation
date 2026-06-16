@@ -15,7 +15,9 @@
   },
   "expect": {
     "valid": false,
-    "errors": ["settler.unknown_verb"],
+    "errors": [
+      "settler.unknown_verb"
+    ],
     "status": "FAILED"
   }
 }
