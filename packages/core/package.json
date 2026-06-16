@@ -1,0 +1,19 @@
+{
+  "name": "@arky/core",
+  "version": "0.1.0",
+  "description": "Reference TypeScript implementation of Arky TIM: produce and verify Time-Identity-Measurement receipts (canonicalization, content addressing, detached JWS, witnessing).",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.6.0",
+    "@noble/hashes": "^1.5.0"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["arky", "tim", "jcs", "rfc8785", "jws", "ed25519", "receipts"]
+}
