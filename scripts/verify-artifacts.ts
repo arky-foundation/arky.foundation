@@ -82,6 +82,28 @@ const TEST_PUBLIC_KEYS_BY_KID: Record<string, jose.JWK> = {
   'notary-key-2025-01': { kty: 'OKP', crv: 'Ed25519', x: 'HDl_cQgT9vSiYMsH8q1dOdyb5prCuQYuRVBRhTTk1P8' },
 };
 
+/**
+ * Resolve an Ed25519 public key from a did:key:z6Mk… identity (per ARKY-TIM-v1
+ * §6.1). Returns undefined for non-did:key identities (caller falls back).
+ * This makes the verifier check the key the artifact's identity actually names,
+ * so a did:key that doesn't match the signing key is caught (not masked by a
+ * hardcoded test key).
+ */
+async function resolveDidKey(id: unknown): Promise<jose.KeyLike | undefined> {
+  if (typeof id !== 'string' || !id.startsWith('did:key:z6Mk')) return undefined;
+  try {
+    const decoded = base58btc.decode(id.slice('did:key:z'.length) as string);
+    if (decoded[0] !== 0xed || decoded[1] !== 0x01) return undefined;
+    const x = decoded.slice(2);
+    let bin = '';
+    for (const b of x) bin += String.fromCharCode(b);
+    const xB64u = btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return (await jose.importJWK({ kty: 'OKP', crv: 'Ed25519', x: xB64u }, 'EdDSA')) as jose.KeyLike;
+  } catch {
+    return undefined;
+  }
+}
+
 /** Resolve a witness public key from the JWS protected header `kid`. */
 async function resolveWitnessKey(sig: string): Promise<jose.KeyLike | undefined> {
   try {
@@ -209,6 +231,11 @@ async function verifyArtifact(
   const hasCid = storedCid !== undefined;
   const cidMatch = hasCid ? storedCid === computedCid : true;
 
+  // Prefer the key the artifact's identity actually names (did:key); fall back
+  // to the passed test key for non-did:key identities (e.g. did:web examples).
+  const identityId = (rest.identity as Record<string, unknown> | undefined)?.id;
+  const signingKey = (await resolveDidKey(identityId)) ?? publicKey;
+
   let sigValid = false;
   let detail = '';
   if (typeof sig === 'string' && sig.split('.').length === 3) {
@@ -217,7 +244,7 @@ async function verifyArtifact(
     try {
       await jose.flattenedVerify(
         { protected: header, signature, payload },
-        publicKey,
+        signingKey,
         { crit: { b64: true } },
       );
       sigValid = true;

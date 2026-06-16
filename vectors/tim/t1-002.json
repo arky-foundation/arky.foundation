@@ -10,7 +10,7 @@
     "tim": {
       "time": {},
       "identity": {
-        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+        "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
       },
       "measurement": {
         "name": "temperature",
@@ -21,8 +21,8 @@
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmSPzxixovM4FXnNoXDupAp3dbhqWxjX6GtSzbWZRiGbDb",
-      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..JvNWdLwttdUxTA2flwiMZjQDFd003xJuChHFAzYKe59UqwDnI-_IWEGdyHmypXJFLXZ1q3uN6OnxJa7gyp3YDw"
+      "cid": "zQmPjhWYVkqTDdNukJAkHoYU4jEb1DErthfL4rVsXSSqG2X",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..WMp2HhBVW15-25k2HiWqcbkYH1mkn4OHdeaRTjRu-nriFiTdt1JpgajsRNGre0PS9IllQw047dAnrsK4kjCnCA"
     }
   },
   "expect": {

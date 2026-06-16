@@ -15,7 +15,7 @@
         "ts": "2025-10-15T12:00:00Z"
       },
       "identity": {
-        "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+        "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
       },
       "measurement": {
         "name": "temperature",
@@ -26,8 +26,8 @@
           "source": "device:temp-sensor-01"
         }
       },
-      "cid": "zQmSR6RtDE4fDaQpsegfrYMoE8hEXTPPwgNzrScgT8UWnDM",
-      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..mb81tA6JhhjzF11BeTk9Uhu9ODJW0MnU_mzWvY-BPVnZ0KknQ1vhcb1Ux9TpSoAmGuifq6vrBP3KoznGPCl3Aw"
+      "cid": "zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..i3Wael9VfCyFE-2O-ncTcghG_MxzkRIP_BLf3Et3-2QH-61rjdX7daXtLL4Qfr1Lxaw31aKFSouEZM1zGNWECg"
     }
   },
   "expect": {

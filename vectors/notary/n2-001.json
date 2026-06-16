@@ -10,13 +10,13 @@
   "inputs": {
     "alg": "merkle-sha256-v1",
     "cids": [
-      "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
-      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM"
+      "zQmQbiz88AW3m21coTmBqB2BUHXn2ygWJB6MGqKwsrbm2Sf",
+      "zQmdNSkiQ7KpXrrSudYS2ZmfDS9kBVL1hWaZmDgUgxf1bqn"
     ]
   },
   "expect": {
     "valid": true,
     "errors": [],
-    "merkle_root": "zQmbdB8Ed4p8hy1mVYvy5bezPoKcTKBwcYYwxwbeTVcfgaG"
+    "merkle_root": "zQma8aMgFEyKzzca3xjtWZzDZrUQ7GyCMkRj54TQDgJ6Lbj"
   }
 }

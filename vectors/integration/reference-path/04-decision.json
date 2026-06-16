@@ -1,6 +1,6 @@
 {
-  "kernel_cid": "zQmX5WB3FC5DhFPDWJputQJd5q39kpZLx8RNvP2zMMDU9fG",
-  "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+  "kernel_cid": "zQmUG7QQQTV7ZzALLsETzdri1NSoH8siaAqbqzsajgKzZT5",
+  "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
   "scope": "arky:scope/datacenter.cooling",
   "status": "APPROVED",
   "assertions": [
@@ -8,7 +8,7 @@
       "name": "temp",
       "result": "PASS",
       "inputs": [
-        "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ"
+        "zQma5hrFJerMUpi8mHmXuMdKVG8Z59xbDzqaZyjUkkw7gDJ"
       ]
     }
   ],
@@ -26,6 +26,6 @@
     }
   ],
   "ts_eval": "2025-10-15T14:30:02Z",
-  "cid": "zQmP5ruZwRSd3bk64NjmSkPF9PAa4BY78RA5mubGZbiCzLn",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..WMUA0VvYx6URvyiOmhO4ihDn3Ry50CCIhSZ4ise63aPpFtFTlDPX-5fBri4yInu2J8AS2utG6wB_goTY0UPEAQ"
+  "cid": "zQmWAxSoY7jhX2BHgvtSkthuK9vrTBkeGmr1EHjdQE7z7UC",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..paWjArN31Cr_9WE7_miOX-XoGyQsWNeYh6dEDNPGW_TaZ8Y0_obeambu4qVQ32wt1vczx-lLZDAWqDrUaDheDg"
 }

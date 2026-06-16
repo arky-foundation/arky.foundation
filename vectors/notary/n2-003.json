@@ -10,11 +10,11 @@
   },
   "inputs": {
     "alg": "merkle-sha256-v1",
-    "leaf": "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
+    "leaf": "zQmQbiz88AW3m21coTmBqB2BUHXn2ygWJB6MGqKwsrbm2Sf",
     "path": [
-      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM"
+      "zQmdNSkiQ7KpXrrSudYS2ZmfDS9kBVL1hWaZmDgUgxf1bqn"
     ],
-    "root": "zQmbdB8Ed4p8hy1mVYvy5bezPoKcTKBwcYYwxwbeTVcfgaG"
+    "root": "zQma8aMgFEyKzzca3xjtWZzDZrUQ7GyCMkRj54TQDgJ6Lbj"
   },
   "expect": {
     "valid": true,

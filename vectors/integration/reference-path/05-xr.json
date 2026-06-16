@@ -1,11 +1,11 @@
 {
   "request_id": "ref-path-exec-001",
-  "commitment_cid": "zQmX5WB3FC5DhFPDWJputQJd5q39kpZLx8RNvP2zMMDU9fG",
-  "decision_cid": "zQmP5ruZwRSd3bk64NjmSkPF9PAa4BY78RA5mubGZbiCzLn",
+  "commitment_cid": "zQmUG7QQQTV7ZzALLsETzdri1NSoH8siaAqbqzsajgKzZT5",
+  "decision_cid": "zQmWAxSoY7jhX2BHgvtSkthuK9vrTBkeGmr1EHjdQE7z7UC",
   "verb": "arky:verb/pay@v1",
   "rail": "arky:rail/ach:us@v1",
   "args_hash": "zQmQCRVTcm4HtP7LxEumERPnEsKWSBDJ3dcoDJvjkxaBoXS",
-  "idempotency_key": "zQmYZgLqTdVHV4N2s48qnFdjB7YpLGv7NTexs778vo2r1P5",
+  "idempotency_key": "zQmWPPwAo1JuC83tgQxDie2qefVyGS99V6YoUSCiuiG1kwd",
   "status": "success",
   "locator": "ACH20251015T143005-refpath",
   "cost": {
@@ -20,6 +20,6 @@
     }
   ],
   "ts": "2025-10-15T14:30:05Z",
-  "cid": "zQmQpr9usXHjgXyUPqHFieepSyEMfhpk6JErtqAX99XUfCq",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6Im5vdGFyeS1rZXktMjAyNS0wMSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..w4QYVfhxN_ZGS6RhdkTt_Rc3nK4SB2jkFerSc2BDTIb6eeq9vYdaJym9PPzQqD0q1PfxGb4hFnaYb5j7geRXBw"
+  "cid": "zQmUPBosDSo5U1XUnk4SBAbjWXkm3hupT9fpjQPQf7P1pcs",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6Im5vdGFyeS1rZXktMjAyNS0wMSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..AOP3VkDpMeqNnwsn36Z-GU-JQ8wq687db7b5gqlSAspGP0nJaexxVsSCKxXkVOSperKnHCQhX-G6D16qgMqSCg"
 }

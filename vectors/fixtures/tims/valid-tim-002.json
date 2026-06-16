@@ -6,11 +6,11 @@
     "time": {
       "ts": "2025-10-15T12:05:00Z",
       "witnesses": [
-        "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDIiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..eloHG2VHD45Igmmak32IxyBbjj1x2A9gse2rvuEoLUB1F9y1Qxjb6OpOaT5Id2OA7aKfuT_Z0teECbnc8SLtBA"
+        "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDIiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..q3vmwnOPAfAQ1gdFH-fAt16hj9L_CVV2ewzwYaFLfVFqZ_xwzokvSCT-zMkhOxidLgRnHnUi-570CEG5l7YDDg"
       ]
     },
     "identity": {
-      "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp"
+      "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
     },
     "measurement": {
       "name": "humidity",
@@ -24,10 +24,10 @@
       "device": "arky:device/humidity-sensor-01",
       "error": "2.0"
     },
-    "prev": "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
+    "prev": "zQmQbiz88AW3m21coTmBqB2BUHXn2ygWJB6MGqKwsrbm2Sf",
     "nonce": "nonce-2025-10-15-001",
-    "cid": "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM",
-    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..G0_hjxR3RwaShXcX7hgVlrc030EY0d3meWzSCJCqs_Uk_xWqxVa1eIl2yyT6_TCrDZOKlVgjl3v4hRgYu03yCg"
+    "cid": "zQmdNSkiQ7KpXrrSudYS2ZmfDS9kBVL1hWaZmDgUgxf1bqn",
+    "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..Em6mjEZqTYqnbBxjmasvppq3PBoBzlONfD1ZcqfBm0c6RmN6j1Nk5ZglNO-FADX3NGRcvEwBtM4Y2CoPPERaCw"
   },
   "signing_key_ref": "fixtures/keys/ed25519-test-01.json",
   "witness_key_ref": "fixtures/keys/ed25519-test-02.json",

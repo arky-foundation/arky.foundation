@@ -11,19 +11,19 @@
   "inputs": {
     "alg": "merkle-sha256-v1",
     "cids": [
-      "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm",
-      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM",
+      "zQmQbiz88AW3m21coTmBqB2BUHXn2ygWJB6MGqKwsrbm2Sf",
+      "zQmdNSkiQ7KpXrrSudYS2ZmfDS9kBVL1hWaZmDgUgxf1bqn",
       "zQmWahgQ4Cx2AFFwwmmXCi4tZ4H4pFwU6URh8NFqTN6bLDJ"
     ]
   },
   "expect": {
     "valid": true,
     "errors": [],
-    "merkle_root": "zQmcj9qKdSDBKt3HHf3W7tFrgpeC6xZ8K33kiq9DPTM4Xbe",
+    "merkle_root": "zQmTHCh1oJE9KXyNdHTbphPJQKKs5tHiPyKXZ38pXAJ95jZ",
     "sorted_order": [
+      "zQmQbiz88AW3m21coTmBqB2BUHXn2ygWJB6MGqKwsrbm2Sf",
       "zQmWahgQ4Cx2AFFwwmmXCi4tZ4H4pFwU6URh8NFqTN6bLDJ",
-      "zQmXLM4tJDagCSXEWdfRowxgGxAwdaQioMp9CCML27yntMM",
-      "zQmaRKmaDYFxZmyWQxJk3vt2xRkEWM3PETtJKarxjWVegLm"
+      "zQmdNSkiQ7KpXrrSudYS2ZmfDS9kBVL1hWaZmDgUgxf1bqn"
     ]
   }
 }

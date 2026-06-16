@@ -34,7 +34,7 @@ const KEY_NOTARY = {
   x: 'HDl_cQgT9vSiYMsH8q1dOdyb5prCuQYuRVBRhTTk1P8',
   d: 's-lf3-1u1GTPb6JOqqYlBVWC8eYdKhXPRZkj7k3x0h8', kid: 'notary-key-2025-01',
 };
-const DID_ISSUER = 'did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp';
+const DID_ISSUER = 'did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw';
 
 /** Detached-payload JWS (RFC 7797, b64:false) over canonical bytes. */
 async function signDetached(canonical: string, key: typeof KEY_ISSUER): Promise<string> {

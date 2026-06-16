@@ -148,6 +148,16 @@ function isPlaceholderCid(cid: unknown): boolean {
 }
 
 /**
+ * A TIM whose stored cid no longer matches its canonical body is STALE and must
+ * be re-signed (e.g. after editing identity.id). Recompute and compare.
+ */
+function hasStaleTimCid(tim: Record<string, unknown>): boolean {
+  if (typeof tim.cid !== 'string') return false;
+  const recomputed = computeCid(jcsCanonical(timCanonicalBody(tim)));
+  return recomputed !== tim.cid;
+}
+
+/**
  * Process a TIM object: compute cid and sign
  */
 async function processTim(tim: Record<string, unknown>, privateKey: jose.KeyLike, witnessKey?: jose.KeyLike): Promise<Record<string, unknown>> {
@@ -212,6 +222,10 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         const content = await readFile(fullPath, 'utf-8');
         const json = JSON.parse(content);
 
+        // Negative vectors carry intentionally-invalid artifacts (bad cid/sig/
+        // timestamp). NEVER re-sign them — that would "fix" the thing they test.
+        if (json.expect && json.expect.valid === false) continue;
+
         let updated: Record<string, unknown> | null = null;
 
         // Detect artifact type and process accordingly
@@ -227,7 +241,7 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         const needsSign = (hasSig && isPlaceholderSig(json.sig)) || ((isTim || isSignableType) && !hasSig);
         const needsCid = hasCid && isPlaceholderCid(json.cid);
 
-        const needsWitnessResign = isTim && hasPlaceholderWitness(json);
+        const needsWitnessResign = isTim && (hasPlaceholderWitness(json) || hasStaleTimCid(json));
 
         if (needsSign || needsCid || needsWitnessResign) {
           if (isTim) {
@@ -256,7 +270,7 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         // Handle test vectors with embedded TIMs
         if (json.inputs?.tim) {
           const tim = json.inputs.tim;
-          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid) || hasPlaceholderWitness(tim)) {
+          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid) || hasPlaceholderWitness(tim) || hasStaleTimCid(tim)) {
             const signedTim = await processTim(tim, privateKey, witnessKey);
             json.inputs.tim = signedTim;
             updated = json;
@@ -289,7 +303,7 @@ async function processDirectory(dir: string, privateKey: jose.KeyLike, rootDir: 
         // Handle fixture files with embedded TIMs
         if (json.tim && json.tim.time && json.tim.identity && json.tim.measurement) {
           const tim = json.tim;
-          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid) || hasPlaceholderWitness(tim)) {
+          if (isPlaceholderSig(tim.sig) || isPlaceholderCid(tim.cid) || hasPlaceholderWitness(tim) || hasStaleTimCid(tim)) {
             const signedTim = await processTim(tim, privateKey, witnessKey);
             json.tim = signedTim;
             updated = json;

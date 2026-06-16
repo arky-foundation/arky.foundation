@@ -19,7 +19,7 @@
       "input": {
         "kernel": {
           "scope": "sensor-data-policy",
-          "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+          "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
           "intent": { "do": "arky:verb/control@v1" },
           "measure": [
             {

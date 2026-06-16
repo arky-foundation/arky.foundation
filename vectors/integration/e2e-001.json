@@ -20,7 +20,7 @@
       "action": "create_evidence",
       "input": {
         "time": { "ts": "2025-10-15T12:00:00Z" },
-        "identity": { "id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp" },
+        "identity": { "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw" },
         "measurement": {
           "name": "temperature",
           "value": 87.5,
@@ -63,7 +63,7 @@
       "input": {
         "kernel": {
           "scope": "datacenter-cooling-policy",
-          "actor": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+          "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
           "intent": {
             "do": "arky:verb/pay@v1",
             "budget": { "value": 500, "unit": "USD" }

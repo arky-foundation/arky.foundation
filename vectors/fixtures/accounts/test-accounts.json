@@ -5,7 +5,7 @@
   "accounts": [
     {
       "id": "account-sender-01",
-      "identity": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+      "identity": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
       "type": "sender",
       "rails": {
         "eip155:1": {

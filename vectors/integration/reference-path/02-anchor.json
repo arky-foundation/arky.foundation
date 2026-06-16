@@ -1,5 +1,5 @@
 {
-  "cid_root": "z8yzBT1zghMd94MvHyspcSppJFfSxvJxEZjxidnb2dUXpXAJ7Z",
+  "cid_root": "z8yzBSwPxbXGoM3qwAj9BydBML8vnXDSo3qYW4G24mtKmSxqwJ",
   "target": "log:arky:transparency@v1",
   "locator": "ref-path-batch-0001",
   "ts_anchor": "2025-10-15T14:30:01Z",
@@ -8,11 +8,11 @@
     "status": "final"
   },
   "proof": {
-    "leaf": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ",
+    "leaf": "zQma5hrFJerMUpi8mHmXuMdKVG8Z59xbDzqaZyjUkkw7gDJ",
     "path": [],
     "alg": "merkle-sha256-v1"
   },
-  "witnessed_cid": "zQmegRx5ezZfZBXHSiEjYJYr1SXeabUVeDR78wb4xp1K8PZ",
-  "cid": "zQmetr8yKwhyZ48f9JkAcLbqTUeFhy6Jh54c3BGdz5ZEjAm",
-  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6Im5vdGFyeS1rZXktMjAyNS0wMSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..QB2MPlkr2dFos-C9YbwLoDPiCNmrtR1ZoZMkN08KpuLLyYCVXJJXQh2OuFnoRCbeFshGDgIN98X2pZsjtvcNCA"
+  "witnessed_cid": "zQma5hrFJerMUpi8mHmXuMdKVG8Z59xbDzqaZyjUkkw7gDJ",
+  "cid": "zQmbxFUwy7vu59Ly7Qqefbs8La426ikdUdGgQRFX7rYiBkd",
+  "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6Im5vdGFyeS1rZXktMjAyNS0wMSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..kQHGQre-4MosKcuBGLxRcmVpckZuR4lbTpQHdmZ3rImyGiBjIUrAM28nAmaTITbdoz1E1vzFuL8iqIJEZwpGAA"
 }

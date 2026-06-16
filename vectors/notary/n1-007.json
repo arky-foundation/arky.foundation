@@ -12,7 +12,7 @@
   },
   "inputs": {
     "tim_cid": "zQmYwAPJzv5CZsnANOTaWbHXpUjdEFRCQWFk8QwuTKYvM3Z",
-    "issuer_id": "did:key:z6MkiTBz1ymuepAQ4HEHYSF1H8quG5GLVVQR3djdX3mDooWp",
+    "issuer_id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
     "rate_limit": {
       "requests_per_minute": 100,
       "current_count": 150
