@@ -37,3 +37,21 @@ export {
   type CreateTimInput,
   type VerifyResult,
 } from './tim.ts';
+export {
+  evaluateAssertion,
+  type TriState,
+  type Symbols,
+  type EvalResult,
+} from './assert.ts';
+export {
+  evaluateKernel,
+  parseIsoDurationMs,
+  REGISTERED_VERBS,
+  type Commitment,
+  type MeasureSpec,
+  type ConsequenceSpec,
+  type Verb,
+  type Decision,
+  type DecisionStatus,
+  type AssertionResult,
+} from './kernel.ts';
