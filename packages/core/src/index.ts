@@ -55,3 +55,15 @@ export {
   type DecisionStatus,
   type AssertionResult,
 } from './kernel.ts';
+export {
+  execute,
+  argsHash,
+  deriveIdempotencyKey,
+  VERB_REQUIRED_ARGS,
+  type ExecutionRequest,
+  type ExecutionReceipt,
+  type ExecuteResult,
+  type ExecuteOptions,
+  type IdempotencyStore,
+  type XrStatus,
+} from './settler.ts';
