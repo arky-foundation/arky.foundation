@@ -46,3 +46,10 @@ jobs:
 
       - name: Verify CIDs, signatures, and algorithmic vectors (conformance)
         run: bun run scripts/verify-artifacts.ts
+
+      - name: Install @arky/core deps
+        run: bun install --cwd packages/core --frozen-lockfile
+
+      - name: "@arky/core conformance (independent stack vs vectors)"
+        run: bun test
+        working-directory: packages/core
