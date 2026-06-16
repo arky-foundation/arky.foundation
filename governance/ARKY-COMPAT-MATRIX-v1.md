@@ -74,6 +74,7 @@ per `ARKY-GOVERNANCE-v1` §4.
 - Must cite: spec versions, vector suite/levels with results JSON, repo/commit,
   and any deviations.
 - A results artifact conforming to `schemas/testing/results-schema.json` is
-  produced by `bun run results` (writes `vectors/RESULTS.json` with impl,
-  environment, per-case status, and totals). It is generated, not committed, so
-  every claim is reproducible from a clean checkout at a stated commit.
+  produced by `bun run results` (writes a `RESULTS.json` under `vectors/` with
+  impl, environment, per-case status, and totals). It is generated, not
+  committed, so every claim is reproducible from a clean checkout at a stated
+  commit.
