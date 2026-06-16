@@ -29,10 +29,19 @@ describe('Settler S1 vectors', () => {
       const req = {
         verb: v.inputs.verb,
         params: v.inputs.params,
-        rail: v.inputs.params?.rail,
+        rail: v.inputs.rail ?? v.inputs.params?.rail,
         idempotency_key: v.inputs.idempotency_key,
         commitment_cid: v.inputs.commitment_cid,
       };
+      // s1-005 tests idempotency by reusing s1-001's key; pre-seed the cache so
+      // this test does not depend on test execution order (CI may reorder).
+      if (v.id === 's1-005') {
+        const first = read(join(dir, 's1-001.json'));
+        execute(
+          { verb: first.inputs.verb, params: first.inputs.params, rail: first.inputs.rail, idempotency_key: first.inputs.idempotency_key },
+          { privateKey: SEED, ts: '2025-10-15T12:00:01Z', store },
+        );
+      }
       const res = execute(req, { privateKey: SEED, kid: 'test-settler', ts: v.context?.time ?? '2025-10-15T12:00:01Z', store });
 
       if (exp.status) expect(res.status).toBe(exp.status);
