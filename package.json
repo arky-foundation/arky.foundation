@@ -7,6 +7,7 @@
   "scripts": {
     "sign": "bun run scripts/sign-artifacts.ts",
     "verify": "bun run scripts/verify-artifacts.ts",
+    "results": "bun run scripts/verify-artifacts.ts --results vectors/RESULTS.json",
     "check-links": "bun run scripts/check-links.ts",
     "validate-kernel": "bun run scripts/validate-kernel-vectors.ts",
     "validate": "bun run scripts/validate.ts",

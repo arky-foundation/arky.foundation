@@ -28,14 +28,27 @@ versions and supported ranges across specs, SDKs, registries, and vectors.
 - Schemas may add optional fields without breaking existing clients.
 - Registries are immutable snapshots; breaking entry semantics require `@v<next>`.
 
-## 3. Minimums (Example)
+## 3. Current Matrix
 
-- TIM: ARKY‑TIM‑v1
-- Canonicalization: ARKY‑TIM‑Canonicalization‑v1
-- Discovery: ARKY‑DISCOVERY‑v1
-- Notary: ARKY‑NOTARY‑v1
-- Settlers: ARKY‑SETTLERS‑v1
-- Vectors: Suites covering the above at L1 minimum; target L2 for production.
+Concrete state as of vectors release **0.2.0** (`vectors/RELEASES.json`). Specs
+are at `status: review`; production claims require ≥2 independent implementations
+per `ARKY-GOVERNANCE-v1` §4.
+
+| Component | Spec | Schema `$id` | Executable vector levels |
+|---|---|---|---|
+| TIM | ARKY‑TIM‑v1 | `…/schemas/core/tim-v1.json` | T1 (7) |
+| Canonicalization | ARKY‑TIM‑Canonicalization‑v1 | (covered by tim-v1) | C1 (6) |
+| Kernel | ARKY‑KERNEL‑v1 | `…/schemas/core/kernel-v1.json` | K1 (10) |
+| Notary | ARKY‑NOTARY‑v1 | `…/schemas/core/anchor-object-v1.json` | N1 (8), N2 (4), N3 (3) |
+| Settlers | ARKY‑SETTLERS‑v1 | `…/schemas/core/execution-receipt-v1.json` | S1 (10), S2 (2), S3 (2) |
+| Discovery | ARKY‑DISCOVERY‑v1 | `…/schemas/infrastructure/discovery-index-v1.json` | D1 (6), D2 (1) |
+| Policy Packs | ARKY‑POLICY‑PACKS‑v1 | `…/schemas/core/policy-pack-v1.json` | (schema-validated) |
+| Attestations | ARKY‑ATTESTATION‑v1 | — | AT1 (2) |
+
+- L1 coverage is complete across core specs; L2/L3 is partial (Notary, Settlers).
+- An **end-to-end reference path** (`vectors/integration/reference-path/`)
+  exercises the full TIM→Notary→Kernel→Settler chain with cryptographic linkage.
+- Vectors covering a component at L1 are the minimum; target L2 for production.
 
 ## 4. SDK Compatibility
 
@@ -53,8 +66,14 @@ versions and supported ranges across specs, SDKs, registries, and vectors.
 
 - Each release must include: spec versions, registry snapshot IDs/CIDs, schema `$id`s,
   vector release manifest hashes, and migration notes.
+- The vector release manifest is `vectors/RELEASES.json` (per-suite levels and
+  changelog). Per-suite vector manifests live in `vectors/manifests/*.json`.
 
 ## 7. Conformance Claims
 
 - Must cite: spec versions, vector suite/levels with results JSON, repo/commit,
   and any deviations.
+- A results artifact conforming to `schemas/testing/results-schema.json` is
+  produced by `bun run results` (writes `vectors/RESULTS.json` with impl,
+  environment, per-case status, and totals). It is generated, not committed, so
+  every claim is reproducible from a clean checkout at a stated commit.

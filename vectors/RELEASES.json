@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0",
-  "release_date": "2025-10-15",
-  "description": "Arky Test Vectors Release - Phase 1 implementation with comprehensive Level 1 coverage",
+  "version": "0.2.0",
+  "release_date": "2026-06-15",
+  "description": "Arky Test Vectors Release - Level 1 coverage plus executable Level 2/3 algorithmic vectors and an end-to-end reference path",
   "suites": {
     "tim": {
       "manifest": "manifests/tim.json",
@@ -39,23 +39,23 @@
     "notary": {
       "manifest": "manifests/notary.json",
       "spec": "ARKY-NOTARY-v1",
-      "status": "basic_coverage",
-      "total_vectors": 8,
+      "status": "partial_coverage",
+      "total_vectors": 15,
       "levels": {
         "N1": 8,
-        "N2": 0,
-        "N3": 0
+        "N2": 4,
+        "N3": 3
       }
     },
     "settlers": {
       "manifest": "manifests/settlers.json",
       "spec": "ARKY-SETTLERS-v1",
-      "status": "basic_coverage",
-      "total_vectors": 10,
+      "status": "partial_coverage",
+      "total_vectors": 14,
       "levels": {
         "S1": 10,
-        "S2": 0,
-        "S3": 0
+        "S2": 2,
+        "S3": 2
       }
     },
     "discovery": {
@@ -82,6 +82,21 @@
     }
   },
   "changes": [
+    {
+      "version": "0.2.0",
+      "date": "2026-06-15",
+      "type": "minor",
+      "description": "Level 2/3 expansion: executable algorithmic vectors + end-to-end reference path",
+      "changes": [
+        "Added Notary N2 vectors (4): Merkle root, odd-count padding, inclusion proof, negative bad-proof",
+        "Added Notary N3 vectors (3): finality depth max(), policy-floor violation, reorg remediation",
+        "Added Settler S2 vectors (2): idempotency key derivation, STOP_ON_FAILURE cascade",
+        "Added Settler S3 vectors (2): compensation verb map, XR state transitions",
+        "Made Canonicalization C1 vectors executable (recompute JCS bytes vs expect)",
+        "Added end-to-end reference path (TIM->anchor->kernel->decision->XR, cryptographically linked)",
+        "Verifier now executes algorithmic vectors and walks chain linkage; emits results.json"
+      ]
+    },
     {
       "version": "0.1.0",
       "date": "2025-10-15",
@@ -130,22 +145,19 @@
       ]
     }
   ],
-  "total_vectors": 50,
+  "total_vectors": 61,
   "status": {
     "overall": "development",
     "production_ready": false,
     "level_1_coverage": "complete",
-    "level_2_coverage": "minimal",
-    "level_3_coverage": "none",
+    "level_2_coverage": "partial",
+    "level_3_coverage": "partial",
     "next_steps": [
       "Add TIM T2/T3 vectors for completeness and witnessing",
       "Add Canonicalization C2/C3 vectors for CID and signature coverage",
       "Add Kernel K2/K3 vectors for policy and conflict handling",
-      "Add Notary N2/N3 vectors for anchoring and finality",
-      "Add Settlers S2/S3 vectors for failures and rollbacks",
       "Add Discovery D2/D3 vectors for descriptors and advanced features",
-      "Add Attestation AT2/AT3 vectors for chains and integration",
-      "Implement automated test runner integration"
+      "Add Attestation AT2/AT3 vectors for chains and integration"
     ]
   },
   "fixtures": {

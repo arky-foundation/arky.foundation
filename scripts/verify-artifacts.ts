@@ -36,8 +36,9 @@
 import * as jose from 'jose';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { base58btc } from 'multiformats/bases/base58';
-import { readdir, readFile } from 'fs/promises';
+import { readdir, readFile, writeFile } from 'fs/promises';
 import { join, relative } from 'path';
+import { execSync } from 'node:child_process';
 import { merkleRoot, verifyInclusion, deriveIdempotencyKey, jcsCanonical as jcsLib, multihash, finalityDepth, canTransition, reorgOutcome } from './lib/merkle.ts';
 
 const rootDir = join(import.meta.dir, '..');
@@ -241,7 +242,11 @@ async function verifyArtifact(
 let passCount = 0;
 let failCount = 0;
 
+// Per-case records for the optional results artifact (--results <path>).
+const cases: Array<{ id: string; status: 'pass' | 'fail'; reason?: string }> = [];
+
 function report(label: string, ok: boolean, detail = '') {
+  cases.push({ id: label, status: ok ? 'pass' : 'fail', ...(ok ? {} : { reason: detail }) });
   if (ok) {
     passCount++;
     console.log(`  [PASS] ${label}`);
@@ -607,6 +612,29 @@ async function main() {
   }
 
   console.log(`\n${passCount} passed, ${failCount} failed.`);
+
+  // Optional results artifact (conforms to schemas/testing/results-schema.json).
+  const resultsArg = process.argv.indexOf('--results');
+  if (resultsArg !== -1) {
+    const out = process.argv[resultsArg + 1] || join(rootDir, 'vectors/RESULTS.json');
+    let commit = 'unknown';
+    try { commit = execSync('git rev-parse HEAD', { cwd: rootDir }).toString().trim(); } catch { /* not a repo */ }
+    const results = {
+      impl: { name: 'arky-foundation-verifier', version: '0.1.0', language: 'typescript', commit },
+      environment: {
+        os: process.platform,
+        arch: process.arch,
+        runtime: `bun ${process.versions.bun ?? ''}`.trim(),
+        timestamp: new Date().toISOString(),
+      },
+      suite: { spec_id: 'ARKY-VECTORS-v1', level: 'all', manifest_hash: multihash(new TextEncoder().encode(jcsLib(cases.map((c) => c.id)))) },
+      cases: cases.map((c) => ({ id: c.id, status: c.status, ...(c.reason ? { reason: c.reason } : {}), duration_ms: 0 })),
+      totals: { passed: passCount, failed: failCount, skipped: 0, total: passCount + failCount },
+    };
+    await writeFile(out, JSON.stringify(results, null, 2) + '\n');
+    console.log(`Results written to ${relative(rootDir, out)}`);
+  }
+
   if (failCount > 0) process.exit(1);
 }
 
