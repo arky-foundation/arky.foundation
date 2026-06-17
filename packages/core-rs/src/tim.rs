@@ -4,7 +4,8 @@
 
 use crate::canonicalize::canonicalize;
 use crate::cid::{cid_from_canonical, from_multibase};
-use crate::jws::{decode_protected_header, verify_detached, verifying_key_from_bytes};
+use crate::jws::{decode_protected_header, sign_detached, verify_detached, verifying_key_from_bytes};
+use ed25519_dalek::SigningKey;
 use serde_json::{Map, Value};
 
 /// Result of verifying a TIM.
@@ -50,6 +51,23 @@ pub fn canonical_body(tim: &Value) -> Value {
         }
     }
     Value::Object(obj)
+}
+
+/// Build a signed TIM from a body (any JSON object containing time/identity/
+/// measurement and optional prev/nonce/exp) and an Ed25519 signing key. Computes
+/// the canonical body, cid, and detached `sig`, returning the full TIM.
+pub fn create_tim(body: Value, signing_key: &SigningKey, kid: Option<&str>) -> Value {
+    let mut obj = body.as_object().cloned().unwrap_or_default();
+    obj.remove("cid");
+    obj.remove("sig");
+    let base = Value::Object(obj);
+    let canonical = canonicalize(&base);
+    let cid = cid_from_canonical(&canonical);
+    let sig = sign_detached(canonical.as_bytes(), signing_key, kid);
+    let mut out = base.as_object().unwrap().clone();
+    out.insert("cid".into(), Value::String(cid));
+    out.insert("sig".into(), Value::String(sig));
+    Value::Object(out)
 }
 
 /// Extract an Ed25519 public key from a did:key:z6Mk… identity (multicodec

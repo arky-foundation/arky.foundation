@@ -4,9 +4,21 @@
   "description": "Reference TypeScript implementation of Arky TIM: produce and verify Time-Identity-Measurement receipts (canonicalization, content addressing, detached JWS, witnessing).",
   "type": "module",
   "main": "src/index.ts",
+  "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
+  "files": [
+    "src",
+    "examples",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arky-foundation/arky.foundation.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://arky.foundation",
   "scripts": {
     "test": "bun test"
   },

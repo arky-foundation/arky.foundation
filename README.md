@@ -106,11 +106,22 @@ sequenceDiagram
 - Examples: `examples/`
 - Governance: `governance/`, RFCs: `rfcs/`
 
+## Implementations
+
+Two independent reference implementations cover the TIM → Kernel → Settler loop
+and are cross‑checked **byte‑for‑byte** against each other in CI:
+
+- [`packages/core`](packages/core) — **`@arky/core`** (TypeScript). `npm install`,
+  then `generateKeyPair()` + `createTim()` + `verifyTim()`. See its README/quickstart.
+- [`packages/core-rs`](packages/core-rs) — **`arky-core`** (Rust). Same loop;
+  systems‑language stack for embedded/high‑assurance use.
+
 ## Repo Map
 - `specs/` — Normative protocol definitions
 - `schemas/` — JSON Schemas for validation/codegen
 - `registries/` — Signed URN snapshots (units, verbs, rails, devices, attestations)
 - `vectors/` — Conformance suites and manifests
+- `packages/` — Reference SDKs (TypeScript, Rust)
 - `examples/` — Copy‑paste examples and tools
 - `governance/` — Versioning, governance policy
 - `rfcs/` — Change proposals and templates

@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 description = "Reference Rust implementation of Arky TIM: JCS canonicalization (RFC 8785), content addressing, detached Ed25519 JWS, and verification. A second independent stack."
 license = "Apache-2.0"
+repository = "https://github.com/arky-foundation/arky.foundation"
+homepage = "https://arky.foundation"
+readme = "README.md"
+keywords = ["arky", "tim", "jcs", "ed25519", "receipts"]
+categories = ["cryptography"]
 
 [dependencies]
 # Parsing only (vectors, test inputs). Canonicalization is hand-rolled per
