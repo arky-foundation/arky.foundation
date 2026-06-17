@@ -15,8 +15,8 @@
       "from": "account-sender-01",
       "to": "account-receiver-01",
       "amount": {
-        "value": "100.00",
-        "currency": "USD"
+        "value": 100,
+        "unit": "USD"
       }
     },
     "idempotency_key": "pay-2025-10-15-002",

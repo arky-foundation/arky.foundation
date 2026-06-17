@@ -4,7 +4,7 @@
  */
 
 import { test, expect, describe } from 'bun:test';
-import { generateKeyPair, createTim, verifyTim, signDetached, canonicalize, canonicalBody, cidFromCanonical, resolveDidKey } from '../src/index.ts';
+import { generateKeyPair, createTim, verifyTim, signDetached, canonicalize, canonicalBody, cidFromCanonical, resolveDidKey, execute, evaluateKernel } from '../src/index.ts';
 
 const issuer = generateKeyPair();
 const attacker = generateKeyPair();
@@ -102,5 +102,35 @@ describe('freshness (opt-in via options.at)', () => {
 
   test('TIM without exp is always fresh', () => {
     expect(verifyTim(tim, undefined, { at: '2099-01-01T00:00:00Z' }).fresh).toBe(true);
+  });
+});
+
+describe('settler rejects invalid amounts (authorization safety)', () => {
+  const key = new Uint8Array(32).fill(1);
+  const pay = (amount: unknown) =>
+    execute({ verb: 'arky:verb/pay@v1', params: { to: 'x', amount }, rail: 'ach:us' }, { privateKey: key, ts: '2025-01-01T00:00:00Z' });
+
+  test('negative amount is rejected', () => expect(pay({ value: -1000, unit: 'USD' }).status).toBe('FAILED'));
+  test('zero amount is rejected', () => expect(pay({ value: 0, unit: 'USD' }).status).toBe('FAILED'));
+  test('amount missing unit is rejected', () => expect(pay({ value: 100 }).status).toBe('FAILED'));
+  test('NaN amount is rejected', () => expect(pay({ value: NaN, unit: 'USD' }).status).toBe('FAILED'));
+  test('non-object amount is rejected', () => expect(pay('100').status).toBe('FAILED'));
+  test('valid amount succeeds', () => expect(pay({ value: 100, unit: 'USD' }).status).toBe('SUCCESS'));
+});
+
+describe('kernel does not authorize on missing/indeterminate evidence', () => {
+  const commitment = {
+    scope: 's', actor: 'a', intent: { do: 'arky:verb/pay@v1' },
+    measure: [{ name: 'temp', assert: 'temp > 20' }],
+    consequence: [{ if: 'PASS', then: [{ name: 'arky:verb/pay@v1', args: { to: 'x', amount: { value: 1, unit: 'USD' } } }] }],
+  };
+  test('no evidence -> INDETERMINATE, not APPROVED', () => {
+    expect(evaluateKernel(commitment, [], {}).status).toBe('INDETERMINATE');
+  });
+  test('unregistered verb -> REJECTED', () => {
+    const bad = { ...commitment, consequence: [{ if: 'PASS', then: [{ name: 'arky:verb/evil@v1', args: {} }] }] };
+    const d = evaluateKernel(bad, [], {});
+    expect(d.status).toBe('REJECTED');
+    expect(d.errors).toContain('kernel.unknown_verb');
   });
 });

@@ -57,6 +57,25 @@ fn rail_supported(rail: Option<&str>) -> bool {
     }
 }
 
+/// Validate an `amount` argument per §3.2: when present it MUST be
+/// { value: number > 0 (finite), unit: string }. Returns the offending field
+/// tag on violation, or None if absent/valid.
+fn validate_amount(amount: Option<&serde_json::Value>) -> Option<&'static str> {
+    let a = amount?;
+    if !a.is_object() {
+        return Some("amount");
+    }
+    match a.get("value").and_then(|v| v.as_f64()) {
+        Some(v) if v.is_finite() && v > 0.0 => {}
+        _ => return Some("amount.value"),
+    }
+    match a.get("unit").and_then(|u| u.as_str()) {
+        Some(u) if !u.is_empty() => {}
+        _ => return Some("amount.unit"),
+    }
+    None
+}
+
 /// multibase(multihash(sha2-256, JCS(args))).
 pub fn args_hash(args: &Value) -> String {
     multihash_mb(canonicalize(args).as_bytes())
@@ -109,6 +128,11 @@ pub fn execute(
         .collect();
     if !missing.is_empty() {
         return ExecuteResult { status: ExecStatus::Failed, errors: vec!["settler.invalid_args".into()], missing_fields: missing, receipt: None };
+    }
+    // 2b. Argument constraints (§3.2): an `amount`, where present, MUST be
+    //     { value: number > 0 (finite), unit: string }.
+    if let Some(field) = validate_amount(req.args.get("amount")) {
+        return ExecuteResult { status: ExecStatus::Failed, errors: vec!["settler.invalid_args".into()], missing_fields: vec![field.into()], receipt: None };
     }
     // 3. Rail supported.
     if !rail_supported(req.rail) {

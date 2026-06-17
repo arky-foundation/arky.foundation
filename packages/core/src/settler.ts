@@ -65,6 +65,20 @@ function railSupported(rail: string | undefined): boolean {
 }
 
 /**
+ * Validate an `amount` argument per ARKY-SETTLERS-v1 §3.2: when present it MUST
+ * be `{ value: number, unit: string }` with `value > 0` and finite. Returns a
+ * short field tag on violation, or null if absent/valid.
+ */
+function validateAmount(amount: unknown): string | null {
+  if (amount === undefined) return null;
+  if (typeof amount !== 'object' || amount === null || Array.isArray(amount)) return 'amount';
+  const a = amount as Record<string, unknown>;
+  if (typeof a.value !== 'number' || !Number.isFinite(a.value) || a.value <= 0) return 'amount.value';
+  if (typeof a.unit !== 'string' || a.unit.length === 0) return 'amount.unit';
+  return null;
+}
+
+/**
  * multibase(multihash(sha2-256, JCS(args))) — args_hash and the basis for the
  * deterministic idempotency key (§5 / §6.1).
  */
@@ -113,6 +127,12 @@ export function execute(req: ExecutionRequest, opts: ExecuteOptions): ExecuteRes
   const missing = required.filter((k) => (args as Record<string, unknown>)[k] === undefined);
   if (missing.length > 0) {
     return { valid: false, status: 'FAILED', errors: ['settler.invalid_args'], missing_fields: missing };
+  }
+  // 2b. Argument constraints (ARKY-SETTLERS-v1 §3.2): an `amount`, where
+  //     present, MUST be { value: number > 0 (finite), unit: string }.
+  const amountErr = validateAmount((args as Record<string, unknown>).amount);
+  if (amountErr) {
+    return { valid: false, status: 'FAILED', errors: ['settler.invalid_args'], missing_fields: [amountErr] };
   }
   // 3. Rail supported.
   if (!railSupported(rail)) {
