@@ -1,0 +1,21 @@
+[package]
+name = "arky-core"
+version = "0.1.0"
+edition = "2021"
+description = "Reference Rust implementation of Arky TIM: JCS canonicalization (RFC 8785), content addressing, detached Ed25519 JWS, and verification. A second independent stack."
+license = "Apache-2.0"
+
+[dependencies]
+# Parsing only (vectors, test inputs). Canonicalization is hand-rolled per
+# RFC 8785 — serde_json's output is NOT JCS-compliant (esp. number formatting).
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+ed25519-dalek = "2"
+bs58 = "0.5"
+base64 = "0.22"
+
+[dev-dependencies]
+# tests load the repo's published vectors
+
+[lib]
+path = "src/lib.rs"
