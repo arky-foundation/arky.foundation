@@ -53,3 +53,13 @@ jobs:
       - name: "@arky/core conformance (independent stack vs vectors)"
         run: bun test
         working-directory: packages/core
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: "arky-core (Rust) conformance (second independent stack)"
+        run: cargo test --locked
+        working-directory: packages/core-rs
+
+      - name: Cross-language canonicalization (TS bytes == Rust bytes)
+        run: bash scripts/cross-check-canon.sh
