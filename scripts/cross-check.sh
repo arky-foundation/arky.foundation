@@ -50,3 +50,25 @@ if [[ $fail -ne 0 ]]; then
   exit 1
 fi
 echo "All K1 vectors: TS and Rust kernel decisions are identical."
+
+echo
+echo "Settler execution receipts (S1 vectors): TS vs Rust"
+for vec in "$ROOT"/vectors/settlers/s1-*.json; do
+  ts="$(cd "$ROOT/packages/core" && bun run scripts/xr.ts "$vec")"
+  rs="$(cd "$ROOT/packages/core-rs" && cargo run --quiet --example xr -- "$vec" 2>/dev/null)"
+  name="$(basename "$vec")"
+  if [[ "$ts" == "$rs" ]]; then
+    echo "[OK]   $name -> $ts"
+  else
+    echo "[FAIL] $name XR diverges: TS=$ts Rust=$rs"
+    fail=1
+  fi
+done
+
+if [[ $fail -ne 0 ]]; then
+  echo "Cross-language MISMATCH." >&2
+  exit 1
+fi
+echo "All S1 vectors: TS and Rust execution receipts are identical."
+echo
+echo "Cross-language agreement holds end-to-end: canonical bytes -> cids -> kernel decisions -> execution receipts."

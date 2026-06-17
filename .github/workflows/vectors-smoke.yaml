@@ -61,5 +61,5 @@ jobs:
         run: cargo test --locked
         working-directory: packages/core-rs
 
-      - name: Cross-language agreement (TS == Rust canonical bytes + kernel decisions)
+      - name: Cross-language agreement (TS == Rust, bytes -> cids -> decisions -> receipts)
         run: bash scripts/cross-check.sh
