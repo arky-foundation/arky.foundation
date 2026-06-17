@@ -86,7 +86,22 @@ export interface VerifyResult {
   cid_valid: boolean;
   signature_valid: boolean;
   witnesses_valid: boolean;
+  /** false iff `options.at` is provided and the TIM's `exp` is at/before it. */
+  fresh: boolean;
   missing_fields?: string[];
+}
+
+export interface VerifyOptions {
+  /**
+   * Current time (RFC3339 or epoch ms) for freshness enforcement (TIM §4). When
+   * provided, a TIM whose `exp` is at or before this time fails with
+   * `tim.expired`. Omit to skip freshness (pure cryptographic verification).
+   *
+   * Note: anti-replay (`nonce`) and causal-chain (`prev`, cross-identity)
+   * enforcement need external state (a seen-nonce store, the prior chain) and
+   * are the caller's responsibility — single-TIM verification cannot do them.
+   */
+  at?: string | number;
 }
 
 /**
@@ -96,13 +111,14 @@ export interface VerifyResult {
 export function verifyTim(
   tim: Record<string, unknown>,
   resolveKey: (tim: Record<string, unknown>) => Uint8Array | undefined = resolveDidKey,
+  options: VerifyOptions = {},
 ): VerifyResult {
   const errors: string[] = [];
   const missing = REQUIRED_PATHS.filter((p) => getPath(tim, p) === undefined);
   const schema_valid = missing.length === 0;
   if (!schema_valid) {
     errors.push('tim.missing_required');
-    return { valid: false, errors, schema_valid: false, cid_valid: false, signature_valid: false, witnesses_valid: false, missing_fields: missing };
+    return { valid: false, errors, schema_valid: false, cid_valid: false, signature_valid: false, witnesses_valid: false, fresh: true, missing_fields: missing };
   }
 
   const canonical = canonicalize(canonicalBody(tim));
@@ -133,16 +149,37 @@ export function verifyTim(
     }
   }
 
-  const valid = cid_valid && signature_valid && witnesses_valid;
-  return { valid, errors, schema_valid, cid_valid, signature_valid, witnesses_valid };
+  // Freshness (TIM §4): if a reference time is given and `exp` is at/before it,
+  // the receipt has expired.
+  let fresh = true;
+  if (options.at !== undefined && typeof tim.exp === 'string') {
+    const now = typeof options.at === 'number' ? options.at : Date.parse(options.at);
+    const exp = Date.parse(tim.exp);
+    if (!Number.isNaN(now) && !Number.isNaN(exp) && exp <= now) {
+      fresh = false;
+      errors.push('tim.expired');
+    }
+  }
+
+  const valid = cid_valid && signature_valid && witnesses_valid && fresh;
+  return { valid, errors, schema_valid, cid_valid, signature_valid, witnesses_valid, fresh };
 }
 
-/** Extract an Ed25519 public key from a did:key:z6Mk… identity. */
+/**
+ * Extract an Ed25519 public key from a did:key:z6Mk… identity. Returns
+ * undefined for any malformed input (bad base58, wrong multicodec, wrong
+ * length) — it MUST NOT throw, so a verifier processing untrusted TIMs cannot
+ * be crashed (DoS) by a hostile identity string.
+ */
 export function resolveDidKey(tim: Record<string, unknown>): Uint8Array | undefined {
   const id = (tim.identity as any)?.id as string | undefined;
   if (!id?.startsWith('did:key:z6Mk')) return undefined;
-  // did:key multibase: 'z' + base58btc(0xed 0x01 || 32-byte ed25519 pubkey).
-  const decoded = base58btcDecode(id.slice('did:key:z'.length));
-  if (decoded[0] !== 0xed || decoded[1] !== 0x01) return undefined;
-  return decoded.slice(2);
+  try {
+    // did:key multibase: 'z' + base58btc(0xed 0x01 || 32-byte ed25519 pubkey).
+    const decoded = base58btcDecode(id.slice('did:key:z'.length));
+    if (decoded.length !== 34 || decoded[0] !== 0xed || decoded[1] !== 0x01) return undefined;
+    return decoded.slice(2);
+  } catch {
+    return undefined;
+  }
 }

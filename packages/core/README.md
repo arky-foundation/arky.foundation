@@ -72,6 +72,21 @@ including witnessing. Run it with `bun run examples/quickstart.ts`.
 
 **Settler** — `execute(request, opts): ExecuteResult`, plus `deriveIdempotencyKey`.
 
+## Security notes
+
+- **Verification never throws on hostile input.** A malformed identity,
+  signature, or witness yields `{ valid: false }`, not an exception — safe to
+  run on untrusted TIMs.
+- **Freshness is opt-in.** `verifyTim(tim)` is a pure cryptographic check.
+  Pass `verifyTim(tim, resolveKey, { at })` with the current time to also reject
+  expired receipts (`exp` ≤ `at` → `tim.expired`).
+- **Anti-replay (`nonce`) and causal chains (`prev`, cross-identity) are the
+  caller's responsibility.** Single-TIM verification cannot enforce them — they
+  need external state (a seen-nonce store, the prior chain). Track `nonce`
+  values you have accepted, and validate `prev` against a chain you hold.
+- **`did:key` keys are resolved from `identity.id`**, so a DID that does not
+  match the signing key fails verification (no hardcoded trust).
+
 ## Status
 
 Pre-1.0 (`v0.1.0`). The Arky specs are at `status: review`. This library passes
