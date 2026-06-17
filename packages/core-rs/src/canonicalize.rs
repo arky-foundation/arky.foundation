@@ -85,31 +85,70 @@ fn write_string(s: &str, out: &mut String) {
 
 /// RFC 8785 number formatting (ECMAScript Number::toString). serde_json with
 /// the `arbitrary_precision` feature off parses numbers as i64/u64/f64; we
-/// reproduce the JCS output:
-///   - integers: plain decimal, no `.0`, no `+`, no leading zeros, no `-0`
-///   - non-integers: shortest round-trip decimal (Rust's f64 Display, which is
-///     shortest/round-trip like ECMAScript for the value ranges Arky uses)
+/// reproduce the ECMAScript `Number::toString` output that RFC 8785 mandates.
+///
+/// CRITICAL: every JSON number is treated as an IEEE-754 double (so e.g.
+/// 9007199254740993 -> 9007199254740992, matching V8 — serde_json would
+/// otherwise preserve the exact integer and diverge). Exponent notation is used
+/// exactly when ECMAScript uses it (decimal exponent < -6 or >= 21).
 fn format_number(n: &serde_json::Number) -> String {
-    if let Some(i) = n.as_i64() {
-        return i.to_string();
-    }
-    if let Some(u) = n.as_u64() {
-        return u.to_string();
-    }
-    let f = n.as_f64().expect("finite JSON number");
+    // Re-parse from the lexical form with Rust's std parser: serde_json's f64
+    // parse is off by one ULP for some extreme exponents (e.g. 1.5e-300),
+    // whereas std (like V8) rounds correctly. Falls back to serde's f64 if the
+    // lexical form somehow won't parse.
+    let f = n
+        .to_string()
+        .parse::<f64>()
+        .unwrap_or_else(|_| n.as_f64().expect("finite JSON number"));
+    ecmascript_number_to_string(f)
+}
+
+/// ECMAScript Number::toString (ECMA-262 §6.1.6.1.20 / Note), shortest
+/// round-trip. Matches V8's `String(n)`, which is the RFC 8785 reference.
+pub fn ecmascript_number_to_string(f: f64) -> String {
     if !f.is_finite() {
         panic!("JCS: non-finite numbers are forbidden");
     }
-    // -0 normalizes to 0.
     if f == 0.0 {
-        return "0".to_string();
+        return "0".to_string(); // also normalizes -0
     }
-    // Rust's {} for f64 emits the shortest round-trip decimal. For whole-valued
-    // f64 it prints without a fractional part (e.g. 1e21 cases are out of scope
-    // for Arky data). This matches ECMAScript Number::toString for the small
-    // integer/decimal magnitudes used by Arky measurements.
-    let s = format!("{}", f);
-    s
+    let sign = if f < 0.0 { "-" } else { "" };
+    let abs = f.abs();
+
+    // Rust's {:e} gives the shortest round-trip as "<d>[.<frac>]e<exp>".
+    let sci = format!("{:e}", abs);
+    let (mantissa, exp_str) = sci.split_once('e').expect("scientific form");
+    let exp: i32 = exp_str.parse().expect("exponent");
+
+    // Digit string `s` (no dot) and number of significant digits `k`; `n` is the
+    // position of the decimal point relative to the digits (ECMAScript's n).
+    let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+    let k = digits.len() as i32;
+    let n = exp + 1; // because mantissa is d.dddd with one digit before the dot
+
+    let body = if (1..=21).contains(&n) {
+        if k <= n {
+            // Integer with trailing zeros: digits followed by (n-k) zeros.
+            format!("{}{}", digits, "0".repeat((n - k) as usize))
+        } else {
+            // Decimal point inside the digits.
+            format!("{}.{}", &digits[..n as usize], &digits[n as usize..])
+        }
+    } else if (-5..=0).contains(&n) {
+        // 0.000…digits
+        format!("0.{}{}", "0".repeat((-n) as usize), digits)
+    } else {
+        // Exponent form: d[.ddd]e{+|-}exp, exponent = n-1, no leading zeros.
+        let e = n - 1;
+        let mant = if k == 1 {
+            digits.clone()
+        } else {
+            format!("{}.{}", &digits[..1], &digits[1..])
+        };
+        let esign = if e >= 0 { "+" } else { "-" };
+        format!("{}e{}{}", mant, esign, e.abs())
+    };
+    format!("{}{}", sign, body)
 }
 
 #[cfg(test)]
@@ -132,6 +171,24 @@ mod tests {
         assert_eq!(canonicalize(&json!(-0.0_f64)), "0");
         assert_eq!(canonicalize(&json!(22.5_f64)), "22.5");
         assert_eq!(canonicalize(&json!(3.14159_f64)), "3.14159");
+    }
+
+    /// ECMAScript Number::toString exponent + precision edges (RFC 8785). These
+    /// MUST equal V8's String(n) so the TS and Rust stacks agree byte-for-byte.
+    #[test]
+    fn rfc8785_number_exponent_and_precision() {
+        let parse = |s: &str| serde_json::from_str::<serde_json::Value>(s).unwrap();
+        assert_eq!(canonicalize(&parse("1e21")), "1e+21");
+        assert_eq!(canonicalize(&parse("1e20")), "100000000000000000000");
+        assert_eq!(canonicalize(&parse("1e-7")), "1e-7");
+        assert_eq!(canonicalize(&parse("1e-6")), "0.000001");
+        assert_eq!(canonicalize(&parse("0.0000001")), "1e-7");
+        assert_eq!(canonicalize(&parse("1.5e300")), "1.5e+300");
+        assert_eq!(canonicalize(&parse("-1.5e-300")), "-1.5e-300");
+        // > 2^53: collapses to the nearest double (matches V8), not the exact int.
+        assert_eq!(canonicalize(&parse("9007199254740993")), "9007199254740992");
+        assert_eq!(canonicalize(&parse("5e-324")), "5e-324");
+        assert_eq!(canonicalize(&parse("1.7976931348623157e308")), "1.7976931348623157e+308");
     }
 
     #[test]

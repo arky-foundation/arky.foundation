@@ -32,6 +32,33 @@ fi
 echo "All fixtures: TS and Rust canonical bytes are identical."
 
 echo
+echo "RFC 8785 number edges (exponent + precision): TS vs Rust"
+# Values the happy-path fixtures never exercise; where JCS impls commonly
+# diverge. Both stacks must emit ECMAScript Number::toString form.
+NUMS=(
+  '{"n":1e21}' '{"n":1e20}' '{"n":1e-7}' '{"n":1e-6}' '{"n":0.0000001}'
+  '{"n":1.5e300}' '{"n":-1.5e-300}' '{"n":9007199254740993}'
+  '{"n":5e-324}' '{"n":1.7976931348623157e308}' '{"n":100000000000000000000}'
+  '{"n":0.1}' '{"n":0.3}' '{"n":22.5}' '{"n":-0.0}'
+)
+for j in "${NUMS[@]}"; do
+  ts="$(cd "$ROOT/packages/core" && bun run scripts/canonjson.ts "$j")"
+  rs="$(cd "$ROOT/packages/core-rs" && cargo run --quiet --example canonjson -- "$j" 2>/dev/null)"
+  if [[ "$ts" == "$rs" ]]; then
+    echo "[OK]   $j -> $ts"
+  else
+    echo "[FAIL] $j number form diverges: TS=$ts Rust=$rs"
+    fail=1
+  fi
+done
+
+if [[ $fail -ne 0 ]]; then
+  echo "Cross-language number MISMATCH." >&2
+  exit 1
+fi
+echo "All number edges: TS and Rust agree."
+
+echo
 echo "Kernel decisions (K1 vectors): TS vs Rust"
 for vec in "$ROOT"/vectors/kernel/k1-*.json; do
   ts="$(cd "$ROOT/packages/core" && bun run scripts/decide.ts "$vec" "$ROOT")"
