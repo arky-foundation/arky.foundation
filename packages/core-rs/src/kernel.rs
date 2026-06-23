@@ -85,9 +85,15 @@ pub fn parse_iso_duration_ms(d: &str) -> Option<i64> {
     Some((total * 1000.0) as i64)
 }
 
-/// Parse an RFC3339 timestamp to epoch millis (UTC, the 'Z' form vectors use).
-fn parse_rfc3339_ms(ts: &str) -> Option<i64> {
-    // Format: YYYY-MM-DDTHH:MM:SSZ (no fractional/offset in the vectors).
+/// Parse an RFC3339 timestamp to epoch millis (UTC). Honors the timezone
+/// designator: 'Z' = UTC; '+HH:MM' / '-HH:MM' = offset applied to reach UTC
+/// (so '12:00:00+02:00' yields the same epoch ms as '10:00:00Z'). Accepts
+/// optional fractional seconds '.sss' before the designator. Any trailing
+/// characters that are not a valid designator (or anything after it) cause
+/// None — matching ECMAScript Date.parse returning NaN, which the TS kernel
+/// treats as outside-window. No external deps; hand-rolled by design.
+pub fn parse_rfc3339_ms(ts: &str) -> Option<i64> {
+    // Format: YYYY-MM-DDTHH:MM:SS[.sss](Z|+HH:MM|-HH:MM)
     let bytes = ts.as_bytes();
     if bytes.len() < 20 || bytes[10] != b'T' {
         return None;
@@ -95,6 +101,57 @@ fn parse_rfc3339_ms(ts: &str) -> Option<i64> {
     let num = |a: usize, b: usize| ts[a..b].parse::<i64>().ok();
     let (y, mo, d) = (num(0, 4)?, num(5, 7)?, num(8, 10)?);
     let (h, mi, s) = (num(11, 13)?, num(14, 16)?, num(17, 19)?);
+
+    // Optional fractional seconds: '.' then one or more ASCII digits. Take the
+    // first three digits as milliseconds (truncate the rest), mirroring
+    // ECMAScript Date.parse (e.g. '.5' -> 500ms, '.123456' -> 123ms).
+    let mut idx = 19;
+    let mut ms: i64 = 0;
+    if bytes[idx] == b'.' {
+        idx += 1;
+        let start = idx;
+        while idx < bytes.len() && bytes[idx].is_ascii_digit() {
+            idx += 1;
+        }
+        let mut s3: String = ts[start..idx].chars().take(3).collect();
+        if s3.is_empty() {
+            return None; // '.' with no digits
+        }
+        while s3.len() < 3 {
+            s3.push('0');
+        }
+        ms = s3.parse::<i64>().ok()?;
+    }
+
+    // Required timezone designator.
+    if idx >= bytes.len() {
+        return None;
+    }
+    let mut offset_ms: i64 = 0;
+    match bytes[idx] {
+        b'Z' => idx += 1,
+        b'+' | b'-' => {
+            let sign: i64 = if bytes[idx] == b'-' { -1 } else { 1 };
+            idx += 1;
+            if idx + 5 > bytes.len() || bytes[idx + 2] != b':' {
+                return None;
+            }
+            let oh = ts[idx..idx + 2].parse::<i64>().ok()?;
+            let om = ts[idx + 3..idx + 5].parse::<i64>().ok()?;
+            if oh > 23 || om > 59 {
+                return None;
+            }
+            offset_ms = sign * (oh * 3600 + om * 60) * 1000;
+            idx += 5;
+        }
+        _ => return None,
+    }
+
+    // Reject any trailing characters after the timezone designator.
+    if idx != bytes.len() {
+        return None;
+    }
+
     // days since epoch via a civil-from-days algorithm (Howard Hinnant's).
     let y = if mo <= 2 { y - 1 } else { y };
     let era = if y >= 0 { y } else { y - 399 } / 400;
@@ -102,7 +159,9 @@ fn parse_rfc3339_ms(ts: &str) -> Option<i64> {
     let doy = (153 * (if mo > 2 { mo - 3 } else { mo + 9 }) + 2) / 5 + d - 1;
     let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
     let days = era * 146097 + doe - 719468;
-    Some((days * 86400 + h * 3600 + mi * 60 + s) * 1000)
+    // The offset is the local offset from UTC; subtract it to get UTC epoch ms.
+    let local_ms = (days * 86400 + h * 3600 + mi * 60 + s) * 1000 + ms;
+    Some(local_ms - offset_ms)
 }
 
 fn within_window(ts: &str, window: &Value, eval_time: &str) -> bool {
@@ -331,5 +390,59 @@ mod tests {
         let a = parse_rfc3339_ms("2025-10-15T12:00:00Z").unwrap();
         let b = parse_rfc3339_ms("2025-10-15T12:05:00Z").unwrap();
         assert_eq!(b - a, 300_000);
+    }
+
+    #[test]
+    fn rfc3339_offsets_match_ecmascript_date_parse() {
+        // '+02:00' local is 2h behind UTC: 12:00:00+02:00 == 10:00:00Z.
+        assert_eq!(
+            parse_rfc3339_ms("2025-10-15T12:00:00+02:00"),
+            parse_rfc3339_ms("2025-10-15T10:00:00Z")
+        );
+        // '-05:00' local is 5h ahead of UTC: 12:00:00-05:00 == 17:00:00Z.
+        assert_eq!(
+            parse_rfc3339_ms("2025-10-15T12:00:00-05:00"),
+            parse_rfc3339_ms("2025-10-15T17:00:00Z")
+        );
+        // Numeric offsets agree with the 'Z' epoch (cross-check vs Date.parse).
+        assert_eq!(
+            parse_rfc3339_ms("2025-10-15T12:00:00+02:00").unwrap(),
+            1_760_522_400_000
+        );
+        // Fractional seconds: '.5' -> 500ms, '.123456' truncated to 123ms.
+        assert_eq!(
+            parse_rfc3339_ms("2025-10-15T12:00:00.5Z").unwrap(),
+            parse_rfc3339_ms("2025-10-15T12:00:00Z").unwrap() + 500
+        );
+        assert_eq!(
+            parse_rfc3339_ms("2025-10-15T12:00:00.123456Z").unwrap(),
+            parse_rfc3339_ms("2025-10-15T12:00:00Z").unwrap() + 123
+        );
+        // Fractional seconds combined with an offset.
+        assert_eq!(
+            parse_rfc3339_ms("2025-10-15T12:00:00.5+02:00").unwrap(),
+            parse_rfc3339_ms("2025-10-15T10:00:00Z").unwrap() + 500
+        );
+    }
+
+    #[test]
+    fn rfc3339_rejects_trailing_garbage_and_missing_designator() {
+        // Trailing characters after 'Z' / offset / digits are rejected (None),
+        // matching Date.parse returning NaN.
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00GARBAGE"), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00Z "), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00Zextra"), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00+02:00extra"), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00+02:00 "), None);
+        // '.' with no digits, or a valid body with no timezone designator, are
+        // not valid RFC3339 — reject (Date.parse would also yield NaN for the
+        // designator-less form in the cross-language battery).
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00."), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00"), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00.5"), None);
+        // Malformed offsets.
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00+2:00"), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00+99:00"), None);
+        assert_eq!(parse_rfc3339_ms("2025-10-15T12:00:00+02:99"), None);
     }
 }
