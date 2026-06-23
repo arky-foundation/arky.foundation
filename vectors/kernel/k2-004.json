@@ -1,0 +1,92 @@
+{
+  "id": "k2-004",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K2",
+  "description": "Timezone-offset ts inside the window (12:00+02:00 == 10:00Z) -> evidence selected, PASS",
+  "context": {
+    "time": "2025-10-15T11:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    },
+    "evidence": [
+      {
+        "time": {
+          "ts": "2025-10-15T12:00:00+02:00"
+        },
+        "identity": {
+          "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+        },
+        "measurement": {
+          "name": "temp",
+          "value": 22.5,
+          "unit": "arky:unit/temp.C",
+          "method": {
+            "type": "sensor",
+            "source": "device:temp-sensor-01"
+          }
+        },
+        "cid": "zQmZ1Acvx1Pvs7GFfnhk9ni5PGaeUwjzP62ZofbK2MTnarr",
+        "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..7m_GlHz_sLaXZKwF0_I1h3jK7673STOxPPdcgXkkRi7S0c5ZBJ9y-JC-wyTcj-7UvSHWMoQemK8j8yraOrBgBA"
+      }
+    ]
+  },
+  "inputs": {
+    "commitment": {
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
+      "intent": {
+        "do": "arky:verb/control@v1"
+      },
+      "measure": [
+        {
+          "name": "temp",
+          "from": "device:temp-sensor-01",
+          "assert": "temp > 20",
+          "window": {
+            "start": "2025-10-15T09:30:00Z",
+            "end": "2025-10-15T10:30:00Z"
+          }
+        }
+      ],
+      "consequence": [
+        {
+          "if": "PASS",
+          "then": [
+            {
+              "name": "arky:verb/control@v1",
+              "args": {
+                "target": "cooling",
+                "state": "on"
+              }
+            }
+          ]
+        }
+      ],
+      "cid": "zQmQcotQrv5p1Liq9mWY77Lv5DSYUsuJQHU7Pd5hoYQtoZp",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..3umWQU3zqblCanpJ-HKPENBTEYCkWpYQuXdaFYiKc2YTIwHrq9Zo83SWxy6_hZFfX1gNeTsF2ZGwhqR8PvqPCA"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "signature_valid": true,
+    "decision": {
+      "status": "APPROVED",
+      "assertions": [
+        {
+          "name": "temp",
+          "result": "PASS",
+          "input_value": 22.5,
+          "unit": "arky:unit/temp.C",
+          "inputs": [
+            "zQmZ1Acvx1Pvs7GFfnhk9ni5PGaeUwjzP62ZofbK2MTnarr"
+          ]
+        }
+      ],
+      "authorized": [
+        "arky:verb/control@v1"
+      ]
+    }
+  }
+}
