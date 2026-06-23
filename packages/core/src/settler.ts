@@ -31,7 +31,10 @@ export interface ExecutionRequest {
   idempotency_key?: string;
 }
 
-export type XrStatus = 'success' | 'pending' | 'failed' | 'rolled_back' | 'skipped';
+// Only the statuses `execute` actually writes into a receipt today. Mirrors the
+// Rust `ExecStatus` (Success/Failed). Other lifecycle states (pending,
+// rolled_back, skipped) are not produced by this reference implementation.
+export type XrStatus = 'success' | 'failed';
 
 export interface ExecutionReceipt {
   request_id: string;
