@@ -121,8 +121,10 @@ fi
 echo "All timestamp edges: TS and Rust agree."
 
 echo
-echo "Kernel decisions (K1 vectors): TS vs Rust"
-for vec in "$ROOT"/vectors/kernel/k1-*.json; do
+echo "Kernel decisions (K1 + K2 vectors): TS vs Rust"
+# K2 adds behavioral L2 cases (negative literals, type-mismatch INDETERMINATE,
+# timezone-offset window selection) whose decisions both stacks must agree on.
+for vec in "$ROOT"/vectors/kernel/k1-*.json "$ROOT"/vectors/kernel/k2-*.json; do
   ts="$(cd "$ROOT/packages/core" && bun run scripts/decide.ts "$vec" "$ROOT")"
   rs="$(cd "$ROOT/packages/core-rs" && cargo run --quiet --example decide -- "$vec" 2>/dev/null)"
   name="$(basename "$vec")"
@@ -138,7 +140,7 @@ if [[ $fail -ne 0 ]]; then
   echo "Cross-language MISMATCH." >&2
   exit 1
 fi
-echo "All K1 vectors: TS and Rust kernel decisions are identical."
+echo "All K1+K2 vectors: TS and Rust kernel decisions are identical."
 
 echo
 echo "Settler execution receipts (S1 vectors): TS vs Rust"
