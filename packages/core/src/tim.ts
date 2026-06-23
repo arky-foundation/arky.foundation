@@ -8,7 +8,7 @@
 
 import { canonicalize } from './canonicalize.ts';
 import { cidFromCanonical, base58btcDecode } from './cid.ts';
-import { signDetached, verifyDetached } from './jws.ts';
+import { signDetached, verifyDetached, decodeProtectedHeader } from './jws.ts';
 
 export interface TimMeasurement {
   name: string;
@@ -205,9 +205,32 @@ export function verifyTim(
  * undefined for any malformed input (bad base58, wrong multicodec, wrong
  * length) — it MUST NOT throw, so a verifier processing untrusted TIMs cannot
  * be crashed (DoS) by a hostile identity string.
+ *
+ * Witness-aware: when called with a `__witness` (a compact JWS string) on the
+ * input object — as the witness loop in `verifyTim` does — decode its protected
+ * header and, if the `kid` is a did:key:z6Mk… string, resolve THAT key instead
+ * of the TIM identity. This lets the default resolver verify a TIM co-signed by
+ * a different did:key notary out of the box. Falls back to the TIM identity
+ * did:key when there is no kid or it is not a did:key (the prior behavior).
  */
 export function resolveDidKey(tim: Record<string, unknown>): Uint8Array | undefined {
+  const witness = tim.__witness;
+  if (typeof witness === 'string') {
+    try {
+      const kid = decodeProtectedHeader(witness).kid;
+      if (typeof kid === 'string' && kid.startsWith('did:key:z6Mk')) {
+        return decodeDidKey(kid);
+      }
+    } catch {
+      // malformed witness header -> fall back to the TIM identity did:key.
+    }
+  }
   const id = (tim.identity as any)?.id as string | undefined;
+  return decodeDidKey(id);
+}
+
+/** Decode a did:key:z6Mk… string to its 32-byte Ed25519 public key, or undefined. */
+function decodeDidKey(id: string | undefined): Uint8Array | undefined {
   if (!id?.startsWith('did:key:z6Mk')) return undefined;
   try {
     // did:key multibase: 'z' + base58btc(0xed 0x01 || 32-byte ed25519 pubkey).
