@@ -2,7 +2,7 @@
 spec_id: ARKY-TIM-v1
 title: Arky — TIM Core
 version: v1
-status: review
+status: implementing
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative
