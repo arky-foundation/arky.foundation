@@ -114,6 +114,36 @@ All RFC materials must live under `/rfcs/<id>/` with public issues. Minutes and 
 - Vectors: `vectors/RELEASES.json` with manifest hashes.
 - Schemas: `$id` URLs must be stable and content‑addressable by `cid` when referenced from Discovery.
 
+### 9.1 Release / Promotion Checklist
+
+Before advancing any spec's lifecycle `status` (§4) or flipping a vector
+manifest's `ready_for_production` to `true`, ALL of the following MUST hold and
+be re-verifiable from the repository:
+
+1. **Validation green** — `bun run validate` passes (JSON syntax, conformance
+   verifier, kernel‑vs‑schema, link checker) at the release commit.
+2. **Vectors published** — every advertised level for the component has ≥1
+   executable vector that the verifier runs (not schema‑only), and each
+   negative vector is negative‑tested.
+3. **Two independent implementations pass** — `@arky/core` (TS) and `arky-core`
+   (Rust) both pass the component's vectors, and `scripts/cross-check.sh` shows
+   byte‑identical agreement (canonical bytes → cids → decisions → receipts) for
+   the levels claimed.
+4. **Status consistency** — the spec `status`, its manifest
+   `ready_for_production`/`overall_coverage`, `vectors/RELEASES.json`, the
+   Compatibility Matrix, `CONFORMANCE.md`, and the SDK READMEs all describe the
+   SAME maturity. No document may claim a higher state than the others.
+5. **Lifecycle honesty** — `stable` requires the §4 process (Last Call freeze,
+   spec_id/version plan, TC vote meeting quorum, published minutes) IN ADDITION
+   to the technical bar. A spec that meets only the technical bar (vectors + two
+   implementations) is at most `implementing`; it MUST NOT be labelled `stable`
+   without the recorded vote.
+6. **Results artifact** — `bun run results` regenerates `vectors/RESULTS.json`,
+   and the conformance claim cites spec version(s), level(s), and commit hash
+   (§8).
+
+Promotion to `stable` additionally requires the recorded TC decision per §5.
+
 ## 10. Security Incident Response
 
 - Intake: security@arky.foundation encrypted or portal; 24h triage acknowledgment.
