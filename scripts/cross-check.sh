@@ -59,6 +59,31 @@ fi
 echo "All number edges: TS and Rust agree."
 
 echo
+echo "C2 canonicalization vectors: TS + Rust vs published expectation"
+for vec in "$ROOT"/vectors/canonicalization/c2-*.json; do
+  input="$(bun -e 'const v = JSON.parse(await Bun.file(process.argv[1]).text()); process.stdout.write(JSON.stringify(v.inputs.original));' "$vec")"
+  expected="$(bun -e 'const v = JSON.parse(await Bun.file(process.argv[1]).text()); process.stdout.write(v.expect.canonical_json);' "$vec")"
+  ts="$(cd "$ROOT/packages/core" && bun run scripts/canonjson.ts "$input")"
+  rs="$(cd "$ROOT/packages/core-rs" && cargo run --quiet --example canonjson -- "$input" 2>/dev/null)"
+  name="$(basename "$vec" .json)"
+  if [[ "$ts" == "$rs" && "$ts" == "$expected" ]]; then
+    echo "[OK]   $name -> $ts"
+  else
+    echo "[FAIL] $name C2 canonical bytes mismatch:"
+    echo "  Expected: $expected"
+    echo "  TS:       $ts"
+    echo "  Rust:     $rs"
+    fail=1
+  fi
+done
+
+if [[ $fail -ne 0 ]]; then
+  echo "Cross-language C2 vector MISMATCH." >&2
+  exit 1
+fi
+echo "All C2 vectors: TS and Rust canonical bytes match the published expectation."
+
+echo
 echo "RFC 3339 timestamp edges (offset + fractional + rejection): TS vs Rust"
 # The TS kernel uses Date.parse; the Rust kernel uses parse_rfc3339_ms. Both
 # must agree on epoch ms for 'Z', numeric offsets, and fractional seconds, and
