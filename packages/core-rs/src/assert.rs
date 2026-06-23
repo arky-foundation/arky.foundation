@@ -141,7 +141,11 @@ fn tokenize(src: &str) -> Result<Vec<Tok>, String> {
             c if c == '_' || c.is_ascii_lowercase() => {
                 let mut j = i;
                 let mut s = String::new();
-                while j < chars.len() && (chars[j] == '_' || chars[j].is_ascii_lowercase() || chars[j].is_ascii_digit()) {
+                while j < chars.len()
+                    && (chars[j] == '_'
+                        || chars[j].is_ascii_lowercase()
+                        || chars[j].is_ascii_digit())
+                {
                     s.push(chars[j]);
                     j += 1;
                 }
@@ -240,7 +244,11 @@ impl Parser {
                 match self.peek().cloned() {
                     Some(Tok::Op(op)) => {
                         self.next();
-                        Ok(Ast::Cmp { sym: name, op, val: self.parse_lit()? })
+                        Ok(Ast::Cmp {
+                            sym: name,
+                            op,
+                            val: self.parse_lit()?,
+                        })
                     }
                     Some(Tok::In) => {
                         self.next();
@@ -303,11 +311,7 @@ fn not3(a: TriState) -> TriState {
     }
 }
 fn b(v: bool) -> TriState {
-    if v {
-        TriState::Pass
-    } else {
-        TriState::Fail
-    }
+    if v { TriState::Pass } else { TriState::Fail }
 }
 
 fn eval_ast(ast: &Ast, symbols: &Symbols, errs: &mut Vec<String>) -> TriState {
@@ -398,7 +402,7 @@ pub fn evaluate_assertion(expr: &str, symbols: &Symbols) -> EvalResult {
             return EvalResult {
                 result: TriState::Indeterminate,
                 error: Some(format!("parse error: {}", e)),
-            }
+            };
         }
     };
     let mut errs = Vec::new();
@@ -429,17 +433,32 @@ mod tests {
         let s = syms();
         assert_eq!(evaluate_assertion("temp > 20", &s).result, TriState::Pass);
         assert_eq!(evaluate_assertion("temp > 30", &s).result, TriState::Fail);
-        assert_eq!(evaluate_assertion("temp >= 20 && temp <= 25", &s).result, TriState::Pass);
-        assert_eq!(evaluate_assertion("temp > 30 || temp < 25", &s).result, TriState::Pass);
-        assert_eq!(evaluate_assertion("!(temp > 30)", &s).result, TriState::Pass);
-        assert_eq!(evaluate_assertion("temp in [22.5, 30]", &s).result, TriState::Pass);
+        assert_eq!(
+            evaluate_assertion("temp >= 20 && temp <= 25", &s).result,
+            TriState::Pass
+        );
+        assert_eq!(
+            evaluate_assertion("temp > 30 || temp < 25", &s).result,
+            TriState::Pass
+        );
+        assert_eq!(
+            evaluate_assertion("!(temp > 30)", &s).result,
+            TriState::Pass
+        );
+        assert_eq!(
+            evaluate_assertion("temp in [22.5, 30]", &s).result,
+            TriState::Pass
+        );
         assert_eq!(evaluate_assertion("flag", &s).result, TriState::Pass);
     }
 
     #[test]
     fn missing_and_type_mismatch() {
         let s = syms();
-        assert_eq!(evaluate_assertion("humidity > 50", &s).result, TriState::Indeterminate);
+        assert_eq!(
+            evaluate_assertion("humidity > 50", &s).result,
+            TriState::Indeterminate
+        );
         let r = evaluate_assertion("temp > \"high\"", &s);
         assert_eq!(r.result, TriState::Indeterminate);
         assert!(r.error.unwrap().contains("type mismatch"));

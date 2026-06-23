@@ -11,6 +11,10 @@ fn main() {
     let path = env::args().nth(1).expect("usage: canon <fixture.json>");
     let v: serde_json::Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
     // Accept either a bare TIM or a fixture wrapper { "tim": {...} }.
-    let tim = if v.get("tim").is_some() { &v["tim"] } else { &v };
+    let tim = if v.get("tim").is_some() {
+        &v["tim"]
+    } else {
+        &v
+    };
     print!("{}", canonicalize(&canonical_body(tim)));
 }

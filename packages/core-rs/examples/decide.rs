@@ -22,10 +22,14 @@ fn main() {
     }
     let mut tims = vec![];
     if let Some(tp) = v["context"]["fixtures"]["tim"].as_str() {
-        let t: Value = serde_json::from_str(&fs::read_to_string(repo.join("vectors").join(tp)).unwrap()).unwrap();
+        let t: Value =
+            serde_json::from_str(&fs::read_to_string(repo.join("vectors").join(tp)).unwrap())
+                .unwrap();
         tims.push(t["tim"].clone());
     }
-    let et = v["context"]["time"].as_str().unwrap_or("2025-10-15T12:00:00Z");
+    let et = v["context"]["time"]
+        .as_str()
+        .unwrap_or("2025-10-15T12:00:00Z");
     let d = evaluate_kernel(commitment, &tims, et);
     print!("{}|{}", d.status.as_str(), d.authorized.join(","));
 }

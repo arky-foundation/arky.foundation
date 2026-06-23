@@ -8,7 +8,7 @@ use crate::cid::{cid_from_canonical, multihash_mb};
 use crate::jws::sign_detached;
 use crate::kernel::REGISTERED_VERBS;
 use ed25519_dalek::SigningKey;
-use serde_json::{json, Map, Value};
+use serde_json::{Map, Value, json};
 use std::collections::BTreeMap;
 
 /// Required argument fields per core verb (schemas/verbs/*.json).
@@ -82,7 +82,13 @@ pub fn args_hash(args: &Value) -> String {
 }
 
 /// Derive an idempotency key per §6.1 when the client omits one.
-pub fn derive_idempotency_key(commitment_cid: &str, verb: &str, rail: Option<&str>, args: &Value, verb_index: u64) -> String {
+pub fn derive_idempotency_key(
+    commitment_cid: &str,
+    verb: &str,
+    rail: Option<&str>,
+    args: &Value,
+    verb_index: u64,
+) -> String {
     let components = json!({
         "args_hash": args_hash(args),
         "commitment_cid": commitment_cid,
@@ -118,7 +124,12 @@ pub fn execute(
 ) -> ExecuteResult {
     // 1. Verb registered.
     if !REGISTERED_VERBS.contains(&req.verb) {
-        return ExecuteResult { status: ExecStatus::Failed, errors: vec!["settler.unknown_verb".into()], missing_fields: vec![], receipt: None };
+        return ExecuteResult {
+            status: ExecStatus::Failed,
+            errors: vec!["settler.unknown_verb".into()],
+            missing_fields: vec![],
+            receipt: None,
+        };
     }
     // 2. Required args present.
     let missing: Vec<String> = verb_required_args(req.verb)
@@ -127,40 +138,69 @@ pub fn execute(
         .map(|k| k.to_string())
         .collect();
     if !missing.is_empty() {
-        return ExecuteResult { status: ExecStatus::Failed, errors: vec!["settler.invalid_args".into()], missing_fields: missing, receipt: None };
+        return ExecuteResult {
+            status: ExecStatus::Failed,
+            errors: vec!["settler.invalid_args".into()],
+            missing_fields: missing,
+            receipt: None,
+        };
     }
     // 2b. Argument constraints (§3.2): an `amount`, where present, MUST be
     //     { value: number > 0 (finite), unit: string }.
     if let Some(field) = validate_amount(req.args.get("amount")) {
-        return ExecuteResult { status: ExecStatus::Failed, errors: vec!["settler.invalid_args".into()], missing_fields: vec![field.into()], receipt: None };
+        return ExecuteResult {
+            status: ExecStatus::Failed,
+            errors: vec!["settler.invalid_args".into()],
+            missing_fields: vec![field.into()],
+            receipt: None,
+        };
     }
     // 3. Rail supported.
     if !rail_supported(req.rail) {
-        return ExecuteResult { status: ExecStatus::Failed, errors: vec!["settler.unsupported_rail".into()], missing_fields: vec![], receipt: None };
+        return ExecuteResult {
+            status: ExecStatus::Failed,
+            errors: vec!["settler.unsupported_rail".into()],
+            missing_fields: vec![],
+            receipt: None,
+        };
     }
 
     let commitment_cid = req.commitment_cid.unwrap_or("");
-    let idem_key = req
-        .idempotency_key
-        .map(String::from)
-        .unwrap_or_else(|| derive_idempotency_key(commitment_cid, req.verb, req.rail, &req.args, 0));
+    let idem_key = req.idempotency_key.map(String::from).unwrap_or_else(|| {
+        derive_idempotency_key(commitment_cid, req.verb, req.rail, &req.args, 0)
+    });
 
     // Idempotency: return cached XR.
-    if let Some(s) = store.as_ref() {
-        if let Some(cached) = s.get(&idem_key) {
-            return ExecuteResult { status: ExecStatus::Success, errors: vec![], missing_fields: vec![], receipt: Some(cached.clone()) };
-        }
+    if let Some(s) = store.as_ref()
+        && let Some(cached) = s.get(&idem_key)
+    {
+        return ExecuteResult {
+            status: ExecStatus::Success,
+            errors: vec![],
+            missing_fields: vec![],
+            receipt: Some(cached.clone()),
+        };
     }
 
     let mut body = Map::new();
-    body.insert("request_id".into(), json!(req.request_id.map(String::from).unwrap_or_else(|| format!("exec-{}", &idem_key[..12.min(idem_key.len())]))));
+    body.insert(
+        "request_id".into(),
+        json!(
+            req.request_id
+                .map(String::from)
+                .unwrap_or_else(|| format!("exec-{}", &idem_key[..12.min(idem_key.len())]))
+        ),
+    );
     body.insert("commitment_cid".into(), json!(commitment_cid));
     body.insert("verb".into(), json!(req.verb));
     body.insert("rail".into(), json!(req.rail.unwrap_or("")));
     body.insert("args_hash".into(), json!(args_hash(&req.args)));
     body.insert("idempotency_key".into(), json!(idem_key));
     body.insert("status".into(), json!("success"));
-    body.insert("locator".into(), json!(format!("MOCK-{}", &idem_key[1..18.min(idem_key.len())])));
+    body.insert(
+        "locator".into(),
+        json!(format!("MOCK-{}", &idem_key[1..18.min(idem_key.len())])),
+    );
     body.insert(
         "anchors".into(),
         json!([{ "target": anchor_target, "locator": format!("batch-{}", &idem_key[1..10.min(idem_key.len())]), "status": "pending" }]),
@@ -180,7 +220,12 @@ pub fn execute(
     if let Some(s) = store {
         s.insert(idem_key, receipt.clone());
     }
-    ExecuteResult { status: ExecStatus::Success, errors: vec![], missing_fields: vec![], receipt: Some(receipt) }
+    ExecuteResult {
+        status: ExecStatus::Success,
+        errors: vec![],
+        missing_fields: vec![],
+        receipt: Some(receipt),
+    }
 }
 
 #[cfg(test)]

@@ -167,10 +167,16 @@ mod tests {
     #[test]
     fn rfc8785_numbers() {
         // integers plain; -0 -> 0; short decimals shortest round-trip.
-        assert_eq!(canonicalize(&json!({"a":42,"b":-17,"c":0})), "{\"a\":42,\"b\":-17,\"c\":0}");
+        assert_eq!(
+            canonicalize(&json!({"a":42,"b":-17,"c":0})),
+            "{\"a\":42,\"b\":-17,\"c\":0}"
+        );
         assert_eq!(canonicalize(&json!(-0.0_f64)), "0");
         assert_eq!(canonicalize(&json!(22.5_f64)), "22.5");
-        assert_eq!(canonicalize(&json!(3.14159_f64)), "3.14159");
+        // The literal 3.14159 (not PI) is intentional — assert its exact output.
+        #[allow(clippy::approx_constant)]
+        let pi_ish = 3.14159_f64;
+        assert_eq!(canonicalize(&json!(pi_ish)), "3.14159");
     }
 
     /// ECMAScript Number::toString exponent + precision edges (RFC 8785). These
@@ -188,7 +194,10 @@ mod tests {
         // > 2^53: collapses to the nearest double (matches V8), not the exact int.
         assert_eq!(canonicalize(&parse("9007199254740993")), "9007199254740992");
         assert_eq!(canonicalize(&parse("5e-324")), "5e-324");
-        assert_eq!(canonicalize(&parse("1.7976931348623157e308")), "1.7976931348623157e+308");
+        assert_eq!(
+            canonicalize(&parse("1.7976931348623157e308")),
+            "1.7976931348623157e+308"
+        );
     }
 
     #[test]

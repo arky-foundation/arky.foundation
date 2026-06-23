@@ -23,7 +23,9 @@ pub fn to_multibase(bytes: &[u8]) -> String {
 
 /// Decode a multibase 'z…' (base58btc) string to raw bytes.
 pub fn from_multibase(s: &str) -> Result<Vec<u8>, String> {
-    let rest = s.strip_prefix('z').ok_or("multibase: expected 'z' prefix")?;
+    let rest = s
+        .strip_prefix('z')
+        .ok_or("multibase: expected 'z' prefix")?;
     bs58::decode(rest)
         .into_vec()
         .map_err(|e| format!("base58: {e}"))

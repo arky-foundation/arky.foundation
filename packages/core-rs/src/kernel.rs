@@ -2,7 +2,7 @@
 //! evidence, evaluate assertions (tri-valued), resolve consequences, and emit a
 //! Decision. Mirrors @arky/core (TS) kernel.ts.
 
-use crate::assert::{evaluate_assertion, SymVal, Symbols, TriState};
+use crate::assert::{SymVal, Symbols, TriState, evaluate_assertion};
 use serde_json::Value;
 
 /// Core verbs registered in ARKY-REGISTRIES-v1 (v1).
@@ -110,26 +110,23 @@ fn within_window(ts: &str, window: &Value, eval_time: &str) -> bool {
         Some(v) => v,
         None => return false,
     };
-    if let Some(start) = window.get("start").and_then(|v| v.as_str()) {
-        if let Some(st) = parse_rfc3339_ms(start) {
-            if t < st {
-                return false;
-            }
-        }
+    if let Some(start) = window.get("start").and_then(|v| v.as_str())
+        && let Some(st) = parse_rfc3339_ms(start)
+        && t < st
+    {
+        return false;
     }
-    if let Some(end) = window.get("end").and_then(|v| v.as_str()) {
-        if let Some(en) = parse_rfc3339_ms(end) {
-            if t >= en {
-                return false;
-            }
-        }
+    if let Some(end) = window.get("end").and_then(|v| v.as_str())
+        && let Some(en) = parse_rfc3339_ms(end)
+        && t >= en
+    {
+        return false;
     }
-    if let Some(max_age) = window.get("max_age").and_then(|v| v.as_str()) {
-        if let (Some(et), Some(ms)) = (parse_rfc3339_ms(eval_time), parse_iso_duration_ms(max_age)) {
-            if et - t > ms {
-                return false;
-            }
-        }
+    if let Some(max_age) = window.get("max_age").and_then(|v| v.as_str())
+        && let (Some(et), Some(ms)) = (parse_rfc3339_ms(eval_time), parse_iso_duration_ms(max_age))
+        && et - t > ms
+    {
+        return false;
     }
     true
 }
@@ -196,7 +193,12 @@ pub fn evaluate_kernel(commitment: &Value, tims: &[Value], eval_time: &str) -> D
     let consequence = commitment.get("consequence").and_then(|v| v.as_array());
     if measure.is_none() || consequence.is_none() {
         errors.push("kernel.invalid_commitment".into());
-        return Decision { status: DecisionStatus::Rejected, assertions, authorized: vec![], errors };
+        return Decision {
+            status: DecisionStatus::Rejected,
+            assertions,
+            authorized: vec![],
+            errors,
+        };
     }
     let (measure, consequence) = (measure.unwrap(), consequence.unwrap());
 
@@ -207,7 +209,12 @@ pub fn evaluate_kernel(commitment: &Value, tims: &[Value], eval_time: &str) -> D
                 let name = verb.get("name").and_then(|v| v.as_str()).unwrap_or("");
                 if !REGISTERED_VERBS.contains(&name) {
                     errors.push("kernel.unknown_verb".into());
-                    return Decision { status: DecisionStatus::Rejected, assertions, authorized: vec![], errors };
+                    return Decision {
+                        status: DecisionStatus::Rejected,
+                        assertions,
+                        authorized: vec![],
+                        errors,
+                    };
                 }
             }
         }
@@ -215,7 +222,11 @@ pub fn evaluate_kernel(commitment: &Value, tims: &[Value], eval_time: &str) -> D
 
     let mut symbols = Symbols::new();
     for spec in measure {
-        let name = spec.get("name").and_then(|v| v.as_str()).unwrap_or("").to_string();
+        let name = spec
+            .get("name")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .to_string();
         let assert_expr = spec.get("assert").and_then(|v| v.as_str()).unwrap_or("");
         let tim = select_latest(spec, tims, eval_time);
         let mut ar = AssertionResult {
@@ -244,7 +255,9 @@ pub fn evaluate_kernel(commitment: &Value, tims: &[Value], eval_time: &str) -> D
         assertions.push(ar);
     }
 
-    let any_indet = assertions.iter().any(|a| a.result == TriState::Indeterminate);
+    let any_indet = assertions
+        .iter()
+        .any(|a| a.result == TriState::Indeterminate);
     let all_pass = !assertions.is_empty() && assertions.iter().all(|a| a.result == TriState::Pass);
     let overall = if any_indet {
         TriState::Indeterminate
@@ -255,7 +268,12 @@ pub fn evaluate_kernel(commitment: &Value, tims: &[Value], eval_time: &str) -> D
     };
 
     if overall == TriState::Indeterminate {
-        return Decision { status: DecisionStatus::Indeterminate, assertions, authorized: vec![], errors };
+        return Decision {
+            status: DecisionStatus::Indeterminate,
+            assertions,
+            authorized: vec![],
+            errors,
+        };
     }
 
     // First matching consequence authorizes its verbs.
@@ -287,7 +305,11 @@ pub fn evaluate_kernel(commitment: &Value, tims: &[Value], eval_time: &str) -> D
     Decision {
         status,
         assertions,
-        authorized: if status == DecisionStatus::Approved { authorized } else { vec![] },
+        authorized: if status == DecisionStatus::Approved {
+            authorized
+        } else {
+            vec![]
+        },
         errors,
     }
 }

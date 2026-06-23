@@ -4,7 +4,9 @@
 
 use crate::canonicalize::canonicalize;
 use crate::cid::{cid_from_canonical, from_multibase};
-use crate::jws::{decode_protected_header, sign_detached, verify_detached, verifying_key_from_bytes};
+use crate::jws::{
+    decode_protected_header, sign_detached, verify_detached, verifying_key_from_bytes,
+};
 use ed25519_dalek::SigningKey;
 use serde_json::{Map, Value};
 

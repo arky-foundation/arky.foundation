@@ -3,7 +3,7 @@
 //!
 //! Usage: cargo run --example xr -- <path-to-s1-vector.json>
 
-use arky_core::settler::{execute, ExecRequest, IdempotencyStore};
+use arky_core::settler::{ExecRequest, IdempotencyStore, execute};
 use ed25519_dalek::SigningKey;
 use serde_json::Value;
 use std::{env, fs};
@@ -26,8 +26,17 @@ fn main() {
         request_id: None,
         idempotency_key: inp["idempotency_key"].as_str(),
     };
-    let ts = v["context"]["time"].as_str().unwrap_or("2025-10-15T12:00:01Z");
-    let r = execute(&req, &signing, Some("test-settler"), ts, "log:arky:transparency@v1", Some(&mut store));
+    let ts = v["context"]["time"]
+        .as_str()
+        .unwrap_or("2025-10-15T12:00:01Z");
+    let r = execute(
+        &req,
+        &signing,
+        Some("test-settler"),
+        ts,
+        "log:arky:transparency@v1",
+        Some(&mut store),
+    );
     match r.receipt {
         Some(xr) => print!("{}|{}", r.status.as_str(), xr["cid"].as_str().unwrap()),
         None => print!("{}|", r.status.as_str()),

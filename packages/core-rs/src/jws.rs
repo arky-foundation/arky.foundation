@@ -2,7 +2,7 @@
 //! RFC 7797 (b64:false). Compact form `<protected>..<signature>`; payload is the
 //! JCS canonical bytes supplied separately.
 
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
 use serde_json::json;
 
@@ -23,7 +23,11 @@ pub fn sign_detached(payload: &[u8], signing_key: &SigningKey, kid: Option<&str>
     };
     let protected_b64 = URL_SAFE_NO_PAD.encode(serde_json::to_vec(&header).unwrap());
     let sig: Signature = signing_key.sign(&signing_input(&protected_b64, payload));
-    format!("{}..{}", protected_b64, URL_SAFE_NO_PAD.encode(sig.to_bytes()))
+    format!(
+        "{}..{}",
+        protected_b64,
+        URL_SAFE_NO_PAD.encode(sig.to_bytes())
+    )
 }
 
 /// Decode the protected header of a compact JWS to a serde_json Value.

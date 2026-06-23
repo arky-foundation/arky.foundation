@@ -3,7 +3,7 @@
 //! idempotency.
 
 use arky_core::cid::cid_from_canonical;
-use arky_core::settler::{execute, ExecRequest, ExecStatus, IdempotencyStore};
+use arky_core::settler::{ExecRequest, IdempotencyStore, execute};
 use arky_core::{canonicalize, verify_detached, verifying_key_from_bytes};
 use ed25519_dalek::SigningKey;
 use serde_json::Value;
@@ -11,7 +11,12 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 fn repo() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().parent().unwrap().to_path_buf()
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf()
 }
 fn read(rel: &str) -> Value {
     serde_json::from_str(&fs::read_to_string(repo().join(rel)).unwrap()).unwrap()
@@ -58,7 +63,14 @@ fn settler_s1_vectors() {
                 request_id: None,
                 idempotency_key: fi["idempotency_key"].as_str(),
             };
-            execute(&req, &signing, None, "2025-10-15T12:00:01Z", "log:arky:transparency@v1", Some(&mut store));
+            execute(
+                &req,
+                &signing,
+                None,
+                "2025-10-15T12:00:01Z",
+                "log:arky:transparency@v1",
+                Some(&mut store),
+            );
         }
 
         let req = ExecRequest {
@@ -69,8 +81,17 @@ fn settler_s1_vectors() {
             request_id: None,
             idempotency_key: inp["idempotency_key"].as_str(),
         };
-        let ts = v["context"]["time"].as_str().unwrap_or("2025-10-15T12:00:01Z");
-        let res = execute(&req, &signing, Some("test-settler"), ts, "log:arky:transparency@v1", Some(&mut store));
+        let ts = v["context"]["time"]
+            .as_str()
+            .unwrap_or("2025-10-15T12:00:01Z");
+        let res = execute(
+            &req,
+            &signing,
+            Some("test-settler"),
+            ts,
+            "log:arky:transparency@v1",
+            Some(&mut store),
+        );
 
         let exp = &v["expect"];
         if let Some(status) = exp["status"].as_str() {
@@ -79,7 +100,12 @@ fn settler_s1_vectors() {
         if let Some(errs) = exp["errors"].as_array() {
             for e in errs {
                 if let Some(es) = e.as_str() {
-                    assert!(res.errors.iter().any(|x| x == es), "{} expected error {}", id, es);
+                    assert!(
+                        res.errors.iter().any(|x| x == es),
+                        "{} expected error {}",
+                        id,
+                        es
+                    );
                 }
             }
         }
@@ -88,21 +114,40 @@ fn settler_s1_vectors() {
             assert_eq!(res.missing_fields, want, "{} missing_fields", id);
         }
         if let Some(xr_exp) = exp.get("execution_receipt") {
-            let xr = res.receipt.as_ref().unwrap_or_else(|| panic!("{} no receipt", id));
+            let xr = res
+                .receipt
+                .as_ref()
+                .unwrap_or_else(|| panic!("{} no receipt", id));
             if let Some(verb) = xr_exp["verb"].as_str() {
                 assert_eq!(xr["verb"].as_str().unwrap(), verb, "{} xr verb", id);
             }
             if xr_exp["has_anchor"].as_bool() == Some(true) {
-                assert!(xr["anchors"].as_array().map(|a| !a.is_empty()).unwrap_or(false), "{} has_anchor", id);
+                assert!(
+                    xr["anchors"]
+                        .as_array()
+                        .map(|a| !a.is_empty())
+                        .unwrap_or(false),
+                    "{} has_anchor",
+                    id
+                );
             }
             // The XR is a real signed, content-addressed artifact.
             let mut body = xr.as_object().unwrap().clone();
             body.remove("cid");
             body.remove("sig");
             let canon = canonicalize(&Value::Object(body));
-            assert_eq!(cid_from_canonical(&canon), xr["cid"].as_str().unwrap(), "{} xr cid", id);
+            assert_eq!(
+                cid_from_canonical(&canon),
+                xr["cid"].as_str().unwrap(),
+                "{} xr cid",
+                id
+            );
             let vk = verifying_key_from_bytes(&pubkey.to_bytes()).unwrap();
-            assert!(verify_detached(xr["sig"].as_str().unwrap(), canon.as_bytes(), &vk), "{} xr sig", id);
+            assert!(
+                verify_detached(xr["sig"].as_str().unwrap(), canon.as_bytes(), &vk),
+                "{} xr sig",
+                id
+            );
         }
     }
 }

@@ -6,7 +6,7 @@
 use arky_core::canonicalize::canonicalize;
 use arky_core::cid::cid_from_canonical;
 use arky_core::tim::{canonical_body, resolve_did_key, verify_tim};
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 use serde_json::Value;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -53,7 +53,11 @@ fn canonicalization_c1_vectors() {
         let got = canonicalize(&input);
         assert_eq!(got, canon_json, "C1 {} canonical_json", v["id"]);
         if let Some(hex) = expect.get("canonical_bytes_hex").and_then(|x| x.as_str()) {
-            let got_hex: String = got.as_bytes().iter().map(|b| format!("{:02x}", b)).collect();
+            let got_hex: String = got
+                .as_bytes()
+                .iter()
+                .map(|b| format!("{:02x}", b))
+                .collect();
             assert_eq!(got_hex, hex, "C1 {} bytes_hex", v["id"]);
         }
     }
@@ -127,5 +131,8 @@ fn cross_language_cids_match_known_values() {
     // stack must reproduce them byte-for-byte from the same canonical bytes.
     let tim001 = read_json("vectors/fixtures/tims/valid-tim-001.json");
     let canon = canonicalize(&canonical_body(&tim001["tim"]));
-    assert_eq!(cid_from_canonical(&canon), tim001["tim"]["cid"].as_str().unwrap());
+    assert_eq!(
+        cid_from_canonical(&canon),
+        tim001["tim"]["cid"].as_str().unwrap()
+    );
 }
