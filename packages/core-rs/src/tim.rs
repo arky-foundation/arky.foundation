@@ -7,6 +7,7 @@ use crate::cid::{cid_from_canonical, from_multibase};
 use crate::jws::{
     decode_protected_header, sign_detached, verify_detached, verifying_key_from_bytes,
 };
+use crate::kernel::parse_rfc3339_ms;
 use ed25519_dalek::SigningKey;
 use serde_json::{Map, Value};
 
@@ -18,6 +19,9 @@ pub struct VerifyResult {
     pub cid_valid: bool,
     pub signature_valid: bool,
     pub witnesses_valid: bool,
+    /// false iff `at` was provided to `verify_tim_at` and the TIM's `exp` is at
+    /// or before it (TIM §4). Always true from `verify_tim` (no freshness check).
+    pub fresh: bool,
     pub errors: Vec<String>,
     pub missing_fields: Vec<String>,
 }
@@ -88,7 +92,19 @@ pub fn resolve_did_key(id: &str) -> Option<Vec<u8>> {
 type KeyResolver<'a> = dyn Fn(&Value, Option<&str>) -> Option<Vec<u8>> + 'a;
 
 /// Verify a TIM. `resolve` maps (tim, optional witness-kid) -> 32-byte pubkey.
+/// Equivalent to `verify_tim_at(tim, resolve, None)` — a pure cryptographic check
+/// with no freshness enforcement (`fresh` is always true).
 pub fn verify_tim(tim: &Value, resolve: &KeyResolver) -> VerifyResult {
+    verify_tim_at(tim, resolve, None)
+}
+
+/// Verify a TIM with an optional reference time for freshness (TIM §4). When `at`
+/// is `Some` and the TIM's `exp` parses as an RFC3339 timestamp at or before `at`,
+/// the result is `fresh: false` and carries a `tim.expired` error; `valid`
+/// includes `fresh` exactly like @arky/core. Omit `at` for a pure cryptographic
+/// check. `parse_rfc3339_ms` returns `None` for malformed input (mirrors
+/// ECMAScript `Date.parse` NaN), so this path cannot error on bad timestamps.
+pub fn verify_tim_at(tim: &Value, resolve: &KeyResolver, at: Option<&str>) -> VerifyResult {
     let mut errors = Vec::new();
     let missing: Vec<String> = REQUIRED_PATHS
         .iter()
@@ -103,6 +119,7 @@ pub fn verify_tim(tim: &Value, resolve: &KeyResolver) -> VerifyResult {
             cid_valid: false,
             signature_valid: false,
             witnesses_valid: false,
+            fresh: true,
             errors,
             missing_fields: missing,
         };
@@ -151,14 +168,85 @@ pub fn verify_tim(tim: &Value, resolve: &KeyResolver) -> VerifyResult {
         }
     }
 
-    let valid = cid_valid && signature_valid && witnesses_valid;
+    // Freshness (TIM §4): if a reference time is given and `exp` is at/before it,
+    // the receipt has expired. Mirrors @arky/core: only string `exp` is checked,
+    // and unparseable `at`/`exp` (None) are ignored rather than erroring.
+    let mut fresh = true;
+    if let Some(at_str) = at
+        && let Some(exp_str) = tim.get("exp").and_then(|v| v.as_str())
+        && let (Some(now), Some(exp)) = (parse_rfc3339_ms(at_str), parse_rfc3339_ms(exp_str))
+        && exp <= now
+    {
+        fresh = false;
+        errors.push("tim.expired".to_string());
+    }
+
+    let valid = cid_valid && signature_valid && witnesses_valid && fresh;
     VerifyResult {
         valid,
         schema_valid: true,
         cid_valid,
         signature_valid,
         witnesses_valid,
+        fresh,
         errors,
         missing_fields: vec![],
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::keys::from_seed;
+    use serde_json::json;
+
+    /// Default resolver: resolve the TIM identity did:key, ignore witness kid.
+    fn identity_resolver(tim: &Value, _kid: Option<&str>) -> Option<Vec<u8>> {
+        let id = tim.get("identity")?.get("id")?.as_str()?;
+        resolve_did_key(id)
+    }
+
+    #[test]
+    fn freshness_expired_with_at_unexpired_without() {
+        let kp = from_seed([7u8; 32]);
+        let body = json!({
+            "time": { "ts": "2025-10-15T12:00:00Z" },
+            "identity": { "id": kp.did },
+            "measurement": {
+                "name": "temp", "value": 22.5, "unit": "degC",
+                "method": { "type": "sensor", "source": "s" }
+            },
+            "exp": "2020-01-02T00:00:00Z",
+        });
+        let tim = create_tim(body, &kp.signing_key, None);
+
+        // No `at`: pure cryptographic check — fresh stays true, valid true.
+        let r = verify_tim(&tim, &identity_resolver);
+        assert!(r.fresh, "fresh should be true without at");
+        assert!(r.valid, "valid should be true without at");
+
+        // With `at` after exp: fresh false, valid false, tim.expired error.
+        let r = verify_tim_at(&tim, &identity_resolver, Some("2026-01-01T00:00:00Z"));
+        assert!(!r.fresh, "fresh should be false when expired");
+        assert!(!r.valid, "valid should be false when expired");
+        assert!(r.errors.iter().any(|e| e == "tim.expired"));
+    }
+
+    #[test]
+    fn freshness_future_exp_passes_with_at() {
+        let kp = from_seed([8u8; 32]);
+        let body = json!({
+            "time": { "ts": "2025-10-15T12:00:00Z" },
+            "identity": { "id": kp.did },
+            "measurement": {
+                "name": "temp", "value": 22.5, "unit": "degC",
+                "method": { "type": "sensor", "source": "s" }
+            },
+            "exp": "2099-01-01T00:00:00Z",
+        });
+        let tim = create_tim(body, &kp.signing_key, None);
+        let r = verify_tim_at(&tim, &identity_resolver, Some("2026-01-01T00:00:00Z"));
+        assert!(r.fresh);
+        assert!(r.valid);
     }
 }
