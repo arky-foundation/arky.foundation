@@ -92,7 +92,9 @@ const TEST_PUBLIC_KEYS_BY_KID: Record<string, jose.JWK> = {
 async function resolveDidKey(id: unknown): Promise<jose.KeyLike | undefined> {
   if (typeof id !== 'string' || !id.startsWith('did:key:z6Mk')) return undefined;
   try {
-    const decoded = base58btc.decode(id.slice('did:key:z'.length) as string);
+    // multiformats base58btc.decode requires the 'z' multibase prefix, so slice
+    // only 'did:key:' (keep the 'z'), not 'did:key:z'.
+    const decoded = base58btc.decode(id.slice('did:key:'.length) as string);
     if (decoded[0] !== 0xed || decoded[1] !== 0x01) return undefined;
     const x = decoded.slice(2);
     let bin = '';
@@ -109,9 +111,12 @@ async function resolveWitnessKey(sig: string): Promise<jose.KeyLike | undefined>
   try {
     const { kid } = jose.decodeProtectedHeader(sig);
     if (typeof kid !== 'string') return undefined;
+    // A witness kid may be a fixture kid (test-key map) or a did:key naming the
+    // co-signing notary (TIM §6.1) — resolve either, mirroring @arky/core's
+    // witness-aware default resolver.
     const jwk = TEST_PUBLIC_KEYS_BY_KID[kid];
-    if (!jwk) return undefined;
-    return (await jose.importJWK(jwk, 'EdDSA')) as jose.KeyLike;
+    if (jwk) return (await jose.importJWK(jwk, 'EdDSA')) as jose.KeyLike;
+    return await resolveDidKey(kid);
   } catch {
     return undefined;
   }
@@ -461,8 +466,31 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
   const vector = JSON.parse(await readFile(path, 'utf-8'));
   const expect = vector.expect ?? {};
 
+  // Freshness (TIM §4): when a vector asserts `expect.fresh` and supplies a
+  // reference time (context.verify_options.at), execute the expiry check —
+  // compute fresh = !(exp <= at) from the TIM's own `exp` and compare. This is
+  // the L2 behavior the SDK's verifyTim(tim, _, { at }) implements. We do it
+  // here (not in the generic artifact path) because only the vector carries the
+  // reference time. Crypto (cid/sig) is still checked below for these vectors.
+  if (typeof expect.fresh === 'boolean') {
+    const tim = vector.inputs?.tim as Record<string, any> | undefined;
+    const at = vector.context?.verify_options?.at;
+    const expStr = tim?.exp;
+    if (at !== undefined && typeof expStr === 'string') {
+      const atMs = typeof at === 'number' ? at : Date.parse(at);
+      const expMs = Date.parse(expStr);
+      const fresh = Number.isNaN(atMs) || Number.isNaN(expMs) ? true : !(expMs <= atMs);
+      report(`${relPath} (freshness)`, fresh === expect.fresh,
+        fresh === expect.fresh ? '' : `fresh: computed ${fresh}, expected ${expect.fresh}`);
+      // fall through to the crypto check below (cid/sig still verified).
+    }
+  }
+
   // Vectors that intentionally describe invalid/unsigned inputs (expect.valid
-  // === false) are validated structurally by the schema step, not here.
+  // === false) are validated structurally by the schema step, not here. Their
+  // crypto/witness "failures" are the expected outcome, so they are not
+  // re-checked against the crypto path (freshness above already ran for any
+  // that assert expect.fresh).
   if (expect.valid === false) {
     report(`${relPath} (negative vector, schema-checked elsewhere)`, true);
     return;
