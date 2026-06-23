@@ -64,9 +64,13 @@ MUST be `{ value: number > 0 (finite), unit: string }`. (commit `10460ca`)
   cannot be done by single-TIM verification. Callers must track accepted nonces
   and validate `prev` against a chain they hold. See `packages/core/README.md`.
 - JSON **duplicate member names**: the spec (Canonicalization §3) says these MUST
-  be rejected, but `JSON.parse`/`serde_json` silently keep the last. Parsing
-  hardening (a strict reader that rejects duplicates) is left as future work; it
-  does not affect signature soundness for objects produced by these libraries.
+  be rejected, but `JSON.parse`/`serde_json` silently keep the last. Both stacks
+  now ship an **opt-in strict parser** — `parseStrict(json)` (`@arky/core`) and
+  `parse_strict(json)` (`arky-core`) — that rejects any object with a duplicate
+  key at any depth. Callers handling untrusted JSON should parse through it before
+  canonicalizing/verifying. (The default `JSON.parse`/`serde_json` path is
+  unchanged and still last-wins; this does not affect signature soundness for
+  objects produced by these libraries.)
 
 ## Regression coverage
 
