@@ -3,7 +3,7 @@
 spec_id: ARKY-KERNEL-v1
 title: Arky — Kernel
 version: v1
-status: review
+status: implementing
 effective: 2025-10-15
 doc_type: specification
 normative_default: true  # all sections normative unless labeled Informative
