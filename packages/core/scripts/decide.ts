@@ -15,6 +15,9 @@ if (!c) {
   const tims = [];
   if (v.context?.fixtures?.tim)
     tims.push(JSON.parse(readFileSync(`${root}/vectors/${v.context.fixtures.tim}`, 'utf-8')).tim);
+  // Inline evidence (K2 vectors embed their TIMs directly so they are
+  // self-contained); each entry is a full TIM object.
+  if (Array.isArray(v.context?.evidence)) tims.push(...v.context.evidence);
   const d = evaluateKernel(c, tims, { time: v.context?.time });
   process.stdout.write(
     `${d.status}|${d.authorized.map((x: { name: string }) => x.name).join(',')}`,
