@@ -7,7 +7,15 @@
 import { test, expect, describe } from 'bun:test';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { execute, deriveIdempotencyKey, argsHash, verifyDetached, canonicalize, cidFromCanonical, type IdempotencyStore } from '../src/index.ts';
+import {
+  execute,
+  deriveIdempotencyKey,
+  argsHash,
+  verifyDetached,
+  canonicalize,
+  cidFromCanonical,
+  type IdempotencyStore,
+} from '../src/index.ts';
 import { ed25519 } from '@noble/curves/ed25519';
 
 const REPO = join(import.meta.dir, '../../..');
@@ -22,7 +30,9 @@ describe('Settler S1 vectors', () => {
   // Shared store so the idempotency vector (s1-005 reuses s1-001's key) hits cache.
   const store: IdempotencyStore = new Map();
 
-  for (const f of readdirSync(join(REPO, dir)).filter((x) => x.endsWith('.json')).sort()) {
+  for (const f of readdirSync(join(REPO, dir))
+    .filter((x) => x.endsWith('.json'))
+    .sort()) {
     const v = read(join(dir, f));
     test(`${v.id}: ${v.description}`, () => {
       const exp = v.expect ?? {};
@@ -38,11 +48,21 @@ describe('Settler S1 vectors', () => {
       if (v.id === 's1-005') {
         const first = read(join(dir, 's1-001.json'));
         execute(
-          { verb: first.inputs.verb, params: first.inputs.params, rail: first.inputs.rail, idempotency_key: first.inputs.idempotency_key },
+          {
+            verb: first.inputs.verb,
+            params: first.inputs.params,
+            rail: first.inputs.rail,
+            idempotency_key: first.inputs.idempotency_key,
+          },
           { privateKey: SEED, ts: '2025-10-15T12:00:01Z', store },
         );
       }
-      const res = execute(req, { privateKey: SEED, kid: 'test-settler', ts: v.context?.time ?? '2025-10-15T12:00:01Z', store });
+      const res = execute(req, {
+        privateKey: SEED,
+        kid: 'test-settler',
+        ts: v.context?.time ?? '2025-10-15T12:00:01Z',
+        store,
+      });
 
       if (exp.status) expect(res.status).toBe(exp.status);
       if (Array.isArray(exp.errors) && exp.errors.length) {
@@ -54,7 +74,7 @@ describe('Settler S1 vectors', () => {
         expect(res.receipt).toBeDefined();
         const xr = res.receipt!;
         if (exp.execution_receipt.verb) expect(xr.verb).toBe(exp.execution_receipt.verb);
-        if (exp.execution_receipt.has_anchor) expect((xr.anchors?.length ?? 0)).toBeGreaterThan(0);
+        if (exp.execution_receipt.has_anchor) expect(xr.anchors?.length ?? 0).toBeGreaterThan(0);
         // The XR is a real signed, content-addressed artifact.
         const { cid, sig, ...bodyXr } = xr;
         expect(cidFromCanonical(canonicalize(bodyXr))).toBe(cid);
@@ -67,7 +87,11 @@ describe('Settler S1 vectors', () => {
 describe('Idempotency (§6.1)', () => {
   test('same key returns the identical receipt (cid stable)', () => {
     const store: IdempotencyStore = new Map();
-    const req = { verb: 'arky:verb/pay@v1', params: { to: 'acct:x', amount: { value: 1, unit: 'USD' }, rail: 'ach:us' }, idempotency_key: 'k-1' };
+    const req = {
+      verb: 'arky:verb/pay@v1',
+      params: { to: 'acct:x', amount: { value: 1, unit: 'USD' }, rail: 'ach:us' },
+      idempotency_key: 'k-1',
+    };
     const a = execute(req, { privateKey: SEED, ts: '2025-10-15T12:00:01Z', store });
     const b = execute(req, { privateKey: SEED, ts: '2025-10-15T12:05:00Z', store }); // later ts, same key
     expect(a.receipt!.cid).toBe(b.receipt!.cid); // cached, not re-signed
@@ -75,8 +99,18 @@ describe('Idempotency (§6.1)', () => {
 
   test('derived key is deterministic and JCS-based', () => {
     const args = { to: 'acct:x', amount: { value: 1, unit: 'USD' } };
-    const k1 = deriveIdempotencyKey({ commitment_cid: 'zC', verb: 'arky:verb/pay@v1', rail: 'ach:us', args });
-    const k2 = deriveIdempotencyKey({ commitment_cid: 'zC', verb: 'arky:verb/pay@v1', rail: 'ach:us', args });
+    const k1 = deriveIdempotencyKey({
+      commitment_cid: 'zC',
+      verb: 'arky:verb/pay@v1',
+      rail: 'ach:us',
+      args,
+    });
+    const k2 = deriveIdempotencyKey({
+      commitment_cid: 'zC',
+      verb: 'arky:verb/pay@v1',
+      rail: 'ach:us',
+      args,
+    });
     expect(k1).toBe(k2);
     expect(k1[0]).toBe('z'); // multibase
     expect(argsHash(args)[0]).toBe('z');

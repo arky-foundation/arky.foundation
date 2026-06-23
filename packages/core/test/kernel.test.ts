@@ -16,13 +16,17 @@ describe('Assertion language (Kleene tri-state)', () => {
   const sym = { temp: { value: 22.5, unit: 'degC' }, flag: { value: true } };
   test('comparison PASS', () => expect(evaluateAssertion('temp > 20', sym).result).toBe('PASS'));
   test('comparison FAIL', () => expect(evaluateAssertion('temp > 30', sym).result).toBe('FAIL'));
-  test('range AND PASS', () => expect(evaluateAssertion('temp >= 20 && temp <= 25', sym).result).toBe('PASS'));
-  test('range AND FAIL', () => expect(evaluateAssertion('temp >= 20 && temp <= 21', sym).result).toBe('FAIL'));
+  test('range AND PASS', () =>
+    expect(evaluateAssertion('temp >= 20 && temp <= 25', sym).result).toBe('PASS'));
+  test('range AND FAIL', () =>
+    expect(evaluateAssertion('temp >= 20 && temp <= 21', sym).result).toBe('FAIL'));
   test('OR', () => expect(evaluateAssertion('temp > 30 || temp < 25', sym).result).toBe('PASS'));
   test('NOT', () => expect(evaluateAssertion('!(temp > 30)', sym).result).toBe('PASS'));
-  test('set membership', () => expect(evaluateAssertion('temp in [22.5, 30]', sym).result).toBe('PASS'));
+  test('set membership', () =>
+    expect(evaluateAssertion('temp in [22.5, 30]', sym).result).toBe('PASS'));
   test('bare boolean symbol', () => expect(evaluateAssertion('flag', sym).result).toBe('PASS'));
-  test('missing symbol -> INDETERMINATE', () => expect(evaluateAssertion('humidity > 50', sym).result).toBe('INDETERMINATE'));
+  test('missing symbol -> INDETERMINATE', () =>
+    expect(evaluateAssertion('humidity > 50', sym).result).toBe('INDETERMINATE'));
   test('type mismatch (num vs string) -> INDETERMINATE', () => {
     const r = evaluateAssertion('temp > "high"', sym);
     expect(r.result).toBe('INDETERMINATE');
@@ -32,13 +36,18 @@ describe('Assertion language (Kleene tri-state)', () => {
 
 describe('Kernel K1 vectors', () => {
   const dir = 'vectors/kernel';
-  for (const f of readdirSync(join(REPO, dir)).filter((x) => x.endsWith('.json')).sort()) {
+  for (const f of readdirSync(join(REPO, dir))
+    .filter((x) => x.endsWith('.json'))
+    .sort()) {
     const v = read(join(dir, f));
     test(`${v.id}: ${v.description}`, () => {
       const exp = v.expect ?? {};
       // Schema-invalid / unknown-verb negatives: only assert decision.status when given.
       const commitment = v.inputs?.commitment;
-      if (!commitment) { expect(exp).toBeTruthy(); return; }
+      if (!commitment) {
+        expect(exp).toBeTruthy();
+        return;
+      }
 
       // Resolve the TIM evidence from context.fixtures.tim.
       const tims: any[] = [];

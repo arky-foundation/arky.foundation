@@ -8,19 +8,31 @@
 import { test, expect, describe } from 'bun:test';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { canonicalize, cidFromCanonical, computeCid, verifyTim, createTim, resolveDidKey } from '../src/index.ts';
+import {
+  canonicalize,
+  cidFromCanonical,
+  verifyTim,
+  createTim,
+  resolveDidKey,
+} from '../src/index.ts';
 
 const REPO = join(import.meta.dir, '../../..');
 const read = (p: string) => JSON.parse(readFileSync(join(REPO, p), 'utf-8'));
 const listVectors = (dir: string) =>
-  readdirSync(join(REPO, dir)).filter((f) => f.endsWith('.json')).sort().map((f) => join(dir, f));
+  readdirSync(join(REPO, dir))
+    .filter((f) => f.endsWith('.json'))
+    .sort()
+    .map((f) => join(dir, f));
 
 describe('Canonicalization C1 vectors', () => {
   for (const path of listVectors('vectors/canonicalization')) {
     const v = read(path);
     if (typeof v.expect?.canonical_json !== 'string') continue;
     test(`${v.id}: ${v.description}`, () => {
-      const input = v.inputs.original !== undefined ? v.inputs.original : JSON.parse(v.inputs.original_formatted);
+      const input =
+        v.inputs.original !== undefined
+          ? v.inputs.original
+          : JSON.parse(v.inputs.original_formatted);
       expect(canonicalize(input)).toBe(v.expect.canonical_json);
       if (typeof v.expect.canonical_bytes_hex === 'string') {
         const hex = Buffer.from(new TextEncoder().encode(canonicalize(input))).toString('hex');
@@ -44,7 +56,8 @@ describe('TIM T1 vectors', () => {
       if (v.expect.valid === true) {
         expect(res.valid).toBe(true);
         if (v.expect.cid_valid !== undefined) expect(res.cid_valid).toBe(v.expect.cid_valid);
-        if (v.expect.signature_valid !== undefined) expect(res.signature_valid).toBe(v.expect.signature_valid);
+        if (v.expect.signature_valid !== undefined)
+          expect(res.signature_valid).toBe(v.expect.signature_valid);
       } else if (v.expect.valid === false) {
         expect(res.valid).toBe(false);
         if (Array.isArray(v.expect.missing_fields)) {
@@ -78,11 +91,20 @@ describe('round-trip: produce then verify', () => {
     const pub = ed25519.getPublicKey(seed);
     const did = 'did:key:z' + base58(prefixEd25519(pub));
     const tim = createTim(
-      { ts: '2025-10-15T12:00:00Z', identity: { id: did }, measurement: { name: 'temperature', value: 22.5, unit: 'degC', method: { type: 'sensor', source: 'device:x' } } },
+      {
+        ts: '2025-10-15T12:00:00Z',
+        identity: { id: did },
+        measurement: {
+          name: 'temperature',
+          value: 22.5,
+          unit: 'degC',
+          method: { type: 'sensor', source: 'device:x' },
+        },
+      },
       seed,
     );
     // cid independently recomputed must equal the embedded cid.
-    const { cid, sig, ...body } = tim;
+    const { cid, sig: _sig, ...body } = tim;
     expect(cidFromCanonical(canonicalize(stripWitnesses(body)))).toBe(cid);
     const res = verifyTim(tim);
     expect(res.valid).toBe(true);
@@ -93,8 +115,13 @@ describe('round-trip: produce then verify', () => {
 
 function stripWitnesses(body: any) {
   if (body.time && 'witnesses' in body.time) {
-    const { witnesses, ...t } = body.time;
-    return Object.keys(t).length ? { ...body, time: t } : (() => { const { time, ...r } = body; return r; })();
+    const { witnesses: _witnesses, ...t } = body.time;
+    return Object.keys(t).length
+      ? { ...body, time: t }
+      : (() => {
+          const { time: _time, ...r } = body;
+          return r;
+        })();
   }
   return body;
 }
@@ -120,7 +147,9 @@ function b64u(s: string): Uint8Array {
 
 function prefixEd25519(pub: Uint8Array): Uint8Array {
   const out = new Uint8Array(2 + pub.length);
-  out[0] = 0xed; out[1] = 0x01; out.set(pub, 2);
+  out[0] = 0xed;
+  out[1] = 0x01;
+  out.set(pub, 2);
   return out;
 }
 
