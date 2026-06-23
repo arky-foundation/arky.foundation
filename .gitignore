@@ -1,3 +1,7 @@
 node_modules/
 vectors/RESULTS.json
 target/
+
+# arkestra
+.agent-out/
+.worktrees/
