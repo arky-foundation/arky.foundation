@@ -104,6 +104,39 @@ describe('malformed input is handled (no DoS / no throw)', () => {
       expect(resolveDidKey({ identity: { id } })).toBeUndefined();
     }
   });
+
+  test('verifyTim does not throw on NaN measurement value (JCS forbids NaN)', () => {
+    const hostile = { ...tim, measurement: { ...tim.measurement, value: NaN } };
+    let r: ReturnType<typeof verifyTim> | undefined;
+    expect(() => {
+      r = verifyTim(hostile);
+    }).not.toThrow();
+    expect(r!.valid).toBe(false);
+    expect(r!.errors).toContain('tim.non_finite');
+  });
+
+  test('verifyTim does not throw on Infinity measurement value', () => {
+    const hostile = { ...tim, measurement: { ...tim.measurement, value: Infinity } };
+    let r: ReturnType<typeof verifyTim> | undefined;
+    expect(() => {
+      r = verifyTim(hostile);
+    }).not.toThrow();
+    expect(r!.valid).toBe(false);
+    expect(r!.errors).toContain('tim.non_finite');
+  });
+
+  test('verifyTim does not throw on -0 measurement value (JCS normalizes, stays valid shape)', () => {
+    // -0 is finite and JCS-normalizes to 0; this must not be flagged non_finite.
+    const hostile = {
+      ...tim,
+      measurement: { ...tim.measurement, value: -0 },
+    };
+    let r: ReturnType<typeof verifyTim> | undefined;
+    expect(() => {
+      r = verifyTim(hostile);
+    }).not.toThrow();
+    expect(r!.errors).not.toContain('tim.non_finite');
+  });
 });
 
 describe('freshness (opt-in via options.at)', () => {
