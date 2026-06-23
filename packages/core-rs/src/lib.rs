@@ -29,4 +29,6 @@ pub use settler::{
     ExecRequest, ExecStatus, ExecuteResult, IdempotencyStore, args_hash, derive_idempotency_key,
     execute,
 };
-pub use tim::{VerifyResult, canonical_body, create_tim, resolve_did_key, verify_tim};
+pub use tim::{
+    VerifyResult, canonical_body, create_tim, resolve_did_key, verify_tim, verify_tim_at,
+};
