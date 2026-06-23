@@ -147,17 +147,24 @@
   ],
   "total_vectors": 61,
   "status": {
-    "overall": "development",
+    "overall": "core_production_ready",
     "production_ready": false,
+    "core_production_ready": true,
+    "core_suites": ["tim", "canonicalization", "kernel", "notary", "settlers"],
+    "core_readiness_note": "The five core-loop suites (TIM, Canonicalization, Kernel, Notary, Settlers) have L2 conformance coverage and pass on two independent implementations (TS @arky/core and Rust arky-core), cross-checked byte-identically. Their specs are at lifecycle state 'implementing' (>=2 implementations) pending formal TC ratification to 'stable'. Non-core suites remain in development.",
     "level_1_coverage": "complete",
-    "level_2_coverage": "partial",
+    "level_2_coverage": "core complete; non-core partial",
     "level_3_coverage": "partial",
+    "completed": [
+      "TIM T2 vectors (freshness/expiry, witness co-signing, witness mismatch)",
+      "Canonicalization C2 vectors (number/escaping/unicode/ordering/nesting/whitespace edge cases)",
+      "Kernel K2 vectors (negative literals, type-mismatch INDETERMINATE, timezone-offset window)"
+    ],
     "next_steps": [
-      "Add TIM T2/T3 vectors for completeness and witnessing",
-      "Add Canonicalization C2/C3 vectors for CID and signature coverage",
-      "Add Kernel K2/K3 vectors for policy and conflict handling",
+      "Formal TC review/vote to advance core specs from 'implementing' to 'stable'",
       "Add Discovery D2/D3 vectors for descriptors and advanced features",
-      "Add Attestation AT2/AT3 vectors for chains and integration"
+      "Add Attestation AT2/AT3 vectors for chains and integration",
+      "Add L2/L3 vectors for remaining non-core suites"
     ]
   },
   "fixtures": {
