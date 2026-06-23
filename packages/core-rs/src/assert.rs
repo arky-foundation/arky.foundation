@@ -68,6 +68,23 @@ fn tokenize(src: &str) -> Result<Vec<Tok>, String> {
     let chars: Vec<char> = src.chars().collect();
     let mut toks = Vec::new();
     let mut i = 0;
+    // A leading '-' is part of a numeric literal only in a value position: at
+    // the start, or after an operator, '(', '[', ',', or a logical/`in` keyword.
+    let value_pos = |toks: &[Tok]| {
+        matches!(
+            toks.last(),
+            None | Some(
+                Tok::Op(_)
+                    | Tok::LParen
+                    | Tok::LBrack
+                    | Tok::Comma
+                    | Tok::And
+                    | Tok::Or
+                    | Tok::Not
+                    | Tok::In
+            )
+        )
+    };
     while i < chars.len() {
         let c = chars[i];
         match c {
@@ -128,9 +145,21 @@ fn tokenize(src: &str) -> Result<Vec<Tok>, String> {
                     return Err(format!("bad operator at '{}'", c));
                 }
             }
-            '0'..='9' => {
+            // Numeric literal, optionally negative (only when a digit/'.' follows
+            // and we are in a value position — see `value_pos`). Elsewhere '-'
+            // falls through to the unexpected-character error (no arithmetic).
+            '0'..='9' | '-'
+                if c != '-'
+                    || (i + 1 < chars.len()
+                        && (chars[i + 1].is_ascii_digit() || chars[i + 1] == '.')
+                        && value_pos(&toks)) =>
+            {
                 let mut j = i;
                 let mut n = String::new();
+                if chars[j] == '-' {
+                    n.push('-');
+                    j += 1;
+                }
                 while j < chars.len() && (chars[j].is_ascii_digit() || chars[j] == '.') {
                     n.push(chars[j]);
                     j += 1;
@@ -450,6 +479,25 @@ mod tests {
             TriState::Pass
         );
         assert_eq!(evaluate_assertion("flag", &s).result, TriState::Pass);
+    }
+
+    #[test]
+    fn negative_numeric_literals() {
+        let mut m = Symbols::new();
+        m.insert("temp".into(), SymVal::Num(-3.0));
+        assert_eq!(evaluate_assertion("temp > -5", &m).result, TriState::Pass);
+        m.insert("temp".into(), SymVal::Num(-10.0));
+        assert_eq!(evaluate_assertion("temp > -5", &m).result, TriState::Fail);
+        // After an operator and inside a list, and a negative fractional.
+        m.insert("temp".into(), SymVal::Num(-3.2));
+        assert_eq!(
+            evaluate_assertion("temp == -3.2", &m).result,
+            TriState::Pass
+        );
+        assert_eq!(
+            evaluate_assertion("temp in [-3.2, -1]", &m).result,
+            TriState::Pass
+        );
     }
 
     #[test]
