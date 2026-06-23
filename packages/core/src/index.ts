@@ -12,6 +12,7 @@
 
 export { generateKeyPair, fromSeed, didKeyFromPublicKey, type KeyPair } from './keys.ts';
 export { canonicalize } from './canonicalize.ts';
+export { parseStrict } from './parse.ts';
 export {
   computeCid,
   cidFromCanonical,
