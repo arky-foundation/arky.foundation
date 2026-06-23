@@ -113,9 +113,29 @@ function tokenize(src: string): Tok[] {
       }
       throw new SyntaxError(`bad operator near '${src.slice(i)}'`);
     }
-    if (/[0-9]/.test(c)) {
-      let j = i;
-      let n = '';
+    // Numeric literal, optionally negative. A leading '-' is part of the
+    // literal only in a value position — at the start, or after an operator,
+    // '(', '[', ',', or a logical/`in` keyword — and only when a digit or '.'
+    // follows. Elsewhere '-' is left unhandled (the language has no arithmetic
+    // subtraction, so it falls through to the bad-character error below).
+    const valuePos = () => {
+      const prev = toks[toks.length - 1];
+      if (!prev) return true;
+      return (
+        prev.t === 'op' ||
+        prev.t === 'lparen' ||
+        prev.t === 'lbrack' ||
+        prev.t === 'comma' ||
+        prev.t === 'and' ||
+        prev.t === 'or' ||
+        prev.t === 'not' ||
+        prev.t === 'in'
+      );
+    };
+    const neg = c === '-' && /[0-9.]/.test(src[i + 1] ?? '') && valuePos();
+    if (/[0-9]/.test(c) || neg) {
+      let j = neg ? i + 1 : i;
+      let n = neg ? '-' : '';
       while (j < src.length && /[0-9.]/.test(src[j])) n += src[j++];
       toks.push({ t: 'num', v: Number(n) });
       i = j;
