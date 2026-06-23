@@ -46,7 +46,7 @@ const tim = createTim(
 // Verify it. For a did:key identity the verifying key is resolved
 // automatically from identity.id.
 verifyTim(tim).valid; // true
-console.log(tim.cid);  // zQm…
+console.log(tim.cid); // zQm…
 ```
 
 See [`examples/quickstart.ts`](./examples/quickstart.ts) for the full flow
@@ -55,11 +55,13 @@ including witnessing. Run it with `bun run examples/quickstart.ts`.
 ## API
 
 **Keys**
+
 - `generateKeyPair(): KeyPair` — fresh Ed25519 key + matching `did:key`.
 - `fromSeed(seed: Uint8Array): KeyPair` — keypair from a 32-byte seed.
 - `didKeyFromPublicKey(pub: Uint8Array): string`.
 
 **TIM**
+
 - `createTim(input, privateKey, kid?): Tim` — build + sign a TIM.
 - `verifyTim(tim, resolveKey?): VerifyResult` — verify cid, signature, and any
   witnesses. `resolveKey` defaults to resolving `did:key` identities; pass your
