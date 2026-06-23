@@ -1,0 +1,86 @@
+{
+  "id": "k2-002",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K2",
+  "description": "Negative numeric literal assertion FAIL (value -10 > -5)",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    },
+    "evidence": [
+      {
+        "time": {
+          "ts": "2025-10-15T12:00:00Z"
+        },
+        "identity": {
+          "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+        },
+        "measurement": {
+          "name": "temp",
+          "value": -10,
+          "unit": "arky:unit/temp.C",
+          "method": {
+            "type": "sensor",
+            "source": "device:temp-sensor-01"
+          }
+        },
+        "cid": "zQmQQ36K9eMWiJhxTYWi8AVyCoouv1GK39duQFQFrHKhVAf",
+        "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..HtVne_vEKaXEZmWRoDeisY0yle6iyqSRgqweYpMdHGduXVUhaNvmrSsT9HhcjVfNEIC-2Bm2641P5cnEJof5BQ"
+      }
+    ]
+  },
+  "inputs": {
+    "commitment": {
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
+      "intent": {
+        "do": "arky:verb/control@v1"
+      },
+      "measure": [
+        {
+          "name": "temp",
+          "from": "device:temp-sensor-01",
+          "assert": "temp > -5"
+        }
+      ],
+      "consequence": [
+        {
+          "if": "PASS",
+          "then": [
+            {
+              "name": "arky:verb/control@v1",
+              "args": {
+                "target": "cooling",
+                "state": "on"
+              }
+            }
+          ]
+        }
+      ],
+      "cid": "zQmQSu6yw8NBPWBEtp7gfj8PehaXXNDXYbCxVLBWWHd9ybw",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..xT0QdCqqMplAbB2biU2vRxeS3u2Cgy6Tl4Ife7QBky8YURcLB2YDOFmUtzdW7HnidbCDPj9BE7x8WTdXmpiLCg"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [],
+    "schema_valid": true,
+    "signature_valid": true,
+    "decision": {
+      "status": "REJECTED",
+      "assertions": [
+        {
+          "name": "temp",
+          "result": "FAIL",
+          "input_value": -10,
+          "unit": "arky:unit/temp.C",
+          "inputs": [
+            "zQmQQ36K9eMWiJhxTYWi8AVyCoouv1GK39duQFQFrHKhVAf"
+          ]
+        }
+      ],
+      "authorized": []
+    }
+  }
+}
