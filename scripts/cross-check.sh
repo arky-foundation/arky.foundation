@@ -59,6 +59,43 @@ fi
 echo "All number edges: TS and Rust agree."
 
 echo
+echo "RFC 3339 timestamp edges (offset + fractional + rejection): TS vs Rust"
+# The TS kernel uses Date.parse; the Rust kernel uses parse_rfc3339_ms. Both
+# must agree on epoch ms for 'Z', numeric offsets, and fractional seconds, and
+# must both reject trailing garbage / a missing timezone designator (TS yields
+# NaN, Rust yields None). '12:00:00+02:00' MUST equal '10:00:00Z'.
+TSMS=(
+  '2025-10-15T12:00:00Z'
+  '2025-10-15T10:00:00Z'
+  '2025-10-15T12:00:00+02:00'
+  '2025-10-15T12:00:00-05:00'
+  '2025-10-15T12:00:00.5Z'
+  '2025-10-15T12:00:00.123Z'
+  '2025-10-15T12:00:00.123456Z'
+  '2025-10-15T12:00:00.5+02:00'
+  '2025-10-15T12:00:00GARBAGE'
+  '2025-10-15T12:00:00Z '
+  '2025-10-15T12:00:00Zextra'
+  '2025-10-15T12:00:00+02:00extra'
+)
+for ts in "${TSMS[@]}"; do
+  tsv="$(cd "$ROOT/packages/core" && bun run scripts/parsetime.ts "$ts")"
+  rsv="$(cd "$ROOT/packages/core-rs" && cargo run --quiet --example parsetime -- "$ts" 2>/dev/null)"
+  if [[ "$tsv" == "$rsv" ]]; then
+    echo "[OK]   $ts -> $tsv"
+  else
+    echo "[FAIL] $ts timestamp diverges: TS=$tsv Rust=$rsv"
+    fail=1
+  fi
+done
+
+if [[ $fail -ne 0 ]]; then
+  echo "Cross-language timestamp MISMATCH." >&2
+  exit 1
+fi
+echo "All timestamp edges: TS and Rust agree."
+
+echo
 echo "Kernel decisions (K1 vectors): TS vs Rust"
 for vec in "$ROOT"/vectors/kernel/k1-*.json; do
   ts="$(cd "$ROOT/packages/core" && bun run scripts/decide.ts "$vec" "$ROOT")"
