@@ -37,13 +37,27 @@ function serializeString(s: string): string {
   for (const ch of s) {
     const code = ch.codePointAt(0)!;
     switch (ch) {
-      case '"': out += '\\"'; break;
-      case '\\': out += '\\\\'; break;
-      case '\b': out += '\\b'; break;
-      case '\f': out += '\\f'; break;
-      case '\n': out += '\\n'; break;
-      case '\r': out += '\\r'; break;
-      case '\t': out += '\\t'; break;
+      case '"':
+        out += '\\"';
+        break;
+      case '\\':
+        out += '\\\\';
+        break;
+      case '\b':
+        out += '\\b';
+        break;
+      case '\f':
+        out += '\\f';
+        break;
+      case '\n':
+        out += '\\n';
+        break;
+      case '\r':
+        out += '\\r';
+        break;
+      case '\t':
+        out += '\\t';
+        break;
       default:
         if (code < 0x20) {
           out += '\\u' + code.toString(16).padStart(4, '0');
@@ -58,7 +72,9 @@ function serializeString(s: string): string {
 function serializeObject(obj: Record<string, unknown>): string {
   // Sort keys by UTF-16 code units. JS string comparison is already UTF-16
   // code-unit lexicographic, which is exactly the RFC 8785 rule.
-  const keys = Object.keys(obj).filter((k) => obj[k] !== undefined).sort();
+  const keys = Object.keys(obj)
+    .filter((k) => obj[k] !== undefined)
+    .sort();
   const parts: string[] = [];
   for (const k of keys) {
     parts.push(serializeString(k) + ':' + serialize(obj[k]));

@@ -10,12 +10,7 @@
  * `specs/core/ARKY-TIM-v1.md` and `ARKY-TIM-Canonicalization-v1.md`.
  */
 
-export {
-  generateKeyPair,
-  fromSeed,
-  didKeyFromPublicKey,
-  type KeyPair,
-} from './keys.ts';
+export { generateKeyPair, fromSeed, didKeyFromPublicKey, type KeyPair } from './keys.ts';
 export { canonicalize } from './canonicalize.ts';
 export {
   computeCid,
@@ -43,12 +38,7 @@ export {
   type CreateTimInput,
   type VerifyResult,
 } from './tim.ts';
-export {
-  evaluateAssertion,
-  type TriState,
-  type Symbols,
-  type EvalResult,
-} from './assert.ts';
+export { evaluateAssertion, type TriState, type Symbols, type EvalResult } from './assert.ts';
 export {
   evaluateKernel,
   parseIsoDurationMs,

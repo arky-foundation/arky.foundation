@@ -73,7 +73,8 @@ function validateAmount(amount: unknown): string | null {
   if (amount === undefined) return null;
   if (typeof amount !== 'object' || amount === null || Array.isArray(amount)) return 'amount';
   const a = amount as Record<string, unknown>;
-  if (typeof a.value !== 'number' || !Number.isFinite(a.value) || a.value <= 0) return 'amount.value';
+  if (typeof a.value !== 'number' || !Number.isFinite(a.value) || a.value <= 0)
+    return 'amount.value';
   if (typeof a.unit !== 'string' || a.unit.length === 0) return 'amount.unit';
   return null;
 }
@@ -87,7 +88,13 @@ export function argsHash(args: unknown): string {
 }
 
 /** Derive an idempotency key per §6.1 when the client omits one. */
-export function deriveIdempotencyKey(req: { commitment_cid?: string; verb: string; rail?: string; args: unknown; verb_index?: number }): string {
+export function deriveIdempotencyKey(req: {
+  commitment_cid?: string;
+  verb: string;
+  rail?: string;
+  args: unknown;
+  verb_index?: number;
+}): string {
   const components = {
     args_hash: argsHash(req.args),
     commitment_cid: req.commitment_cid ?? '',
@@ -126,13 +133,23 @@ export function execute(req: ExecutionRequest, opts: ExecuteOptions): ExecuteRes
   const required = VERB_REQUIRED_ARGS[req.verb] ?? [];
   const missing = required.filter((k) => (args as Record<string, unknown>)[k] === undefined);
   if (missing.length > 0) {
-    return { valid: false, status: 'FAILED', errors: ['settler.invalid_args'], missing_fields: missing };
+    return {
+      valid: false,
+      status: 'FAILED',
+      errors: ['settler.invalid_args'],
+      missing_fields: missing,
+    };
   }
   // 2b. Argument constraints (ARKY-SETTLERS-v1 §3.2): an `amount`, where
   //     present, MUST be { value: number > 0 (finite), unit: string }.
   const amountErr = validateAmount((args as Record<string, unknown>).amount);
   if (amountErr) {
-    return { valid: false, status: 'FAILED', errors: ['settler.invalid_args'], missing_fields: [amountErr] };
+    return {
+      valid: false,
+      status: 'FAILED',
+      errors: ['settler.invalid_args'],
+      missing_fields: [amountErr],
+    };
   }
   // 3. Rail supported.
   if (!railSupported(rail)) {
@@ -140,7 +157,9 @@ export function execute(req: ExecutionRequest, opts: ExecuteOptions): ExecuteRes
   }
 
   // Idempotency: return cached XR for the same key.
-  const idemKey = req.idempotency_key ?? deriveIdempotencyKey({ commitment_cid: req.commitment_cid, verb: req.verb, rail, args });
+  const idemKey =
+    req.idempotency_key ??
+    deriveIdempotencyKey({ commitment_cid: req.commitment_cid, verb: req.verb, rail, args });
   const cached = opts.store?.get(idemKey);
   if (cached) return { valid: true, status: 'SUCCESS', errors: [], receipt: cached };
 
@@ -155,7 +174,9 @@ export function execute(req: ExecutionRequest, opts: ExecuteOptions): ExecuteRes
     idempotency_key: idemKey,
     status: 'success',
     locator: `MOCK-${idemKey.slice(1, 18)}`,
-    anchors: [{ target: anchorTarget, locator: `batch-${idemKey.slice(1, 10)}`, status: 'pending' }],
+    anchors: [
+      { target: anchorTarget, locator: `batch-${idemKey.slice(1, 10)}`, status: 'pending' },
+    ],
     ts,
   };
   const canonical = canonicalize(body);

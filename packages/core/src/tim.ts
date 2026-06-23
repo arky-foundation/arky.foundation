@@ -8,7 +8,7 @@
 
 import { canonicalize } from './canonicalize.ts';
 import { cidFromCanonical, base58btcDecode } from './cid.ts';
-import { signDetached, verifyDetached, decodeProtectedHeader } from './jws.ts';
+import { signDetached, verifyDetached } from './jws.ts';
 
 export interface TimMeasurement {
   name: string;
@@ -73,7 +73,15 @@ export function createTim(input: CreateTimInput, privateKey: Uint8Array, kid?: s
   return { ...(body as object), cid, sig } as Tim;
 }
 
-const REQUIRED_PATHS = ['time.ts', 'identity.id', 'measurement.name', 'measurement.value', 'measurement.method', 'cid', 'sig'];
+const REQUIRED_PATHS = [
+  'time.ts',
+  'identity.id',
+  'measurement.name',
+  'measurement.value',
+  'measurement.method',
+  'cid',
+  'sig',
+];
 
 function getPath(obj: any, path: string): unknown {
   return path.split('.').reduce((a, k) => (a == null ? undefined : a[k]), obj);
@@ -118,7 +126,16 @@ export function verifyTim(
   const schema_valid = missing.length === 0;
   if (!schema_valid) {
     errors.push('tim.missing_required');
-    return { valid: false, errors, schema_valid: false, cid_valid: false, signature_valid: false, witnesses_valid: false, fresh: true, missing_fields: missing };
+    return {
+      valid: false,
+      errors,
+      schema_valid: false,
+      cid_valid: false,
+      signature_valid: false,
+      witnesses_valid: false,
+      fresh: true,
+      missing_fields: missing,
+    };
   }
 
   const canonical = canonicalize(canonicalBody(tim));

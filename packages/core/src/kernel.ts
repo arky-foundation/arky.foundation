@@ -30,8 +30,15 @@ export interface MeasureSpec {
   require?: { min_witnesses?: number; device_class?: string[]; code?: string[] };
 }
 
-export interface Verb { name: string; args: Record<string, unknown> }
-export interface ConsequenceSpec { if: string; then: Verb[]; limits?: unknown }
+export interface Verb {
+  name: string;
+  args: Record<string, unknown>;
+}
+export interface ConsequenceSpec {
+  if: string;
+  then: Verb[];
+  limits?: unknown;
+}
 
 export interface Commitment {
   scope: string;
@@ -78,11 +85,15 @@ function selectLatest(spec: MeasureSpec, tims: Tim[], evalTime: string): Tim | u
   }
   // require.device_class (match measurement.device)
   if (spec.require?.device_class?.length) {
-    candidates = candidates.filter((t) => spec.require!.device_class!.includes((t.measurement as any).device));
+    candidates = candidates.filter((t) =>
+      spec.require!.device_class!.includes((t.measurement as any).device),
+    );
   }
   // require.code
   if (spec.require?.code?.length) {
-    candidates = candidates.filter((t) => spec.require!.code!.includes((t.measurement as any).code));
+    candidates = candidates.filter((t) =>
+      spec.require!.code!.includes((t.measurement as any).code),
+    );
   }
   // window
   if (spec.window) {
@@ -93,15 +104,20 @@ function selectLatest(spec: MeasureSpec, tims: Tim[], evalTime: string): Tim | u
   // Notary ordering tuple: (ts ASC, lamport ASC, identity.id ASC, cid ASC); pick last.
   candidates.sort((a, b) => {
     if (a.time.ts !== b.time.ts) return a.time.ts < b.time.ts ? -1 : 1;
-    const la = ((a.time as any).ordering?.lamport ?? 0), lb = ((b.time as any).ordering?.lamport ?? 0);
+    const la = (a.time as any).ordering?.lamport ?? 0,
+      lb = (b.time as any).ordering?.lamport ?? 0;
     if (la !== lb) return la - lb;
     if (a.identity.id !== b.identity.id) return a.identity.id < b.identity.id ? -1 : 1;
-    return (a.cid ?? '') < (b.cid ?? '') ? -1 : (a.cid === b.cid ? 0 : 1);
+    return (a.cid ?? '') < (b.cid ?? '') ? -1 : a.cid === b.cid ? 0 : 1;
   });
   return candidates[candidates.length - 1];
 }
 
-function withinWindow(ts: string, w: { start?: string; end?: string; max_age?: string }, evalTime: string): boolean {
+function withinWindow(
+  ts: string,
+  w: { start?: string; end?: string; max_age?: string },
+  evalTime: string,
+): boolean {
   const t = Date.parse(ts);
   if (w.start && t < Date.parse(w.start)) return false;
   if (w.end && t >= Date.parse(w.end)) return false;
@@ -117,14 +133,21 @@ export function parseIsoDurationMs(d: string): number {
   const m = d.match(/^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?$/);
   if (!m) return NaN;
   const [, dd, hh, mm, ss] = m;
-  return ((Number(dd || 0) * 86400) + (Number(hh || 0) * 3600) + (Number(mm || 0) * 60) + Number(ss || 0)) * 1000;
+  return (
+    (Number(dd || 0) * 86400 + Number(hh || 0) * 3600 + Number(mm || 0) * 60 + Number(ss || 0)) *
+    1000
+  );
 }
 
 /**
  * Evaluate a commitment against TIM receipts. `tims` are the candidate evidence
  * (already verified by the caller). Returns a Decision.
  */
-export function evaluateKernel(commitment: Commitment, tims: Tim[], opts: EvalOptions = {}): Decision {
+export function evaluateKernel(
+  commitment: Commitment,
+  tims: Tim[],
+  opts: EvalOptions = {},
+): Decision {
   const evalTime = opts.time ?? new Date().toISOString();
   const errors: string[] = [];
   const assertions: AssertionResult[] = [];
@@ -191,12 +214,17 @@ export function evaluateKernel(commitment: Commitment, tims: Tim[], opts: EvalOp
     }
   }
 
-  const status: DecisionStatus = overall === 'PASS' && authorized.length > 0 ? 'APPROVED' : 'REJECTED';
+  const status: DecisionStatus =
+    overall === 'PASS' && authorized.length > 0 ? 'APPROVED' : 'REJECTED';
   return { status, assertions, authorized: status === 'APPROVED' ? authorized : [], errors };
 }
 
 /** Match a ConsequenceSpec.if (literal PASS/FAIL/INDETERMINATE) to the outcome. */
-function matchesOutcome(ifClause: string, overall: TriState, _assertions: AssertionResult[]): boolean {
+function matchesOutcome(
+  ifClause: string,
+  overall: TriState,
+  _assertions: AssertionResult[],
+): boolean {
   const c = ifClause.trim();
   if (c === 'PASS') return overall === 'PASS';
   if (c === 'FAIL') return overall === 'FAIL';

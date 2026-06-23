@@ -46,7 +46,13 @@ function signingInput(protectedB64: string, payload: Uint8Array): Uint8Array {
 
 /** Sign canonical `payload` bytes; returns compact `<protected>..<signature>`. */
 export function signDetached(payload: Uint8Array, privateKey: Uint8Array, kid?: string): string {
-  const header: ProtectedHeader = { alg: 'EdDSA', b64: false, crit: ['b64'], typ: 'JWS', ...(kid ? { kid } : {}) };
+  const header: ProtectedHeader = {
+    alg: 'EdDSA',
+    b64: false,
+    crit: ['b64'],
+    typ: 'JWS',
+    ...(kid ? { kid } : {}),
+  };
   const protectedB64 = base64urlEncode(new TextEncoder().encode(JSON.stringify(header)));
   const sig = ed25519.sign(signingInput(protectedB64, payload), privateKey);
   return `${protectedB64}..${base64urlEncode(sig)}`;
