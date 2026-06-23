@@ -91,10 +91,12 @@ including witnessing. Run it with `bun run examples/quickstart.ts`.
 
 ## Status
 
-Pre-1.0 (`v0.1.0`). The Arky specs are at `status: review`. This library passes
-the published conformance vectors and is cross-checked byte-for-byte against the
-Rust stack, but the protocol is not yet declared stable. See the repository
-[`CONFORMANCE.md`](../../CONFORMANCE.md).
+Pre-1.0 (`v0.1.0`). The five core-loop specs (TIM, Canonicalization, Kernel,
+Notary, Settlers) are at `status: implementing` with L2 conformance coverage;
+other specs remain at `status: review`. This library passes the published
+conformance vectors at L2 and is cross-checked byte-for-byte against the Rust
+stack, but formal ratification of the core specs to **stable** is still pending.
+See the repository [`CONFORMANCE.md`](../../CONFORMANCE.md).
 
 **The fixture keys under `vectors/fixtures/keys/` are TEST KEYS — never use them
 in production.** Generate your own with `generateKeyPair()`.
