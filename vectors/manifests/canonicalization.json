@@ -25,15 +25,29 @@
       ]
     },
     "C2": {
-      "name": "CID",
-      "description": "Content identifier computation",
-      "vectors": [],
-      "coverage": 0,
+      "name": "CID + JCS edge cases",
+      "description": "Content identifier computation and edge-case JCS conformance for number formatting, escaping, unicode, key ordering, nesting, and whitespace",
+      "vectors": [
+        "c2-001.json",
+        "c2-002.json",
+        "c2-003.json",
+        "c2-004.json",
+        "c2-005.json",
+        "c2-006.json",
+        "c2-007.json"
+      ],
+      "coverage": 7,
       "focus_areas": [
         "SHA-256 hashing",
         "Multihash encoding",
         "Base58-BTC encoding",
-        "CID format validation"
+        "CID format validation",
+        "Number formatting",
+        "String escaping",
+        "Unicode passthrough",
+        "Key ordering",
+        "Deep nesting",
+        "Whitespace insignificance"
       ]
     },
     "C3": {
@@ -49,7 +63,7 @@
       ]
     }
   },
-  "total_vectors": 6,
+  "total_vectors": 13,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,
