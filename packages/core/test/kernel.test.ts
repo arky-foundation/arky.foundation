@@ -32,6 +32,15 @@ describe('Assertion language (Kleene tri-state)', () => {
     expect(r.result).toBe('INDETERMINATE');
     expect(r.error).toContain('type mismatch');
   });
+  test('negative numeric literal PASS', () =>
+    expect(evaluateAssertion('temp > -5', { temp: { value: -3 } }).result).toBe('PASS'));
+  test('negative numeric literal FAIL', () =>
+    expect(evaluateAssertion('temp > -5', { temp: { value: -10 } }).result).toBe('FAIL'));
+  test('negative fractional after == and in list', () => {
+    const s = { temp: { value: -3.2 } };
+    expect(evaluateAssertion('temp == -3.2', s).result).toBe('PASS');
+    expect(evaluateAssertion('temp in [-3.2, -1]', s).result).toBe('PASS');
+  });
 });
 
 describe('Kernel K1 vectors', () => {
