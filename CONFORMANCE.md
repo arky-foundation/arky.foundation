@@ -3,12 +3,16 @@
 How to validate the Arky repository, and exactly what each check proves. This
 is the practical companion to "Vectors over vibes" (see `Mission.md`).
 
-> **Maturity:** specs are at `status: review`, and every vector manifest is
-> `ready_for_production: false`. Per `governance/ARKY-GOVERNANCE-v1.md` §4, a
-> spec is **Stable** only once vectors are published **and ≥2 independent
-> implementations pass**. There are not yet two independent implementations, so
-> no spec here claims Stable. The tooling in `scripts/` is maintenance and
-> conformance tooling, **not** a reference implementation.
+> **Maturity:** the five **core-loop** specs (TIM, Canonicalization, Kernel,
+> Notary, Settlers) are at `status: implementing` with L2 vector coverage and
+> `ready_for_production: true` manifests; the remaining specs stay at
+> `status: review`. Per `governance/ARKY-GOVERNANCE-v1.md` §4, a spec is
+> **Stable** only once vectors are published **and ≥2 independent
+> implementations pass** — both now hold for the core loop (`@arky/core` TS and
+> `arky-core` Rust pass at L2 and are cross-checked byte-for-byte), but the
+> formal TC ratification to **Stable** is still pending, so the core specs are
+> labelled `implementing` rather than `stable`. The tooling in `scripts/` is
+> maintenance and conformance tooling, **not** a third reference implementation.
 
 ## Run everything
 
