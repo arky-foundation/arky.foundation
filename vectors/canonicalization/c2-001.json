@@ -1,0 +1,20 @@
+{
+  "id": "c2-001",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "Number formatting: large/small exponents per ECMAScript Number::toString (1e21 -> 1e+21, 1e-7)",
+  "inputs": {
+    "original": {
+      "big": 1e+21,
+      "small": 1e-7,
+      "over53": 9007199254740992,
+      "prec": 0.1
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"big\":1e+21,\"over53\":9007199254740992,\"prec\":0.1,\"small\":1e-7}",
+    "canonical_bytes_hex": "7b22626967223a31652b32312c226f7665723533223a393030373139393235343734303939322c2270726563223a302e312c22736d616c6c223a31652d377d"
+  }
+}

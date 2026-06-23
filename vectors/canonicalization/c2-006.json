@@ -1,0 +1,37 @@
+{
+  "id": "c2-006",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "Deep nesting: object keys sorted at every depth, array order preserved",
+  "inputs": {
+    "original": {
+      "outer": {
+        "z": [
+          3,
+          1,
+          2
+        ],
+        "a": {
+          "y": 1,
+          "x": 2
+        }
+      },
+      "arr": [
+        {
+          "b": 1,
+          "a": 2
+        },
+        {
+          "d": 4,
+          "c": 3
+        }
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"arr\":[{\"a\":2,\"b\":1},{\"c\":3,\"d\":4}],\"outer\":{\"a\":{\"x\":2,\"y\":1},\"z\":[3,1,2]}}",
+    "canonical_bytes_hex": "7b22617272223a5b7b2261223a322c2262223a317d2c7b2263223a332c2264223a347d5d2c226f75746572223a7b2261223a7b2278223a322c2279223a317d2c227a223a5b332c312c325d7d7d"
+  }
+}

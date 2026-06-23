@@ -1,0 +1,24 @@
+{
+  "id": "c2-005",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "Key ordering by UTF-16 code units incl. mixed case, digits, prefix vs longer key",
+  "inputs": {
+    "original": {
+      "2": 5,
+      "10": 4,
+      "Z": 1,
+      "a": 2,
+      "A": 3,
+      "ab": 6,
+      "abc": 7,
+      "b": 8
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"10\":4,\"2\":5,\"A\":3,\"Z\":1,\"a\":2,\"ab\":6,\"abc\":7,\"b\":8}",
+    "canonical_bytes_hex": "7b223130223a342c2232223a352c2241223a332c225a223a312c2261223a322c226162223a362c22616263223a372c2262223a387d"
+  }
+}

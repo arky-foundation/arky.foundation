@@ -1,0 +1,19 @@
+{
+  "id": "c2-002",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "Zero and negative zero serialize identically (JCS number rules)",
+  "inputs": {
+    "original": {
+      "z": 0,
+      "nz": 0,
+      "f": 0
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"f\":0,\"nz\":0,\"z\":0}",
+    "canonical_bytes_hex": "7b2266223a302c226e7a223a302c227a223a307d"
+  }
+}

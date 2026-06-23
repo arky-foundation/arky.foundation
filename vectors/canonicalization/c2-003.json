@@ -1,0 +1,18 @@
+{
+  "id": "c2-003",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "String escaping: control chars, quote, backslash must be escaped; others raw",
+  "inputs": {
+    "original": {
+      "s": "tab\tnewline\nquote\"back\\end",
+      "ctrl": "\u0001\u001f"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"ctrl\":\"\\u0001\\u001f\",\"s\":\"tab\\tnewline\\nquote\\\"back\\\\end\"}",
+    "canonical_bytes_hex": "7b226374726c223a225c75303030315c7530303166222c2273223a227461625c746e65776c696e655c6e71756f74655c226261636b5c5c656e64227d"
+  }
+}

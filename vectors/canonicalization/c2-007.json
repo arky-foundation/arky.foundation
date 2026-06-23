@@ -1,0 +1,23 @@
+{
+  "id": "c2-007",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "Whitespace insignificance: pretty-printed input canonicalizes to the same bytes",
+  "inputs": {
+    "original": {
+      "b": 2,
+      "a": 1,
+      "nested": {
+        "y": 2,
+        "x": 1
+      }
+    },
+    "original_formatted": "{\n  \"b\": 2,\n  \"a\": 1,\n  \"nested\": {\n    \"y\": 2,\n    \"x\": 1\n  }\n}"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"a\":1,\"b\":2,\"nested\":{\"x\":1,\"y\":2}}",
+    "canonical_bytes_hex": "7b2261223a312c2262223a322c226e6573746564223a7b2278223a312c2279223a327d7d"
+  }
+}

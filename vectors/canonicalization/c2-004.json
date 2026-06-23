@@ -1,0 +1,19 @@
+{
+  "id": "c2-004",
+  "spec": "ARKY-TIM-Canonicalization-v1",
+  "level": "C2",
+  "description": "Unicode passthrough: non-ASCII and emoji (surrogate pair) are NOT escaped (UTF-8)",
+  "inputs": {
+    "original": {
+      "accent": "café",
+      "emoji": "😀",
+      "cjk": "日本語"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "canonical_json": "{\"accent\":\"café\",\"cjk\":\"日本語\",\"emoji\":\"😀\"}",
+    "canonical_bytes_hex": "7b22616363656e74223a22636166c3a9222c22636a6b223a22e697a5e69cace8aa9e222c22656d6f6a69223a22f09f9880227d"
+  }
+}
