@@ -27,6 +27,11 @@ fn main() {
                 .unwrap();
         tims.push(t["tim"].clone());
     }
+    // Inline evidence (K2 vectors embed their TIMs directly so they are
+    // self-contained); each entry is a full TIM object.
+    if let Some(ev) = v["context"]["evidence"].as_array() {
+        tims.extend(ev.iter().cloned());
+    }
     let et = v["context"]["time"]
         .as_str()
         .unwrap_or("2025-10-15T12:00:00Z");
