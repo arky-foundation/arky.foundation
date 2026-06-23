@@ -72,6 +72,27 @@ describe('forgery is rejected', () => {
   });
 });
 
+describe('witness-aware default resolver (MED-5)', () => {
+  test('witness co-signed by a second did:key notary verifies with the DEFAULT resolver', () => {
+    const notary = generateKeyPair();
+    const canon = new TextEncoder().encode(canonicalize(canonicalBody(tim)));
+    // Witness signed by the notary, with kid = the notary's did:key identity.
+    const wsig = signDetached(canon, notary.privateKey, notary.did);
+    const r = verifyTim({ ...tim, time: { ...tim.time, witnesses: [wsig] } });
+    expect(r.witnesses_valid).toBe(true);
+    expect(r.valid).toBe(true);
+  });
+
+  test('witness whose kid is not a did:key falls back to TIM identity (still rejected if mismatched)', () => {
+    const canon = new TextEncoder().encode(canonicalize(canonicalBody(tim)));
+    // kid is a non-did:key string -> default resolver falls back to issuer, but
+    // the witness was signed by attacker, so it must fail.
+    const wsig = signDetached(canon, attacker.privateKey, 'test-key-2025-02');
+    const r = verifyTim({ ...tim, time: { ...tim.time, witnesses: [wsig] } });
+    expect(r.witnesses_valid).toBe(false);
+  });
+});
+
 describe('malformed input is handled (no DoS / no throw)', () => {
   const bad = [
     ['malformed base58 did:key', { ...tim, identity: { id: 'did:key:z6Mk0OIl' } }],
