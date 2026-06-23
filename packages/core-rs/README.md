@@ -59,8 +59,10 @@ Run the full example: `cargo run --example quickstart`.
 
 ## Status
 
-Pre-1.0 (`v0.1.0`); the Arky specs are at `status: review`. Passes the published
-vectors and is cross-checked byte-for-byte against the TS stack, but the protocol
-is not yet declared stable. Fixture keys are TEST KEYS — generate your own.
+Pre-1.0 (`v0.1.0`); the five core-loop specs are at `status: implementing` with
+L2 conformance coverage (other specs remain `status: review`). Passes the
+published vectors at L2 and is cross-checked byte-for-byte against the TS stack,
+but formal ratification of the core specs to **stable** is still pending.
+Fixture keys are TEST KEYS — generate your own.
 
 Apache-2.0.
