@@ -138,7 +138,24 @@ export function verifyTim(
     };
   }
 
-  const canonical = canonicalize(canonicalBody(tim));
+  // Canonicalize under a guard: JCS forbids NaN/Infinity (canonicalize.ts
+  // throws RangeError on them), and a hostile TIM can carry such fields. The
+  // verifier MUST NOT throw on hostile input — translate a canonicalization
+  // failure into the standard failure shape so callers stay safe.
+  let canonical: string;
+  try {
+    canonical = canonicalize(canonicalBody(tim));
+  } catch {
+    return {
+      valid: false,
+      errors: ['tim.non_finite'],
+      schema_valid: true,
+      cid_valid: false,
+      signature_valid: false,
+      witnesses_valid: false,
+      fresh: true,
+    };
+  }
   const payload = new TextEncoder().encode(canonical);
 
   const cid_valid = cidFromCanonical(canonical) === tim.cid;
@@ -167,7 +184,8 @@ export function verifyTim(
   }
 
   // Freshness (TIM §4): if a reference time is given and `exp` is at/before it,
-  // the receipt has expired.
+  // the receipt has expired. Guard against non-finite `options.at` / `exp`
+  // (Date.parse returns NaN for bad input) so this path cannot throw either.
   let fresh = true;
   if (options.at !== undefined && typeof tim.exp === 'string') {
     const now = typeof options.at === 'number' ? options.at : Date.parse(options.at);
