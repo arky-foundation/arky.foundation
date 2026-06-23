@@ -13,6 +13,7 @@ pub mod cid;
 pub mod jws;
 pub mod kernel;
 pub mod keys;
+pub mod parse;
 pub mod settler;
 pub mod tim;
 
@@ -25,6 +26,7 @@ pub use jws::{sign_detached, verify_detached, verifying_key_from_bytes};
 pub use kernel::{
     Decision, DecisionStatus, REGISTERED_VERBS, evaluate_kernel, parse_iso_duration_ms,
 };
+pub use parse::parse_strict;
 pub use settler::{
     ExecRequest, ExecStatus, ExecuteResult, IdempotencyStore, args_hash, derive_idempotency_key,
     execute,
