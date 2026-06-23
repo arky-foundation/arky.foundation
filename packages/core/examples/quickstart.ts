@@ -2,7 +2,14 @@
  * @arky/core quickstart: generate a key, sign a TIM, verify it, witness it.
  * Run: bun run examples/quickstart.ts
  */
-import { generateKeyPair, createTim, verifyTim, signDetached, canonicalize, canonicalBody } from '../src/index.ts';
+import {
+  generateKeyPair,
+  createTim,
+  verifyTim,
+  signDetached,
+  canonicalize,
+  canonicalBody,
+} from '../src/index.ts';
 
 // 1. A keypair whose did:key matches the signing key (no DID/key mismatch).
 const issuer = generateKeyPair();
