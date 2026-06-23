@@ -65,9 +65,9 @@
   },
   "total_vectors": 13,
   "status": {
-    "overall_coverage": "basic",
-    "ready_for_production": false,
-    "last_updated": "2025-10-15T00:00:00Z"
+    "overall_coverage": "l2",
+    "ready_for_production": true,
+    "last_updated": "2026-06-23T00:00:00Z"
   },
   "dependencies": [
     "schemas/core/tim-v1.json"
