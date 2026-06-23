@@ -1,0 +1,87 @@
+{
+  "id": "k2-003",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K2",
+  "description": "Type mismatch (numeric assert vs string measurement) -> INDETERMINATE",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    },
+    "evidence": [
+      {
+        "time": {
+          "ts": "2025-10-15T12:00:00Z"
+        },
+        "identity": {
+          "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+        },
+        "measurement": {
+          "name": "temp",
+          "value": "hot",
+          "unit": "arky:unit/temp.C",
+          "method": {
+            "type": "sensor",
+            "source": "device:temp-sensor-01"
+          }
+        },
+        "cid": "zQmXDHgDpCe9mSFgPRwJe4rWpDKTmJz8uWhKa3XotMmNBzp",
+        "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..sY2hMpA2MVBW-5KCyp0nmOdtoiJ8rKarQHy042Tg5qMZXHETvhN1yUmYCrV20OOmTV3-iJl3sVzTiioQF9EhAQ"
+      }
+    ]
+  },
+  "inputs": {
+    "commitment": {
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
+      "intent": {
+        "do": "arky:verb/control@v1"
+      },
+      "measure": [
+        {
+          "name": "temp",
+          "from": "device:temp-sensor-01",
+          "assert": "temp > 20"
+        }
+      ],
+      "consequence": [
+        {
+          "if": "PASS",
+          "then": [
+            {
+              "name": "arky:verb/control@v1",
+              "args": {
+                "target": "cooling",
+                "state": "on"
+              }
+            }
+          ]
+        }
+      ],
+      "cid": "zQmR5wcS8ZBJq1gGXWETLzr9545Mi3bToG9mPPvyMhwKMEr",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..KuQ9gP7D3ANNQgCLiUa3wukd2Q9ZJ8aoSvo6jbnA47GZbEtIjCYBB4oqxhSoEV7o_le3ik7sPPhrDmJRzUWFBQ"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [],
+    "schema_valid": true,
+    "signature_valid": true,
+    "decision": {
+      "status": "INDETERMINATE",
+      "assertions": [
+        {
+          "name": "temp",
+          "result": "INDETERMINATE",
+          "input_value": "hot",
+          "unit": "arky:unit/temp.C",
+          "inputs": [
+            "zQmXDHgDpCe9mSFgPRwJe4rWpDKTmJz8uWhKa3XotMmNBzp"
+          ],
+          "error": "type mismatch: string symbol compared to non-string literal"
+        }
+      ],
+      "authorized": []
+    }
+  }
+}
