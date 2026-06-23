@@ -1,0 +1,45 @@
+{
+  "id": "t2-003",
+  "spec": "ARKY-TIM-v1",
+  "level": "T2",
+  "description": "Witnessed TIM: a witness co-signed by a second did:key notary verifies with the default resolver",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json",
+      "witness_key": "fixtures/keys/ed25519-test-02.json"
+    }
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z",
+        "witnesses": [
+          "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6ImRpZDprZXk6ejZNa25vRXF0ZGtHVHUyVlVkQWM2alBNZkdBWmJKMzMycVY5NHRSM0VGRDdOZDg1In0..osSLcfsD7VQY7tp-6B4CtFr4wumn16iPk9KmgUAccgy8D0Z-qjI6YbIJBRjdJXMP3-eEVrfelIb6KEfV7qvGCQ"
+        ]
+      },
+      "identity": {
+        "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "arky:unit/temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..CEcioJmM5fGvqgJJGy2vbFv_8wV2J9R_V0MHa5pkhiD1D8_Wk69aWbOhQsFB8KkXR_h_hJ84k1dS17DMLy3BBQ"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "cid_valid": true,
+    "signature_valid": true,
+    "witnesses_valid": true
+  }
+}

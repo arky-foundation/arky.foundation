@@ -1,0 +1,46 @@
+{
+  "id": "t2-004",
+  "spec": "ARKY-TIM-v1",
+  "level": "T2",
+  "description": "Witness key mismatch: a witness whose kid resolves to a different key than it was signed with fails",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    }
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z",
+        "witnesses": [
+          "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6ImRpZDprZXk6ejZNa25vRXF0ZGtHVHUyVlVkQWM2alBNZkdBWmJKMzMycVY5NHRSM0VGRDdOZDg1In0..ytEhLaelSjtTGni61myK_sOPyfDE1-XvDRpqqb7gC1aXdzPOGgKIkjQNOGnFHaxKzKIh1c1RWYmObXWAN90OAA"
+        ]
+      },
+      "identity": {
+        "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "arky:unit/temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..CEcioJmM5fGvqgJJGy2vbFv_8wV2J9R_V0MHa5pkhiD1D8_Wk69aWbOhQsFB8KkXR_h_hJ84k1dS17DMLy3BBQ"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "tim.invalid_witness[0]"
+    ],
+    "schema_valid": true,
+    "cid_valid": true,
+    "signature_valid": true,
+    "witnesses_valid": false
+  }
+}

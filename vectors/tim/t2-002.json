@@ -1,0 +1,47 @@
+{
+  "id": "t2-002",
+  "spec": "ARKY-TIM-v1",
+  "level": "T2",
+  "description": "Expired TIM: exp at/before the evaluation time fails with tim.expired",
+  "context": {
+    "time": "2026-01-01T00:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    },
+    "verify_options": {
+      "at": "2026-01-01T00:00:00Z"
+    }
+  },
+  "inputs": {
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z"
+      },
+      "identity": {
+        "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "arky:unit/temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "exp": "2020-01-02T00:00:00Z",
+      "cid": "zQmWmf2iHY1t19Y4UFN5CTwULKNLFoVZHz999aJcWAQ4L1K",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..Gn1IfK8LJiJ3ajVQArfmb8_1eevBVQw4D0X0-ftoD1lexpCoLhpE09z6TwXw84YPFcAjNJFCuZlh1G8jQpmYDA"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "tim.expired"
+    ],
+    "schema_valid": true,
+    "cid_valid": true,
+    "signature_valid": true,
+    "fresh": false
+  }
+}
