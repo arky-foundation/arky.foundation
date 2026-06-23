@@ -28,14 +28,19 @@
     },
     "T2": {
       "name": "Completeness",
-      "description": "Validate TIM completeness and relationships",
-      "vectors": [],
-      "coverage": 0,
+      "description": "Behavioral TIM conformance: freshness (exp) enforcement and witness co-signing by a second did:key notary",
+      "vectors": [
+        "t2-001.json",
+        "t2-002.json",
+        "t2-003.json",
+        "t2-004.json"
+      ],
+      "coverage": 4,
       "focus_areas": [
-        "TIM relationship validation",
-        "Causal chain verification",
-        "Completeness checks",
-        "Dependency validation",
+        "Freshness / expiry (exp) enforcement",
+        "Unexpired vs expired evaluation",
+        "Witness co-signing by a second did:key",
+        "Witness key-mismatch rejection",
         "Required field enforcement"
       ]
     },
@@ -52,7 +57,7 @@
       ]
     }
   },
-  "total_vectors": 7,
+  "total_vectors": 11,
   "status": {
     "overall_coverage": "basic",
     "ready_for_production": false,
