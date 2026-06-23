@@ -1,0 +1,88 @@
+{
+  "id": "k2-001",
+  "spec": "ARKY-KERNEL-v1",
+  "level": "K2",
+  "description": "Negative numeric literal assertion PASS (value -3 > -5)",
+  "context": {
+    "time": "2025-10-15T12:00:00Z",
+    "fixtures": {
+      "signing_key": "fixtures/keys/ed25519-test-01.json"
+    },
+    "evidence": [
+      {
+        "time": {
+          "ts": "2025-10-15T12:00:00Z"
+        },
+        "identity": {
+          "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+        },
+        "measurement": {
+          "name": "temp",
+          "value": -3,
+          "unit": "arky:unit/temp.C",
+          "method": {
+            "type": "sensor",
+            "source": "device:temp-sensor-01"
+          }
+        },
+        "cid": "zQmQe8MiKeHYbRBfvGqEWAo1jbnMGNSE3p9HFqwBP4vVNoh",
+        "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..K_ugr79hpS9ftsmU7CfJNsfDRY_gZIQg2FLk7bUUcF0MwBoKjWkqwRbeEPNhFGFudAsHDbhy2wQuncne5al5Cg"
+      }
+    ]
+  },
+  "inputs": {
+    "commitment": {
+      "scope": "arky:scope/datacenter.cooling",
+      "actor": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
+      "intent": {
+        "do": "arky:verb/control@v1"
+      },
+      "measure": [
+        {
+          "name": "temp",
+          "from": "device:temp-sensor-01",
+          "assert": "temp > -5"
+        }
+      ],
+      "consequence": [
+        {
+          "if": "PASS",
+          "then": [
+            {
+              "name": "arky:verb/control@v1",
+              "args": {
+                "target": "cooling",
+                "state": "on"
+              }
+            }
+          ]
+        }
+      ],
+      "cid": "zQmQSu6yw8NBPWBEtp7gfj8PehaXXNDXYbCxVLBWWHd9ybw",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..xT0QdCqqMplAbB2biU2vRxeS3u2Cgy6Tl4Ife7QBky8YURcLB2YDOFmUtzdW7HnidbCDPj9BE7x8WTdXmpiLCg"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "schema_valid": true,
+    "signature_valid": true,
+    "decision": {
+      "status": "APPROVED",
+      "assertions": [
+        {
+          "name": "temp",
+          "result": "PASS",
+          "input_value": -3,
+          "unit": "arky:unit/temp.C",
+          "inputs": [
+            "zQmQe8MiKeHYbRBfvGqEWAo1jbnMGNSE3p9HFqwBP4vVNoh"
+          ]
+        }
+      ],
+      "authorized": [
+        "arky:verb/control@v1"
+      ]
+    }
+  }
+}
