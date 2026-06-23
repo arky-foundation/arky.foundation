@@ -13,7 +13,12 @@ if (v.level !== 'S1') {
   const seed = new Uint8Array(32).fill(9);
   const r = execute(
     { verb: i.verb, params: i.params, rail: i.rail, idempotency_key: i.idempotency_key },
-    { privateKey: seed, kid: 'test-settler', ts: v.context?.time ?? '2025-10-15T12:00:01Z', store: new Map() },
+    {
+      privateKey: seed,
+      kid: 'test-settler',
+      ts: v.context?.time ?? '2025-10-15T12:00:01Z',
+      store: new Map(),
+    },
   );
   process.stdout.write(`${r.status}|${r.receipt ? r.receipt.cid : ''}`);
 }
