@@ -256,7 +256,7 @@ Op         ::= "<" | "<=" | ">" | ">=" | "==" | "!="
 Symbol     ::= [a-z_][a-z0-9_]*          // matches MeasureSpec.name
 Value      ::= Number | String | Boolean
 ValueList  ::= Value ("," Value)*
-Number     ::= [0-9]+ ("." [0-9]+)?
+Number     ::= "-"? [0-9]+ ("." [0-9]+)?   // leading "-" permitted in a value position
 String     ::= '"' [^"]* '"'
 Boolean    ::= "true" | "false"
 ```
@@ -265,6 +265,11 @@ Boolean    ::= "true" | "false"
 - Arithmetic comparisons: `<`, `<=`, `>`, `>=`, `==`, `!=`
 - Logical operators: `&&` (AND), `||` (OR), `!` (NOT)
 - Set membership: `in [...]`
+
+A leading `-` is a **negative numeric literal** only in a value position — at the
+start of an expression, or immediately after an operator, `(`, `[`, `,`, a logical
+operator, or `in`. The language has no arithmetic subtraction operator; a `-`
+anywhere else is a syntax error.
 
 **Examples:**
 ```typescript
