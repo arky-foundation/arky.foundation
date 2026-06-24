@@ -1,0 +1,1440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Arky is a neutral public standard for action and verification across agents, money, chains, and machines.">
+  <meta name="color-scheme" content="light">
+  <title>Arky - Neutral Accountability Standard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ground: #F4F1EA;
+      --lines: #C8C0B0;
+      --text: #1A1714;
+      --text-dim: #6B625A;
+      --accent: #1E3A5F;
+      --panel: #FAF8F4;
+      --hairline: #D9D2C5;
+      --max: 1180px;
+      --gutter: 24px;
+      --header-h: 72px;
+      --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--ground);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        linear-gradient(195deg, rgba(244, 241, 234, 0.92), #F4F1EA 64%, rgba(237, 232, 221, 0.96)),
+        var(--ground);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: 0;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      content: "";
+      background-image:
+        linear-gradient(rgba(200, 192, 176, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 192, 176, 0.10) 1px, transparent 1px);
+      background-position: center top;
+      background-size: 88px 88px;
+      mask-image: linear-gradient(180deg, black 0%, black 68%, transparent 100%);
+      opacity: 0.64;
+      pointer-events: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 1px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    button {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      z-index: 10;
+      transform: translateY(-140%);
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 14px;
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .blueprint-field {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
+      color: var(--lines);
+      opacity: 0.54;
+      pointer-events: none;
+    }
+
+    .blueprint-field path,
+    .blueprint-field line,
+    .blueprint-field circle,
+    .blueprint-field rect {
+      vector-effect: non-scaling-stroke;
+    }
+
+    .wrap {
+      width: min(100% - calc(var(--gutter) * 2), var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 6;
+      border-bottom: 1px solid rgba(200, 192, 176, 0.72);
+      background: rgba(244, 241, 234, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: var(--header-h);
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      gap: 12px;
+      color: var(--text);
+      font-weight: 650;
+      line-height: 1;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--accent);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .brand-mark svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .brand-standard {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      border-left: 1px solid var(--hairline);
+      padding-left: 12px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-dim);
+      font-size: 0.92rem;
+    }
+
+    .nav a {
+      border-radius: 4px;
+      padding: 8px 10px;
+      transition: color 160ms ease, background 160ms ease;
+    }
+
+    .nav a:hover {
+      background: rgba(218, 210, 198, 0.42);
+      color: var(--text);
+    }
+
+    .neutral-badge {
+      margin-left: 8px;
+      border: 1px solid rgba(30, 58, 95, 0.28);
+      border-radius: 4px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      padding: 5px 9px;
+      white-space: nowrap;
+      background: rgba(30, 58, 95, 0.04);
+    }
+
+    @media (max-width: 880px) {
+      .neutral-badge {
+        display: none;
+      }
+    }
+
+    .hero {
+      display: grid;
+      min-height: calc(84svh - var(--header-h));
+      align-items: center;
+      grid-template-columns: minmax(0, 0.94fr) minmax(420px, 1.06fr);
+      gap: 46px;
+      padding: 58px 0 52px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .kicker::before {
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+      content: "";
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: var(--font-display);
+      font-optical-sizing: auto;
+    }
+
+    h1 {
+      max-width: 680px;
+      margin-bottom: 22px;
+      color: var(--text);
+      font-size: 5.25rem;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      line-height: 0.94;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.7), 0 -1px 0 rgba(0,0,0,0.06);
+    }
+
+    .tagline {
+      max-width: 720px;
+      margin-bottom: 18px;
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 1.78rem;
+      font-weight: 400;
+      line-height: 1.24;
+    }
+
+    .subline {
+      max-width: 700px;
+      margin-bottom: 28px;
+      color: var(--text-dim);
+      font-size: 1.08rem;
+    }
+
+    .signature {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      min-height: 40px;
+      border: 1px solid rgba(30, 58, 95, 0.3);
+      border-radius: 4px;
+      background: rgba(250, 248, 244, 0.78);
+      box-shadow: inset 0 0 0 1px rgba(30, 58, 95, 0.06);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      padding: 8px 12px;
+      white-space: normal;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 14px;
+      font-size: 0.94rem;
+      font-weight: 560;
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    }
+
+    .button:hover {
+      border-color: rgba(30, 58, 95, 0.45);
+      color: var(--accent);
+    }
+
+    .button.primary {
+      border-color: rgba(30, 58, 95, 0.5);
+      color: var(--accent);
+    }
+
+    .button.primary:hover {
+      background: rgba(30, 58, 95, 0.06);
+    }
+
+    .hero-blueprint {
+      position: relative;
+      min-height: 492px;
+      border: 1px solid rgba(200, 192, 176, 0.72);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(250, 248, 244, 0.7), rgba(244, 241, 234, 0.92)),
+        var(--ground);
+      box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(26, 23, 20, 0.03);
+      overflow: hidden;
+    }
+
+    .hero-blueprint::before {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200, 192, 176, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 192, 176, 0.14) 1px, transparent 1px);
+      background-size: 44px 44px;
+      content: "";
+      opacity: 0.48;
+    }
+
+    .hero-blueprint svg {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 492px;
+    }
+
+    .schematic-line {
+      fill: none;
+      stroke: var(--lines);
+      stroke-width: 0.7;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .schematic-faint {
+      fill: none;
+      stroke: var(--lines);
+      stroke-width: 0.5;
+      opacity: 0.55;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .node-box {
+      fill: rgba(250, 248, 244, 0.94);
+      stroke: var(--lines);
+      stroke-width: 0.8;
+      vector-effect: non-scaling-stroke;
+      transition: stroke 220ms ease, fill 220ms ease;
+    }
+
+    .node-label {
+      fill: var(--text);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    .node-role {
+      fill: var(--text-dim);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.03em;
+    }
+
+    .flow-node[data-active="true"] .node-box {
+      fill: rgba(30, 58, 95, 0.06);
+      stroke: rgba(30, 58, 95, 0.72);
+    }
+
+    .flow-node[data-active="true"] .node-label {
+      fill: var(--accent);
+    }
+
+    .flow-node {
+      cursor: pointer;
+    }
+
+    .flow-node:focus-visible {
+      outline: none;
+    }
+
+    .flow-node:focus-visible .node-box {
+      stroke: var(--accent);
+      stroke-width: 1.4;
+    }
+
+    .flow-node:hover .node-box {
+      stroke: rgba(30, 58, 95, 0.48);
+    }
+
+    .live-route {
+      fill: none;
+      stroke: var(--accent);
+      stroke-linecap: round;
+      stroke-width: 1.6;
+      filter: drop-shadow(0 0 8px rgba(30, 58, 95, 0.2));
+      vector-effect: non-scaling-stroke;
+    }
+
+    .signal-dot {
+      fill: var(--accent);
+      filter: drop-shadow(0 0 6px rgba(30, 58, 95, 0.3));
+    }
+
+    .readout {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid var(--hairline);
+      border-radius: 6px;
+      background: rgba(244, 241, 234, 0.88);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 10px 12px;
+    }
+
+    .readout strong {
+      color: var(--text);
+      font-weight: 560;
+    }
+
+    .readout .receipt {
+      color: var(--accent);
+    }
+
+    .depth-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 2;
+      display: inline-flex;
+      border: 1px solid var(--hairline);
+      border-radius: 6px;
+      background: rgba(244, 241, 234, 0.9);
+      padding: 3px;
+    }
+
+    .depth-btn {
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      padding: 6px 12px;
+      text-transform: uppercase;
+      transition: color 160ms ease, background 160ms ease;
+    }
+
+    .depth-btn[aria-pressed="true"] {
+      background: rgba(30, 58, 95, 0.1);
+      color: var(--accent);
+    }
+
+    .stage-desc {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 64px;
+      z-index: 2;
+      margin: 0;
+      min-height: 2.4em;
+      color: var(--text);
+      font-size: 0.92rem;
+      line-height: 1.32;
+      opacity: 1;
+      transition: opacity 240ms ease, transform 240ms ease;
+    }
+
+    .stage-desc.is-swapping {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    .stage-desc code {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.86em;
+    }
+
+    /* Corner crop marks on hero blueprint */
+    .hero-blueprint::after {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      content: "";
+      pointer-events: none;
+      --mark-len: 14px;
+      --mark-gap: 10px;
+      --mark-clr: rgba(200, 192, 176, 0.6);
+      background:
+        /* top-left */
+        linear-gradient(90deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 0 var(--mark-gap) / var(--mark-len) 1px no-repeat,
+        linear-gradient(0deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) var(--mark-gap) 0 / 1px var(--mark-len) no-repeat,
+        /* top-right */
+        linear-gradient(270deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 100% var(--mark-gap) / var(--mark-len) 1px no-repeat,
+        linear-gradient(0deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) calc(100% - var(--mark-gap)) 0 / 1px var(--mark-len) no-repeat,
+        /* bottom-left */
+        linear-gradient(90deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 0 calc(100% - var(--mark-gap)) / var(--mark-len) 1px no-repeat,
+        linear-gradient(180deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) var(--mark-gap) 100% / 1px var(--mark-len) no-repeat,
+        /* bottom-right */
+        linear-gradient(270deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 100% calc(100% - var(--mark-gap)) / var(--mark-len) 1px no-repeat,
+        linear-gradient(180deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) calc(100% - var(--mark-gap)) 100% / 1px var(--mark-len) no-repeat;
+    }
+
+    .band {
+      border-top: 1px solid var(--hairline);
+    }
+
+    .section {
+      padding: 74px 0;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.64fr) minmax(0, 1fr);
+      gap: 52px;
+      align-items: start;
+    }
+
+    .section-label {
+      margin-bottom: 12px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    h2 {
+      max-width: 540px;
+      margin-bottom: 18px;
+      color: var(--text);
+      font-size: 2.5rem;
+      font-weight: 610;
+      letter-spacing: 0;
+      line-height: 1.08;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: var(--text-dim);
+      font-size: 1.06rem;
+    }
+
+    .definition {
+      border-left: 1px solid rgba(30, 58, 95, 0.5);
+      color: var(--text);
+      font-size: 1.3rem;
+      line-height: 1.45;
+      padding-left: 22px;
+    }
+
+    .definition p {
+      margin: 0;
+    }
+
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--hairline);
+      background: var(--hairline);
+    }
+
+    .protocol-step {
+      min-height: 188px;
+      background: rgba(250, 248, 244, 0.62);
+      padding: 18px;
+    }
+
+    .step-index {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 26px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+
+    .step-index::after {
+      width: 34px;
+      height: 1px;
+      background: var(--lines);
+      content: "";
+    }
+
+    .protocol-step:last-child .step-index::after {
+      background: var(--accent);
+    }
+
+    .protocol-step h3,
+    .path-card h3,
+    .conformance-item h3 {
+      margin-bottom: 10px;
+      color: var(--text);
+      font-size: 1.08rem;
+      font-weight: 620;
+      letter-spacing: 0;
+      line-height: 1.22;
+    }
+
+    .protocol-step p,
+    .path-card p,
+    .conformance-item p {
+      margin-bottom: 0;
+      color: var(--text-dim);
+      font-size: 0.94rem;
+    }
+
+    .path-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .path-card {
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      background: rgba(250, 248, 244, 0.64);
+      padding: 20px;
+    }
+
+    .path-card a {
+      display: inline-flex;
+      margin-top: 18px;
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 560;
+    }
+
+    .path-card a:hover {
+      color: var(--accent);
+    }
+
+    .terminal {
+      margin-top: 18px;
+      border: 1px solid var(--hairline);
+      border-radius: 6px;
+      background: #EDE9DF;
+      overflow: hidden;
+    }
+
+    .terminal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 40px;
+      border-bottom: 1px solid var(--hairline);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      padding: 0 12px;
+    }
+
+    .copy-command {
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 4px 8px;
+      transition: color 160ms ease, border-color 160ms ease;
+    }
+
+    .copy-command:hover {
+      border-color: rgba(30, 58, 95, 0.4);
+      color: var(--accent);
+    }
+
+    pre {
+      margin: 0;
+      overflow-x: auto;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      padding: 16px;
+    }
+
+    code {
+      font-family: var(--font-mono);
+    }
+
+    .conversion {
+      margin-top: 18px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+    }
+
+    .conversion span {
+      color: var(--accent);
+    }
+
+    .conformance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--hairline);
+      background: var(--hairline);
+    }
+
+    .conformance-item {
+      background: rgba(250, 248, 244, 0.62);
+      padding: 20px;
+    }
+
+    .claim {
+      display: inline-flex;
+      margin-bottom: 18px;
+      border: 1px solid rgba(30, 58, 95, 0.34);
+      border-radius: 4px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      padding: 4px 7px;
+    }
+
+    .domain-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--hairline);
+      background: var(--hairline);
+    }
+
+    .domain {
+      min-height: 152px;
+      background: rgba(250, 248, 244, 0.48);
+      padding: 18px;
+    }
+
+    .domain svg {
+      display: block;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 18px;
+      color: var(--lines);
+    }
+
+    .domain h3 {
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .domain p {
+      margin-bottom: 0;
+      color: var(--text-dim);
+      font-size: 0.92rem;
+    }
+
+    .repo-map {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .repo-map a {
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      background: rgba(250, 248, 244, 0.52);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 10px;
+      transition: color 160ms ease, border-color 160ms ease;
+    }
+
+    .repo-map a:hover {
+      border-color: rgba(30, 58, 95, 0.3);
+      color: var(--text);
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--hairline);
+      padding: 28px 0;
+      color: var(--text-dim);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .drawing-block {
+      position: fixed;
+      bottom: 18px;
+      right: 20px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(200, 192, 176, 0.55);
+      border-radius: 3px;
+      background: rgba(244, 241, 234, 0.78);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .drawing-rev {
+      color: var(--accent);
+    }
+
+    @media (max-width: 760px) {
+      .drawing-block {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1080px) {
+      :root {
+        --gutter: 20px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .hero-blueprint {
+        min-height: 430px;
+      }
+
+      .hero-blueprint svg {
+        min-height: 430px;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .protocol-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .protocol-step:last-child {
+        grid-column: span 2;
+      }
+
+      .domain-list,
+      .repo-map {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --header-h: 60px;
+        --gutter: 16px;
+      }
+
+      .header-inner {
+        min-height: var(--header-h);
+      }
+
+      .brand-standard {
+        display: none;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+        gap: 24px;
+        padding: 36px 0 38px;
+      }
+
+      h1 {
+        margin-bottom: 16px;
+        font-size: 3.2rem;
+        line-height: 0.96;
+      }
+
+      .tagline {
+        font-size: 1.28rem;
+      }
+
+      .subline {
+        margin-bottom: 20px;
+        font-size: 1rem;
+      }
+
+      .hero-actions {
+        margin-top: 22px;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .hero-blueprint {
+        min-height: 332px;
+      }
+
+      .hero-blueprint svg {
+        min-height: 332px;
+      }
+
+      .readout {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        font-size: 0.72rem;
+      }
+
+      .section {
+        padding: 52px 0;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      .definition {
+        font-size: 1.12rem;
+        padding-left: 16px;
+      }
+
+      .protocol-grid,
+      .path-grid,
+      .conformance-grid,
+      .domain-list,
+      .repo-map {
+        grid-template-columns: 1fr;
+      }
+
+      .protocol-step:last-child {
+        grid-column: auto;
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <svg class="blueprint-field" aria-hidden="true" viewBox="0 0 1440 920" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.72">
+      <path d="M-40 190H150L190 150H370L410 190H620L690 120H860L940 200H1190L1250 140H1480"></path>
+      <path d="M80 650H280L340 590H510L570 650H790L860 580H1060L1130 650H1370"></path>
+      <path d="M160 80V250M340 150V310M620 190V450M860 120V300M1190 200V430"></path>
+      <path d="M210 430H430L470 390H640L690 440H930L980 390H1210"></path>
+      <path d="M1040 720V560H1220V440M460 790V650M760 730V650M1040 720H1260"></path>
+      <path d="M190 496C276 360 376 360 462 496S642 632 730 496S910 360 998 496S1176 632 1264 496"></path>
+      <rect x="84" y="412" width="212" height="140"></rect>
+      <rect x="356" y="238" width="232" height="140"></rect>
+      <rect x="626" y="550" width="220" height="140"></rect>
+      <rect x="908" y="238" width="236" height="140"></rect>
+      <rect x="1172" y="412" width="184" height="140"></rect>
+      <rect x="128" y="118" width="60" height="60"></rect>
+      <rect x="580" y="416" width="76" height="76"></rect>
+      <rect x="1004" y="356" width="68" height="68"></rect>
+      <circle cx="370" cy="150" r="22"></circle>
+      <circle cx="860" cy="120" r="18"></circle>
+      <circle cx="1130" cy="650" r="24"></circle>
+      <path d="M36 356h108M36 378h74M36 400h132M1264 286h132M1286 310h86M1240 334h156"></path>
+    </g>
+    <!-- Via dots at key junctions -->
+    <g fill="currentColor" opacity="0.45">
+      <circle cx="150" cy="190" r="2.2"></circle><circle cx="370" cy="150" r="2.2"></circle>
+      <circle cx="620" cy="190" r="2.2"></circle><circle cx="860" cy="120" r="2.2"></circle>
+      <circle cx="1190" cy="200" r="2.2"></circle><circle cx="280" cy="650" r="2.2"></circle>
+      <circle cx="510" cy="650" r="2.2"></circle><circle cx="790" cy="650" r="2.2"></circle>
+      <circle cx="1060" cy="650" r="2.2"></circle><circle cx="340" cy="150" r="2"></circle>
+      <circle cx="690" cy="120" r="2"></circle><circle cx="160" cy="250" r="2"></circle>
+      <circle cx="340" cy="310" r="2"></circle><circle cx="620" cy="450" r="2"></circle>
+      <circle cx="860" cy="300" r="2"></circle><circle cx="1190" cy="430" r="2"></circle>
+      <circle cx="210" cy="430" r="2.2"></circle><circle cx="640" cy="390" r="2.2"></circle>
+      <circle cx="930" cy="440" r="2.2"></circle><circle cx="1040" cy="560" r="2"></circle>
+      <circle cx="1220" cy="440" r="2"></circle><circle cx="460" cy="650" r="2"></circle>
+      <circle cx="760" cy="650" r="2"></circle>
+    </g>
+    <!-- Dimension lines with tick marks -->
+    <g fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.48">
+      <path d="M84 568h212"></path>
+      <path d="M84 564v8M296 564v8"></path>
+      <path d="M36 190v-32M36 182h14M36 190h14"></path>
+      <path d="M1370 650v-32M1370 642h-14M1370 650h-14"></path>
+      <path d="M1264 496v-70M1260 496h8M1268 496h8M1260 426h8M1268 426h8"></path>
+      <path d="M-20 496h56M-20 492v8M36 492v8"></path>
+    </g>
+    <!-- Component glyphs -->
+    <g fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.42">
+      <!-- Resistor zigzag -->
+      <path d="M1352 298h6l4-8h4l4 8h4l4-8h4l4 8h6"></path>
+      <!-- Capacitor plates -->
+      <path d="M44 298h12M64 290v16M72 290v16M80 298h12"></path>
+      <!-- IC pin rows -->
+      <path d="M632 570h12M632 578h12M632 586h12M632 594h12M676 570h12M676 578h12M676 586h12M676 594h12"></path>
+    </g>
+    <!-- Measurement annotations -->
+    <g fill="currentColor" opacity="0.38" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="0.08em">
+      <text x="150" y="578">212</text>
+      <text x="1280" y="420">~70</text>
+      <text x="1298" y="312">R1 10k</text>
+      <text x="20" y="312">C1 22pF</text>
+      <text x="636" y="564">IC1</text>
+    </g>
+  </svg>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="Arky home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 12h5l3-6 3 12 3-6h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <span>Arky</span>
+        <span class="brand-standard">PUBLIC STANDARD</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#standard">Standard</a>
+        <a href="#loop">Loop</a>
+        <a href="#adopt">Adopt</a>
+        <a href="#conformance">Conformance</a>
+        <span class="neutral-badge">No token. No lock-in. No central switch.</span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" id="top" aria-labelledby="hero-title">
+      <div>
+        <p class="kicker">NEUTRAL ACCOUNTABILITY LAYER</p>
+        <h1 id="hero-title">Arky</h1>
+        <p class="tagline">Neutral accountability for AI, blockchain, finance, and space.</p>
+        <p class="subline">Open standards for action and verification across agents, money, chains, and machines.</p>
+        <div class="signature">Receipts or it didn't happen.</div>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button primary" href="../specs/core/ARKY-TIM-v1.md">Read the spec</a>
+          <a class="button" href="../CONFORMANCE.md">Run vectors</a>
+          <a class="button" href="../packages/core/README.md">Implement</a>
+        </div>
+      </div>
+
+      <div class="hero-blueprint" aria-label="Arky protocol schematic">
+        <svg viewBox="0 0 720 492" role="img" aria-labelledby="schematic-title schematic-desc">
+          <title id="schematic-title">Arky protocol flow</title>
+          <desc id="schematic-desc">Evidence moves through witness, decision, execution, and receipt stages.</desc>
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10Z" fill="var(--lines)"></path>
+            </marker>
+          </defs>
+
+          <!-- Circuitry background texture -->
+          <g opacity="0.36" fill="none" stroke="var(--lines)" stroke-width="0.5" vector-effect="non-scaling-stroke">
+            <path d="M18 442h28M18 450h18M18 458h32"></path>
+            <path d="M624 38h56M632 46h40M620 54h60"></path>
+            <path d="M648 402h44M656 410h32M642 418h50"></path>
+            <path d="M36 38v32M46 38v22M56 38v38"></path>
+            <path d="M674 432v36M684 432v26M694 432v42"></path>
+            <!-- Resistor zigzag -->
+            <path d="M656 344h6l3-6h3l3 6h3l3-6h3l3 6h6"></path>
+            <!-- Capacitor -->
+            <path d="M28 344h8M42 338v12M48 338v12M54 344h8"></path>
+            <!-- Via dots -->
+            <circle cx="28" cy="442" r="1.4"></circle>
+            <circle cx="66" cy="38" r="1.4"></circle>
+            <circle cx="624" cy="38" r="1.4"></circle>
+            <circle cx="648" cy="402" r="1.4"></circle>
+          </g>
+
+          <g opacity="0.72">
+            <path class="schematic-faint" d="M54 80h116l34-34h92l34 34h158l44-44h98"></path>
+            <path class="schematic-faint" d="M92 390h132l34-34h146l46 46h178"></path>
+            <path class="schematic-faint" d="M140 122V54M342 116V54M548 124V54"></path>
+            <path class="schematic-faint" d="M86 212H36M116 234H36M568 262h104M598 284h74"></path>
+            <circle class="schematic-faint" cx="182" cy="46" r="18"></circle>
+            <circle class="schematic-faint" cx="532" cy="36" r="16"></circle>
+            <rect class="schematic-faint" x="598" y="364" width="56" height="56" rx="2"></rect>
+          </g>
+
+          <!-- Via dots on faint paths -->
+          <g fill="var(--lines)" opacity="0.5">
+            <circle cx="54" cy="80" r="2"></circle>
+            <circle cx="204" cy="46" r="2"></circle>
+            <circle cx="342" cy="116" r="2"></circle>
+            <circle cx="548" cy="124" r="2"></circle>
+            <circle cx="92" cy="390" r="2"></circle>
+            <circle cx="258" cy="356" r="2"></circle>
+            <circle cx="628" cy="390" r="2"></circle>
+          </g>
+
+          <path class="schematic-line" d="M95 248C138 180 188 180 231 248S321 316 365 248S455 180 499 248S588 316 632 248" marker-end="url(#arrow)"></path>
+          <path class="live-route" id="live-route" d="M95 248C138 180 188 180 231 248S321 316 365 248S455 180 499 248S588 316 632 248"></path>
+
+          <!-- Dimension ticks on main route -->
+          <g fill="none" stroke="var(--lines)" stroke-width="0.4" opacity="0.4" vector-effect="non-scaling-stroke">
+            <path d="M95 264v-6M95 248h-6M632 264v-6M632 248h6"></path>
+          </g>
+
+          <g class="flow-node" data-step="0" data-active="true" tabindex="0" role="button" aria-label="Stage 1: TIM, evidence">
+            <rect class="node-box" x="42" y="206" width="106" height="70" rx="4"></rect>
+            <text class="node-label" x="62" y="234">TIM</text>
+            <text class="node-role" x="62" y="255">Evidence</text>
+          </g>
+
+          <g class="flow-node" data-step="1" data-active="false" tabindex="0" role="button" aria-label="Stage 2: Notary, witness">
+            <rect class="node-box" x="178" y="119" width="116" height="70" rx="4"></rect>
+            <text class="node-label" x="198" y="147">Notary</text>
+            <text class="node-role" x="198" y="168">Witness</text>
+          </g>
+
+          <g class="flow-node" data-step="2" data-active="false" tabindex="0" role="button" aria-label="Stage 3: Kernel, policy">
+            <rect class="node-box" x="313" y="275" width="110" height="70" rx="4"></rect>
+            <text class="node-label" x="333" y="303">Kernel</text>
+            <text class="node-role" x="333" y="324">Policy</text>
+          </g>
+
+          <g class="flow-node" data-step="3" data-active="false" tabindex="0" role="button" aria-label="Stage 4: Settler, execute">
+            <rect class="node-box" x="454" y="119" width="118" height="70" rx="4"></rect>
+            <text class="node-label" x="474" y="147">Settler</text>
+            <text class="node-role" x="474" y="168">Execute</text>
+          </g>
+
+          <g class="flow-node" data-step="4" data-active="false" tabindex="0" role="button" aria-label="Stage 5: XR, receipt">
+            <rect class="node-box" x="586" y="206" width="92" height="70" rx="4"></rect>
+            <text class="node-label" x="606" y="234">XR</text>
+            <text class="node-role" x="606" y="255">Receipt</text>
+          </g>
+
+          <circle class="signal-dot" id="signal-dot" cx="95" cy="248" r="4.8"></circle>
+        </svg>
+        <div class="depth-toggle" role="group" aria-label="Explanation depth">
+          <button type="button" class="depth-btn" data-mode="plain" aria-pressed="true">Plain</button>
+          <button type="button" class="depth-btn" data-mode="engineer" aria-pressed="false">Engineer</button>
+        </div>
+        <div class="readout">
+          <span>signal <strong id="active-stage">TIM / Evidence</strong></span>
+          <span class="receipt">signed receipt path</span>
+        </div>
+        <p class="stage-desc" id="stage-desc" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="band section" id="standard" aria-labelledby="standard-title">
+      <div class="wrap section-grid">
+        <div>
+          <p class="section-label">WHAT ARKY IS</p>
+          <h2 id="standard-title">A public protocol for accountable action.</h2>
+          <p class="lead">A standard is adopted when independent systems can read the same artifacts, replay the same evidence, and reach the same result.</p>
+        </div>
+        <div class="definition">
+          <p>A minimal public protocol that records who acted, with what evidence, under which policy, and what actually happened.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band section" id="loop" aria-labelledby="loop-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div>
+            <p class="section-label">CORE LOOP</p>
+            <h2 id="loop-title">Evidence to decision to receipt.</h2>
+          </div>
+          <p class="lead">Arky turns messy, real-world evidence into deterministic decisions and signed receipts that any rail can verify.</p>
+        </div>
+
+        <div class="protocol-grid" aria-label="Arky core loop">
+          <article class="protocol-step">
+            <div class="step-index">01</div>
+            <h3>TIM</h3>
+            <p>Cryptographic evidence: who, what, when, signed and content-addressed.</p>
+          </article>
+          <article class="protocol-step">
+            <div class="step-index">02</div>
+            <h3>Notary</h3>
+            <p>Witness time, order, and finality so evidence can be verified later.</p>
+          </article>
+          <article class="protocol-step">
+            <div class="step-index">03</div>
+            <h3>Kernel</h3>
+            <p>Deterministic decisions under declared policy and assertions.</p>
+          </article>
+          <article class="protocol-step">
+            <div class="step-index">04</div>
+            <h3>Settlers</h3>
+            <p>Execute verbs on banks, blockchains, or devices.</p>
+          </article>
+          <article class="protocol-step">
+            <div class="step-index">05</div>
+            <h3>Receipt</h3>
+            <p>Signed outcome tied to the decision, rail, and anchors.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band section" id="adopt" aria-labelledby="adopt-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div>
+            <p class="section-label">ADOPTION PATH</p>
+            <h2 id="adopt-title">Read the spec. Run the vectors. Ship conformance.</h2>
+          </div>
+          <div>
+            <p class="lead">The conversion is technical adoption, not a signup. Teams validate artifacts locally, compare behavior against vectors, then implement the core loop in their stack.</p>
+            <p class="conversion">read spec <span>-&gt;</span> run vectors <span>-&gt;</span> ship implementation</p>
+          </div>
+        </div>
+
+        <div class="path-grid">
+          <article class="path-card">
+            <p class="claim">1 / SPEC</p>
+            <h3>Read</h3>
+            <p>Start with the normative core documents for TIM, Notary, Kernel, Settlers, and Policy Packs.</p>
+            <a href="../specs/core/README.md">Open core specs</a>
+          </article>
+
+          <article class="path-card">
+            <p class="claim">2 / VERIFY</p>
+            <h3>Validate</h3>
+            <p>Run the repository checks: JSON syntax, conformance verifier, Kernel schema checks, and link resolution.</p>
+            <div class="terminal">
+              <div class="terminal-head">
+                <span>local conformance</span>
+                <button class="copy-command" type="button" data-copy="bun install&#10;bun run validate">copy</button>
+              </div>
+              <pre><code>bun install
+bun run validate</code></pre>
+            </div>
+          </article>
+
+          <article class="path-card">
+            <p class="claim">3 / IMPLEMENT</p>
+            <h3>Build</h3>
+            <p>Use the TypeScript and Rust reference packages as executable anchors for conformant behavior.</p>
+            <a href="../packages/core/README.md">TypeScript</a>
+            <a href="../packages/core-rs/README.md">Rust</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band section" id="conformance" aria-labelledby="conformance-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div>
+            <p class="section-label">CONFORMANCE</p>
+            <h2 id="conformance-title">Vectors over vibes.</h2>
+          </div>
+          <p class="lead">Conformance is pass/fail, not marketing. A spec is Stable only once its vectors pass on two or more independent implementations. The TypeScript and Rust reference stacks pass the published vectors and are cross-checked byte-for-byte.</p>
+        </div>
+
+        <div class="conformance-grid">
+          <article class="conformance-item">
+            <p class="claim">VECTORS</p>
+            <h3>Executable checks</h3>
+            <p>Validation recomputes content IDs, verifies signatures and witnesses, and executes canonicalization, Merkle, finality, and Settler vectors.</p>
+          </article>
+          <article class="conformance-item">
+            <p class="claim">IMPLEMENTATIONS</p>
+            <h3>Two stacks</h3>
+            <p><code>@arky/core</code> and <code>arky-core</code> cover the TIM to Kernel to Settler loop across TypeScript and Rust.</p>
+          </article>
+          <article class="conformance-item">
+            <p class="claim">STATUS</p>
+            <h3>Implementing</h3>
+            <p>Formal ratification to stable is pending; the core loop has L2 coverage and production-ready manifests.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band section" aria-labelledby="domains-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div>
+            <p class="section-label">ADOPTERS</p>
+            <h2 id="domains-title">One receipt language across industries.</h2>
+          </div>
+          <p class="lead">Arky is rail-agnostic and policy-aware: the same accountability surface can be adopted by agents, money systems, chains, and machines.</p>
+        </div>
+
+        <div class="domain-list">
+          <article class="domain">
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path d="M10 18h28M10 30h28M18 10v28M30 10v28" stroke="currentColor" stroke-width="1"></path>
+              <rect x="14" y="14" width="20" height="20" rx="2" stroke="currentColor" stroke-width="1"></rect>
+            </svg>
+            <h3>AI and agents</h3>
+            <p>Action records with cited evidence and declared policy.</p>
+          </article>
+          <article class="domain">
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path d="M10 18h28v18H10zM14 18v-4h20v4M16 27h16" stroke="currentColor" stroke-width="1"></path>
+            </svg>
+            <h3>Finance</h3>
+            <p>Receipts that connect decisions to rails and outcomes.</p>
+          </article>
+          <article class="domain">
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path d="M12 18h10v10H12zM26 10h10v10H26zM26 28h10v10H26zM22 23h4M31 20v8" stroke="currentColor" stroke-width="1"></path>
+            </svg>
+            <h3>Blockchain</h3>
+            <p>Neutral verification without capture by any one chain.</p>
+          </article>
+          <article class="domain">
+            <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <path d="M24 8l6 12 12 6-12 4-6 10-6-10-12-4 12-6zM24 8v32" stroke="currentColor" stroke-width="1" stroke-linejoin="round"></path>
+            </svg>
+            <h3>Space and robotics</h3>
+            <p>Trust under latency, offline verification, and delayed settlement.</p>
+          </article>
+        </div>
+
+        <div class="repo-map" aria-label="Repository map">
+          <a href="../specs/">specs/</a>
+          <a href="../schemas/">schemas/</a>
+          <a href="../registries/">registries/</a>
+          <a href="../vectors/">vectors/</a>
+          <a href="../examples/">examples/</a>
+          <a href="../governance/">governance/</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="drawing-block" aria-hidden="true">
+    <span>DWG&nbsp;№</span>
+    <span>ARKY-001</span>
+    <span class="drawing-rev">REV&nbsp;B</span>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <span>Arky Foundation standard materials. Apache-2.0 reference implementations.</span>
+      <div class="footer-links" aria-label="Footer links">
+        <a href="../README.md">README</a>
+        <a href="../CONFORMANCE.md">Conformance</a>
+        <a href="../SECURITY.md">Security</a>
+        <a href="../governance/ARKY-GOVERNANCE-v1.md">Governance</a>
+      </div>
+    </div>
+  </footer>
+
+<script is:inline src="/scripts/schematic.js"></script>
+</body>
+</html>
