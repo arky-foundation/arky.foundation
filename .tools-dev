@@ -1,0 +1,4 @@
+# tools dev layout for arky.foundation
+# format: <name> | <dir> | <command>
+frontend | ./site | bun dev
+misc | . | 
