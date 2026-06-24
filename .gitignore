@@ -1,7 +1,16 @@
 node_modules/
+dist/
 vectors/RESULTS.json
 target/
 
 # arkestra
 .agent-out/
 .worktrees/
+
+# astro
+.astro/
+
+# bun scratch dirs
+site/.bun-cache/
+site/.bun-tmp/
+site/.tmp/
