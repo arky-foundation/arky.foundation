@@ -161,7 +161,7 @@
   });
 
   // Scroll-reveal: fade + rise elements as they enter the viewport.
-  const reveals = Array.from(document.querySelectorAll(".reveal"));
+  const reveals = Array.from(document.querySelectorAll(".reveal:not(.hero-load)"));
   if (reveals.length > 0) {
     if (reduceMotion || !("IntersectionObserver" in window)) {
       reveals.forEach((el) => el.classList.add("is-in"));
