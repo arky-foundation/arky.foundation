@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Arky is a neutral public standard for action and verification across agents, money, chains, and machines.">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light">
   <title>Arky - Neutral Accountability Standard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ground: #0A0E14;
-      --lines: #2A3340;
-      --text: #C9D1D9;
-      --text-dim: #8B95A1;
-      --accent: #F4B860;
-      --panel: #11161F;
-      --hairline: #1A212B;
+      --ground: #F4F1EA;
+      --lines: #C8C0B0;
+      --text: #1A1714;
+      --text-dim: #6B625A;
+      --accent: #1E3A5F;
+      --panel: #FAF8F4;
+      --hairline: #D9D2C5;
       --max: 1180px;
       --gutter: 24px;
       --header-h: 72px;
@@ -41,7 +41,7 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        linear-gradient(180deg, rgba(10, 14, 20, 0.92), rgba(10, 14, 20, 1) 58%),
+        linear-gradient(195deg, rgba(244, 241, 234, 0.92), #F4F1EA 64%, rgba(237, 232, 221, 0.96)),
         var(--ground);
       color: var(--text);
       font-family: var(--font-sans);
@@ -58,12 +58,12 @@
       z-index: -2;
       content: "";
       background-image:
-        linear-gradient(rgba(42, 51, 64, 0.16) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(42, 51, 64, 0.12) 1px, transparent 1px);
+        linear-gradient(rgba(200, 192, 176, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 192, 176, 0.10) 1px, transparent 1px);
       background-position: center top;
       background-size: 88px 88px;
-      mask-image: linear-gradient(180deg, black 0%, black 56%, transparent 100%);
-      opacity: 0.58;
+      mask-image: linear-gradient(180deg, black 0%, black 68%, transparent 100%);
+      opacity: 0.64;
       pointer-events: none;
     }
 
@@ -128,8 +128,8 @@
       position: sticky;
       top: 0;
       z-index: 6;
-      border-bottom: 1px solid rgba(26, 33, 43, 0.86);
-      background: rgba(10, 14, 20, 0.84);
+      border-bottom: 1px solid rgba(200, 192, 176, 0.72);
+      background: rgba(244, 241, 234, 0.88);
       backdrop-filter: blur(18px);
     }
 
@@ -160,6 +160,7 @@
       border-radius: 4px;
       background: var(--panel);
       color: var(--accent);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
     }
 
     .brand-mark svg {
@@ -194,20 +195,21 @@
     }
 
     .nav a:hover {
-      background: rgba(17, 22, 31, 0.74);
+      background: rgba(218, 210, 198, 0.42);
       color: var(--text);
     }
 
     .neutral-badge {
       margin-left: 8px;
-      border: 1px solid rgba(244, 184, 96, 0.32);
+      border: 1px solid rgba(30, 58, 95, 0.28);
       border-radius: 4px;
       color: var(--accent);
       font-family: var(--font-mono);
       font-size: 0.68rem;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.04em;
       padding: 5px 9px;
       white-space: nowrap;
+      background: rgba(30, 58, 95, 0.04);
     }
 
     @media (max-width: 880px) {
@@ -263,8 +265,9 @@
       color: var(--text);
       font-size: 5.25rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.005em;
       line-height: 0.94;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.7), 0 -1px 0 rgba(0,0,0,0.06);
     }
 
     .tagline {
@@ -289,14 +292,15 @@
       align-items: center;
       max-width: 100%;
       min-height: 40px;
-      border: 1px solid rgba(244, 184, 96, 0.34);
+      border: 1px solid rgba(30, 58, 95, 0.3);
       border-radius: 4px;
-      background: rgba(17, 22, 31, 0.72);
-      box-shadow: inset 0 0 0 1px rgba(244, 184, 96, 0.07);
+      background: rgba(250, 248, 244, 0.78);
+      box-shadow: inset 0 0 0 1px rgba(30, 58, 95, 0.06);
       color: var(--accent);
       font-family: var(--font-mono);
       padding: 8px 12px;
       white-space: normal;
+      letter-spacing: 0.04em;
     }
 
     .hero-actions {
@@ -323,30 +327,30 @@
     }
 
     .button:hover {
-      border-color: rgba(244, 184, 96, 0.5);
+      border-color: rgba(30, 58, 95, 0.45);
       color: var(--accent);
     }
 
     .button.primary {
-      border-color: rgba(244, 184, 96, 0.5);
+      border-color: rgba(30, 58, 95, 0.5);
       color: var(--accent);
     }
 
     .button.primary:hover {
-      background: rgba(244, 184, 96, 0.08);
+      background: rgba(30, 58, 95, 0.06);
     }
 
     .hero-blueprint {
       position: relative;
       min-height: 492px;
-      border: 1px solid rgba(42, 51, 64, 0.82);
+      border: 1px solid rgba(200, 192, 176, 0.72);
       border-radius: 8px;
       background:
-        linear-gradient(180deg, rgba(17, 22, 31, 0.64), rgba(10, 14, 20, 0.9)),
+        linear-gradient(180deg, rgba(250, 248, 244, 0.7), rgba(244, 241, 234, 0.92)),
         var(--ground);
       box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.28),
-        inset 0 0 0 1px rgba(201, 209, 217, 0.02);
+        0 12px 48px rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(26, 23, 20, 0.03);
       overflow: hidden;
     }
 
@@ -354,11 +358,11 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(42, 51, 64, 0.22) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(42, 51, 64, 0.18) 1px, transparent 1px);
+        linear-gradient(rgba(200, 192, 176, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 192, 176, 0.14) 1px, transparent 1px);
       background-size: 44px 44px;
       content: "";
-      opacity: 0.42;
+      opacity: 0.48;
     }
 
     .hero-blueprint svg {
@@ -386,7 +390,7 @@
     }
 
     .node-box {
-      fill: rgba(17, 22, 31, 0.94);
+      fill: rgba(250, 248, 244, 0.94);
       stroke: var(--lines);
       stroke-width: 0.8;
       vector-effect: non-scaling-stroke;
@@ -397,19 +401,19 @@
       fill: var(--text);
       font-family: var(--font-mono);
       font-size: 12px;
-      letter-spacing: 0;
+      letter-spacing: 0.06em;
     }
 
     .node-role {
       fill: var(--text-dim);
       font-family: var(--font-sans);
       font-size: 11px;
-      letter-spacing: 0;
+      letter-spacing: 0.03em;
     }
 
     .flow-node[data-active="true"] .node-box {
-      fill: rgba(244, 184, 96, 0.07);
-      stroke: rgba(244, 184, 96, 0.78);
+      fill: rgba(30, 58, 95, 0.06);
+      stroke: rgba(30, 58, 95, 0.72);
     }
 
     .flow-node[data-active="true"] .node-label {
@@ -430,7 +434,7 @@
     }
 
     .flow-node:hover .node-box {
-      stroke: rgba(244, 184, 96, 0.55);
+      stroke: rgba(30, 58, 95, 0.48);
     }
 
     .live-route {
@@ -438,13 +442,13 @@
       stroke: var(--accent);
       stroke-linecap: round;
       stroke-width: 1.6;
-      filter: drop-shadow(0 0 10px rgba(244, 184, 96, 0.42));
+      filter: drop-shadow(0 0 8px rgba(30, 58, 95, 0.2));
       vector-effect: non-scaling-stroke;
     }
 
     .signal-dot {
       fill: var(--accent);
-      filter: drop-shadow(0 0 12px rgba(244, 184, 96, 0.62));
+      filter: drop-shadow(0 0 6px rgba(30, 58, 95, 0.3));
     }
 
     .readout {
@@ -459,7 +463,7 @@
       align-items: center;
       border: 1px solid var(--hairline);
       border-radius: 6px;
-      background: rgba(10, 14, 20, 0.84);
+      background: rgba(244, 241, 234, 0.88);
       color: var(--text-dim);
       font-family: var(--font-mono);
       font-size: 0.78rem;
@@ -483,7 +487,7 @@
       display: inline-flex;
       border: 1px solid var(--hairline);
       border-radius: 6px;
-      background: rgba(10, 14, 20, 0.86);
+      background: rgba(244, 241, 234, 0.9);
       padding: 3px;
     }
 
@@ -502,7 +506,7 @@
     }
 
     .depth-btn[aria-pressed="true"] {
-      background: rgba(244, 184, 96, 0.12);
+      background: rgba(30, 58, 95, 0.1);
       color: var(--accent);
     }
 
@@ -530,6 +534,31 @@
       color: var(--accent);
       font-family: var(--font-mono);
       font-size: 0.86em;
+    }
+
+    /* Corner crop marks on hero blueprint */
+    .hero-blueprint::after {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      content: "";
+      pointer-events: none;
+      --mark-len: 14px;
+      --mark-gap: 10px;
+      --mark-clr: rgba(200, 192, 176, 0.6);
+      background:
+        /* top-left */
+        linear-gradient(90deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 0 var(--mark-gap) / var(--mark-len) 1px no-repeat,
+        linear-gradient(0deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) var(--mark-gap) 0 / 1px var(--mark-len) no-repeat,
+        /* top-right */
+        linear-gradient(270deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 100% var(--mark-gap) / var(--mark-len) 1px no-repeat,
+        linear-gradient(0deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) calc(100% - var(--mark-gap)) 0 / 1px var(--mark-len) no-repeat,
+        /* bottom-left */
+        linear-gradient(90deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 0 calc(100% - var(--mark-gap)) / var(--mark-len) 1px no-repeat,
+        linear-gradient(180deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) var(--mark-gap) 100% / 1px var(--mark-len) no-repeat,
+        /* bottom-right */
+        linear-gradient(270deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 100% calc(100% - var(--mark-gap)) / var(--mark-len) 1px no-repeat,
+        linear-gradient(180deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) calc(100% - var(--mark-gap)) 100% / 1px var(--mark-len) no-repeat;
     }
 
     .band {
@@ -572,7 +601,7 @@
     }
 
     .definition {
-      border-left: 1px solid rgba(244, 184, 96, 0.56);
+      border-left: 1px solid rgba(30, 58, 95, 0.5);
       color: var(--text);
       font-size: 1.3rem;
       line-height: 1.45;
@@ -593,7 +622,7 @@
 
     .protocol-step {
       min-height: 188px;
-      background: rgba(17, 22, 31, 0.66);
+      background: rgba(250, 248, 244, 0.62);
       padding: 18px;
     }
 
@@ -647,7 +676,7 @@
     .path-card {
       border: 1px solid var(--hairline);
       border-radius: 8px;
-      background: rgba(17, 22, 31, 0.68);
+      background: rgba(250, 248, 244, 0.64);
       padding: 20px;
     }
 
@@ -667,7 +696,7 @@
       margin-top: 18px;
       border: 1px solid var(--hairline);
       border-radius: 6px;
-      background: #0A0E14;
+      background: #EDE9DF;
       overflow: hidden;
     }
 
@@ -695,7 +724,7 @@
     }
 
     .copy-command:hover {
-      border-color: rgba(244, 184, 96, 0.42);
+      border-color: rgba(30, 58, 95, 0.4);
       color: var(--accent);
     }
 
@@ -733,14 +762,14 @@
     }
 
     .conformance-item {
-      background: rgba(17, 22, 31, 0.66);
+      background: rgba(250, 248, 244, 0.62);
       padding: 20px;
     }
 
     .claim {
       display: inline-flex;
       margin-bottom: 18px;
-      border: 1px solid rgba(244, 184, 96, 0.38);
+      border: 1px solid rgba(30, 58, 95, 0.34);
       border-radius: 4px;
       color: var(--accent);
       font-family: var(--font-mono);
@@ -758,7 +787,7 @@
 
     .domain {
       min-height: 152px;
-      background: rgba(17, 22, 31, 0.54);
+      background: rgba(250, 248, 244, 0.48);
       padding: 18px;
     }
 
@@ -793,7 +822,7 @@
     .repo-map a {
       border: 1px solid var(--hairline);
       border-radius: 4px;
-      background: rgba(17, 22, 31, 0.56);
+      background: rgba(250, 248, 244, 0.52);
       color: var(--text-dim);
       font-family: var(--font-mono);
       font-size: 0.78rem;
@@ -802,7 +831,7 @@
     }
 
     .repo-map a:hover {
-      border-color: rgba(244, 184, 96, 0.34);
+      border-color: rgba(30, 58, 95, 0.3);
       color: var(--text);
     }
 
@@ -828,6 +857,36 @@
 
     .footer-links a:hover {
       color: var(--accent);
+    }
+
+    .drawing-block {
+      position: fixed;
+      bottom: 18px;
+      right: 20px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(200, 192, 176, 0.55);
+      border-radius: 3px;
+      background: rgba(244, 241, 234, 0.78);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .drawing-rev {
+      color: var(--accent);
+    }
+
+    @media (max-width: 760px) {
+      .drawing-block {
+        display: none;
+      }
     }
 
     @media (max-width: 1080px) {
@@ -995,6 +1054,47 @@
       <circle cx="1130" cy="650" r="24"></circle>
       <path d="M36 356h108M36 378h74M36 400h132M1264 286h132M1286 310h86M1240 334h156"></path>
     </g>
+    <!-- Via dots at key junctions -->
+    <g fill="currentColor" opacity="0.45">
+      <circle cx="150" cy="190" r="2.2"></circle><circle cx="370" cy="150" r="2.2"></circle>
+      <circle cx="620" cy="190" r="2.2"></circle><circle cx="860" cy="120" r="2.2"></circle>
+      <circle cx="1190" cy="200" r="2.2"></circle><circle cx="280" cy="650" r="2.2"></circle>
+      <circle cx="510" cy="650" r="2.2"></circle><circle cx="790" cy="650" r="2.2"></circle>
+      <circle cx="1060" cy="650" r="2.2"></circle><circle cx="340" cy="150" r="2"></circle>
+      <circle cx="690" cy="120" r="2"></circle><circle cx="160" cy="250" r="2"></circle>
+      <circle cx="340" cy="310" r="2"></circle><circle cx="620" cy="450" r="2"></circle>
+      <circle cx="860" cy="300" r="2"></circle><circle cx="1190" cy="430" r="2"></circle>
+      <circle cx="210" cy="430" r="2.2"></circle><circle cx="640" cy="390" r="2.2"></circle>
+      <circle cx="930" cy="440" r="2.2"></circle><circle cx="1040" cy="560" r="2"></circle>
+      <circle cx="1220" cy="440" r="2"></circle><circle cx="460" cy="650" r="2"></circle>
+      <circle cx="760" cy="650" r="2"></circle>
+    </g>
+    <!-- Dimension lines with tick marks -->
+    <g fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.48">
+      <path d="M84 568h212"></path>
+      <path d="M84 564v8M296 564v8"></path>
+      <path d="M36 190v-32M36 182h14M36 190h14"></path>
+      <path d="M1370 650v-32M1370 642h-14M1370 650h-14"></path>
+      <path d="M1264 496v-70M1260 496h8M1268 496h8M1260 426h8M1268 426h8"></path>
+      <path d="M-20 496h56M-20 492v8M36 492v8"></path>
+    </g>
+    <!-- Component glyphs -->
+    <g fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.42">
+      <!-- Resistor zigzag -->
+      <path d="M1352 298h6l4-8h4l4 8h4l4-8h4l4 8h6"></path>
+      <!-- Capacitor plates -->
+      <path d="M44 298h12M64 290v16M72 290v16M80 298h12"></path>
+      <!-- IC pin rows -->
+      <path d="M632 570h12M632 578h12M632 586h12M632 594h12M676 570h12M676 578h12M676 586h12M676 594h12"></path>
+    </g>
+    <!-- Measurement annotations -->
+    <g fill="currentColor" opacity="0.38" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="0.08em">
+      <text x="150" y="578">212</text>
+      <text x="1280" y="420">~70</text>
+      <text x="1298" y="312">R1 10k</text>
+      <text x="20" y="312">C1 22pF</text>
+      <text x="636" y="564">IC1</text>
+    </g>
   </svg>
 
   <header class="site-header">
@@ -1043,6 +1143,24 @@
             </marker>
           </defs>
 
+          <!-- Circuitry background texture -->
+          <g opacity="0.36" fill="none" stroke="var(--lines)" stroke-width="0.5" vector-effect="non-scaling-stroke">
+            <path d="M18 442h28M18 450h18M18 458h32"></path>
+            <path d="M624 38h56M632 46h40M620 54h60"></path>
+            <path d="M648 402h44M656 410h32M642 418h50"></path>
+            <path d="M36 38v32M46 38v22M56 38v38"></path>
+            <path d="M674 432v36M684 432v26M694 432v42"></path>
+            <!-- Resistor zigzag -->
+            <path d="M656 344h6l3-6h3l3 6h3l3-6h3l3 6h6"></path>
+            <!-- Capacitor -->
+            <path d="M28 344h8M42 338v12M48 338v12M54 344h8"></path>
+            <!-- Via dots -->
+            <circle cx="28" cy="442" r="1.4"></circle>
+            <circle cx="66" cy="38" r="1.4"></circle>
+            <circle cx="624" cy="38" r="1.4"></circle>
+            <circle cx="648" cy="402" r="1.4"></circle>
+          </g>
+
           <g opacity="0.72">
             <path class="schematic-faint" d="M54 80h116l34-34h92l34 34h158l44-44h98"></path>
             <path class="schematic-faint" d="M92 390h132l34-34h146l46 46h178"></path>
@@ -1053,8 +1171,24 @@
             <rect class="schematic-faint" x="598" y="364" width="56" height="56" rx="2"></rect>
           </g>
 
+          <!-- Via dots on faint paths -->
+          <g fill="var(--lines)" opacity="0.5">
+            <circle cx="54" cy="80" r="2"></circle>
+            <circle cx="204" cy="46" r="2"></circle>
+            <circle cx="342" cy="116" r="2"></circle>
+            <circle cx="548" cy="124" r="2"></circle>
+            <circle cx="92" cy="390" r="2"></circle>
+            <circle cx="258" cy="356" r="2"></circle>
+            <circle cx="628" cy="390" r="2"></circle>
+          </g>
+
           <path class="schematic-line" d="M95 248C138 180 188 180 231 248S321 316 365 248S455 180 499 248S588 316 632 248" marker-end="url(#arrow)"></path>
           <path class="live-route" id="live-route" d="M95 248C138 180 188 180 231 248S321 316 365 248S455 180 499 248S588 316 632 248"></path>
+
+          <!-- Dimension ticks on main route -->
+          <g fill="none" stroke="var(--lines)" stroke-width="0.4" opacity="0.4" vector-effect="non-scaling-stroke">
+            <path d="M95 264v-6M95 248h-6M632 264v-6M632 248h6"></path>
+          </g>
 
           <g class="flow-node" data-step="0" data-active="true" tabindex="0" role="button" aria-label="Stage 1: TIM, evidence">
             <rect class="node-box" x="42" y="206" width="106" height="70" rx="4"></rect>
@@ -1282,6 +1416,12 @@ bun run validate</code></pre>
       </div>
     </section>
   </main>
+
+  <div class="drawing-block" aria-hidden="true">
+    <span>DWG&nbsp;№</span>
+    <span>ARKY-001</span>
+    <span class="drawing-rev">REV&nbsp;B</span>
+  </div>
 
   <footer class="site-footer">
     <div class="wrap footer-inner">
