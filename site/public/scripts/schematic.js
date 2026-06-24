@@ -1,10 +1,21 @@
 (() => {
   const route = document.querySelector("#live-route");
   const dot = document.querySelector("#signal-dot");
+  const halo = document.querySelector("#signal-halo");
   const stage = document.querySelector("#active-stage");
   const nodes = Array.from(document.querySelectorAll(".flow-node"));
   const copyButtons = Array.from(document.querySelectorAll("[data-copy]"));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Move the signal dot (and its halo) to a point on the route.
+  const placeSignal = (point) => {
+    dot.setAttribute("cx", point.x.toFixed(2));
+    dot.setAttribute("cy", point.y.toFixed(2));
+    if (halo) {
+      halo.setAttribute("cx", point.x.toFixed(2));
+      halo.setAttribute("cy", point.y.toFixed(2));
+    }
+  };
 
   const stageDesc = document.querySelector("#stage-desc");
   const depthButtons = Array.from(document.querySelectorAll(".depth-btn"));
@@ -70,9 +81,7 @@
       paused = true;
       const clamped = Math.max(0, Math.min(nodes.length - 1, index));
       const progress = nodes.length > 1 ? clamped / (nodes.length - 1) : 0;
-      const point = route.getPointAtLength(progress * length);
-      dot.setAttribute("cx", point.x.toFixed(2));
-      dot.setAttribute("cy", point.y.toFixed(2));
+      placeSignal(route.getPointAtLength(progress * length));
       route.style.strokeDashoffset = String(length * (1 - progress));
       setActive(clamped);
     };
@@ -114,10 +123,8 @@
       if (paused) {
         return;
       }
-      const progress = reduceMotion ? 0.94 : (timestamp % 7200) / 7200;
-      const point = route.getPointAtLength(progress * length);
-      dot.setAttribute("cx", point.x.toFixed(2));
-      dot.setAttribute("cy", point.y.toFixed(2));
+      const progress = reduceMotion ? 0.94 : (timestamp % 9000) / 9000;
+      placeSignal(route.getPointAtLength(progress * length));
       route.style.strokeDashoffset = String(length * (1 - progress));
       const index = Math.min(nodes.length - 1, Math.floor(progress * nodes.length));
       if (index !== current) setActive(index);
@@ -152,4 +159,25 @@
       }, 1600);
     });
   });
+
+  // Scroll-reveal: fade + rise elements as they enter the viewport.
+  const reveals = Array.from(document.querySelectorAll(".reveal"));
+  if (reveals.length > 0) {
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      reveals.forEach((el) => el.classList.add("is-in"));
+    } else {
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
+      );
+      reveals.forEach((el) => observer.observe(el));
+    }
+  }
 })();
