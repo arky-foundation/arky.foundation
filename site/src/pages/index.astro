@@ -11,19 +11,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ground: #F4F1EA;
-      --lines: #C8C0B0;
-      --text: #1A1714;
-      --text-dim: #6B625A;
-      --accent: #1E3A5F;
-      --panel: #FAF8F4;
-      --hairline: #D9D2C5;
-      --max: 1180px;
-      --gutter: 24px;
-      --header-h: 72px;
+      --ground: #F2EEE4;
+      --lines: #C2B9A6;
+      --text: #16130F;
+      --text-dim: #5F564C;
+      --accent: #1A3A60;
+      --accent-soft: rgba(26, 58, 96, 0.08);
+      --oxide: #B0462E;
+      --oxide-soft: rgba(176, 70, 46, 0.1);
+      --panel: #FBF9F4;
+      --hairline: #D6CFC1;
+      --max: 1440px;
+      --max-text: 1180px;
+      --gutter: 32px;
+      --header-h: 76px;
       --font-display: "Fraunces", Georgia, "Times New Roman", serif;
       --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -41,7 +46,9 @@
       margin: 0;
       overflow-x: hidden;
       background:
-        linear-gradient(195deg, rgba(244, 241, 234, 0.92), #F4F1EA 64%, rgba(237, 232, 221, 0.96)),
+        radial-gradient(125% 90% at 78% -8%, rgba(26, 58, 96, 0.07), transparent 52%),
+        radial-gradient(110% 80% at 8% 4%, rgba(176, 70, 46, 0.05), transparent 46%),
+        linear-gradient(192deg, #F6F2E9, #F2EEE4 58%, #ECE6D9),
         var(--ground);
       color: var(--text);
       font-family: var(--font-sans);
@@ -52,19 +59,39 @@
       text-rendering: optimizeLegibility;
     }
 
+    /* Fine engineering grid + coarse module grid, full viewport, gently animated drift */
     body::before {
+      position: fixed;
+      inset: -2px;
+      z-index: -3;
+      content: "";
+      background-image:
+        linear-gradient(rgba(194, 185, 166, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(194, 185, 166, 0.16) 1px, transparent 1px),
+        linear-gradient(rgba(194, 185, 166, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(194, 185, 166, 0.07) 1px, transparent 1px);
+      background-size: 128px 128px, 128px 128px, 32px 32px, 32px 32px;
+      opacity: 0.7;
+      pointer-events: none;
+      animation: grid-drift 60s linear infinite;
+    }
+
+    /* Paper grain + faint vignette over everything */
+    body::after {
       position: fixed;
       inset: 0;
       z-index: -2;
       content: "";
-      background-image:
-        linear-gradient(rgba(200, 192, 176, 0.14) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(200, 192, 176, 0.10) 1px, transparent 1px);
-      background-position: center top;
-      background-size: 88px 88px;
-      mask-image: linear-gradient(180deg, black 0%, black 68%, transparent 100%);
-      opacity: 0.64;
       pointer-events: none;
+      opacity: 0.5;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+        radial-gradient(120% 120% at 50% 40%, transparent 62%, rgba(60, 50, 38, 0.06));
+    }
+
+    @keyframes grid-drift {
+      to {
+        background-position: 128px 128px, 128px 128px, 32px 32px, 32px 32px;
+      }
     }
 
     a {
@@ -108,19 +135,47 @@
       width: 100vw;
       height: 100vh;
       color: var(--lines);
-      opacity: 0.54;
+      opacity: 0.92;
       pointer-events: none;
     }
 
     .blueprint-field path,
     .blueprint-field line,
     .blueprint-field circle,
-    .blueprint-field rect {
+    .blueprint-field rect,
+    .blueprint-field polyline {
       vector-effect: non-scaling-stroke;
+    }
+
+    .bp-trace { stroke: var(--lines); stroke-width: 0.9; opacity: 0.5; }
+    .bp-faint { stroke: var(--lines); stroke-width: 0.6; opacity: 0.3; }
+    .bp-oxide { stroke: var(--oxide); stroke-width: 0.7; opacity: 0.26; }
+    .bp-via { fill: var(--lines); opacity: 0.4; }
+    .bp-via-oxide { fill: var(--oxide); opacity: 0.34; }
+    .bp-anno { fill: var(--text-dim); opacity: 0.32; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; }
+
+    /* A faint signal that perpetually travels a background bus line */
+    .bp-bus {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.1;
+      stroke-linecap: round;
+      opacity: 0.5;
+      stroke-dasharray: 26 1400;
+      animation: bus-run 9s linear infinite;
+    }
+
+    @keyframes bus-run {
+      to { stroke-dashoffset: -1426; }
     }
 
     .wrap {
       width: min(100% - calc(var(--gutter) * 2), var(--max));
+      margin: 0 auto;
+    }
+
+    .wrap-text {
+      width: min(100% - calc(var(--gutter) * 2), var(--max-text));
       margin: 0 auto;
     }
 
@@ -218,30 +273,40 @@
       }
     }
 
+    /* ============ FULL-BLEED HERO STAGE ============ */
     .hero {
-      display: grid;
-      min-height: calc(84svh - var(--header-h));
-      align-items: center;
-      grid-template-columns: minmax(0, 0.94fr) minmax(420px, 1.06fr);
-      gap: 46px;
-      padding: 58px 0 52px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: calc(100svh - var(--header-h));
+      padding: clamp(28px, 5vh, 64px) 0 clamp(20px, 3vh, 40px);
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 3;
+      width: min(100% - calc(var(--gutter) * 2), var(--max));
+      margin: 0 auto;
     }
 
     .kicker {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin: 0 0 18px;
+      gap: 12px;
+      margin: 0 0 20px;
       color: var(--text-dim);
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .kicker::before {
       display: block;
-      width: 28px;
+      width: 40px;
       height: 1px;
-      background: var(--accent);
+      background: linear-gradient(90deg, var(--oxide), var(--accent));
       content: "";
     }
 
@@ -260,164 +325,230 @@
     }
 
     h1 {
-      max-width: 680px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       color: var(--text);
-      font-size: 5.25rem;
+      font-size: clamp(4.5rem, 13vw, 12rem);
       font-weight: 600;
-      letter-spacing: -0.005em;
-      line-height: 0.94;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.7), 0 -1px 0 rgba(0,0,0,0.06);
+      letter-spacing: -0.02em;
+      line-height: 0.86;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 -1px 1px rgba(0, 0, 0, 0.07);
+    }
+
+    h1 .h1-mark {
+      position: relative;
+      display: inline-block;
+      padding-right: 0.12em;
+    }
+
+    /* Hairline registration ticks flanking the monogram */
+    h1 .h1-mark::after {
+      position: absolute;
+      right: -0.04em;
+      bottom: 0.16em;
+      width: 0.5ch;
+      height: 0.5ch;
+      border-right: 2px solid var(--oxide);
+      border-bottom: 2px solid var(--oxide);
+      opacity: 0.55;
+      content: "";
     }
 
     .tagline {
-      max-width: 720px;
-      margin-bottom: 18px;
+      max-width: 30ch;
+      margin-bottom: 16px;
       color: var(--text);
       font-family: var(--font-display);
-      font-size: 1.78rem;
+      font-size: clamp(1.5rem, 2.4vw, 2.4rem);
       font-weight: 400;
-      line-height: 1.24;
+      line-height: 1.18;
     }
 
     .subline {
-      max-width: 700px;
-      margin-bottom: 28px;
+      max-width: 56ch;
+      margin-bottom: 26px;
       color: var(--text-dim);
-      font-size: 1.08rem;
+      font-size: clamp(1.02rem, 1.2vw, 1.2rem);
     }
 
     .signature {
       display: inline-flex;
       align-items: center;
+      gap: 10px;
       max-width: 100%;
       min-height: 40px;
-      border: 1px solid rgba(30, 58, 95, 0.3);
+      border: 1px solid rgba(176, 70, 46, 0.32);
       border-radius: 4px;
-      background: rgba(250, 248, 244, 0.78);
-      box-shadow: inset 0 0 0 1px rgba(30, 58, 95, 0.06);
-      color: var(--accent);
+      background: rgba(251, 249, 244, 0.82);
+      box-shadow: inset 0 0 0 1px rgba(176, 70, 46, 0.06), 0 1px 0 rgba(255, 255, 255, 0.6);
+      color: var(--oxide);
       font-family: var(--font-mono);
-      padding: 8px 12px;
+      padding: 8px 14px;
       white-space: normal;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
+    }
+
+    .signature::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--oxide);
+      box-shadow: 0 0 0 3px rgba(176, 70, 46, 0.14);
+      content: "";
+      animation: sig-pulse 2.6s var(--ease-out) infinite;
+    }
+
+    @keyframes sig-pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(176, 70, 46, 0.14); }
+      50% { box-shadow: 0 0 0 6px rgba(176, 70, 46, 0.04); }
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       margin-top: 30px;
     }
 
     .button {
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
+      min-height: 46px;
       border: 1px solid var(--hairline);
       border-radius: 4px;
       background: var(--panel);
       color: var(--text);
-      padding: 10px 14px;
-      font-size: 0.94rem;
+      padding: 11px 18px;
+      font-size: 0.96rem;
       font-weight: 560;
-      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: border-color 180ms ease, color 180ms ease, background 180ms ease, transform 180ms var(--ease-out);
     }
 
     .button:hover {
-      border-color: rgba(30, 58, 95, 0.45);
+      border-color: rgba(26, 58, 96, 0.5);
       color: var(--accent);
+      transform: translateY(-1px);
     }
 
     .button.primary {
-      border-color: rgba(30, 58, 95, 0.5);
-      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #F4F1EA;
+      box-shadow: 0 2px 14px rgba(26, 58, 96, 0.22);
     }
 
     .button.primary:hover {
-      background: rgba(30, 58, 95, 0.06);
+      background: #16314f;
+      color: #fff;
     }
 
-    .hero-blueprint {
+    /* Full-bleed stage: the protocol flow as the hero centerpiece */
+    .hero-stage {
       position: relative;
-      min-height: 492px;
-      border: 1px solid rgba(200, 192, 176, 0.72);
-      border-radius: 8px;
-      background:
-        linear-gradient(180deg, rgba(250, 248, 244, 0.7), rgba(244, 241, 234, 0.92)),
-        var(--ground);
-      box-shadow:
-        0 12px 48px rgba(0, 0, 0, 0.06),
-        inset 0 0 0 1px rgba(26, 23, 20, 0.03);
-      overflow: hidden;
+      z-index: 2;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-top: clamp(28px, 5vh, 56px);
+      padding: 0;
     }
 
-    .hero-blueprint::before {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(200, 192, 176, 0.18) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(200, 192, 176, 0.14) 1px, transparent 1px);
-      background-size: 44px 44px;
-      content: "";
-      opacity: 0.48;
-    }
-
-    .hero-blueprint svg {
-      position: relative;
-      z-index: 1;
+    .hero-stage svg.stage-svg {
       display: block;
       width: 100%;
-      height: auto;
-      min-height: 492px;
+      height: clamp(280px, 42vh, 460px);
+    }
+
+    .stage-edge-fade {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: linear-gradient(90deg, var(--ground), transparent 9%, transparent 91%, var(--ground));
+    }
+
+    /* Floating controls anchored to the readable column over the wide stage */
+    .stage-controls {
+      width: min(100% - calc(var(--gutter) * 2), var(--max));
+      margin: -52px auto 0;
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
     }
 
     .schematic-line {
       fill: none;
       stroke: var(--lines);
-      stroke-width: 0.7;
+      stroke-width: 1.1;
       vector-effect: non-scaling-stroke;
     }
 
     .schematic-faint {
       fill: none;
       stroke: var(--lines);
-      stroke-width: 0.5;
-      opacity: 0.55;
+      stroke-width: 0.7;
+      opacity: 0.5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .schematic-oxide {
+      fill: none;
+      stroke: var(--oxide);
+      stroke-width: 0.8;
+      opacity: 0.4;
       vector-effect: non-scaling-stroke;
     }
 
     .node-box {
-      fill: rgba(250, 248, 244, 0.94);
+      fill: rgba(251, 249, 244, 0.96);
       stroke: var(--lines);
-      stroke-width: 0.8;
+      stroke-width: 1.1;
       vector-effect: non-scaling-stroke;
-      transition: stroke 220ms ease, fill 220ms ease;
+      transition: stroke 240ms var(--ease-out), fill 240ms var(--ease-out);
     }
 
     .node-label {
       fill: var(--text);
       font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.06em;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
     }
 
     .node-role {
       fill: var(--text-dim);
       font-family: var(--font-sans);
-      font-size: 11px;
-      letter-spacing: 0.03em;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .node-pin {
+      stroke: var(--lines);
+      stroke-width: 1;
+      opacity: 0.5;
+      vector-effect: non-scaling-stroke;
     }
 
     .flow-node[data-active="true"] .node-box {
-      fill: rgba(30, 58, 95, 0.06);
-      stroke: rgba(30, 58, 95, 0.72);
+      fill: rgba(26, 58, 96, 0.07);
+      stroke: var(--accent);
+      stroke-width: 1.6;
     }
 
     .flow-node[data-active="true"] .node-label {
       fill: var(--accent);
+    }
+
+    .flow-node[data-active="true"] .node-pin {
+      stroke: var(--accent);
+      opacity: 0.8;
     }
 
     .flow-node {
@@ -429,65 +560,83 @@
     }
 
     .flow-node:focus-visible .node-box {
-      stroke: var(--accent);
-      stroke-width: 1.4;
+      stroke: var(--oxide);
+      stroke-width: 1.8;
     }
 
     .flow-node:hover .node-box {
-      stroke: rgba(30, 58, 95, 0.48);
+      stroke: rgba(26, 58, 96, 0.55);
     }
 
     .live-route {
       fill: none;
       stroke: var(--accent);
       stroke-linecap: round;
-      stroke-width: 1.6;
-      filter: drop-shadow(0 0 8px rgba(30, 58, 95, 0.2));
+      stroke-width: 2.4;
+      filter: drop-shadow(0 0 7px rgba(26, 58, 96, 0.32));
       vector-effect: non-scaling-stroke;
     }
 
     .signal-dot {
-      fill: var(--accent);
-      filter: drop-shadow(0 0 6px rgba(30, 58, 95, 0.3));
+      fill: var(--oxide);
+      filter: drop-shadow(0 0 9px rgba(176, 70, 46, 0.6));
+    }
+
+    .signal-halo {
+      fill: var(--oxide);
+      opacity: 0.18;
     }
 
     .readout {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 16px;
+      display: inline-flex;
       align-items: center;
+      gap: 14px;
       border: 1px solid var(--hairline);
       border-radius: 6px;
-      background: rgba(244, 241, 234, 0.88);
+      background: rgba(251, 249, 244, 0.92);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       color: var(--text-dim);
       font-family: var(--font-mono);
-      font-size: 0.78rem;
-      padding: 10px 12px;
+      font-size: 0.8rem;
+      letter-spacing: 0.03em;
+      padding: 10px 14px;
     }
 
     .readout strong {
-      color: var(--text);
+      color: var(--accent);
       font-weight: 560;
     }
 
     .readout .receipt {
-      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--oxide);
+    }
+
+    .readout .receipt::before {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--oxide);
+      content: "";
+    }
+
+    .stage-meta {
+      display: flex;
+      flex: 1 1 320px;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
     }
 
     .depth-toggle {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      z-index: 2;
       display: inline-flex;
       border: 1px solid var(--hairline);
       border-radius: 6px;
-      background: rgba(244, 241, 234, 0.9);
+      background: rgba(251, 249, 244, 0.92);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       padding: 3px;
     }
 
@@ -498,29 +647,27 @@
       color: var(--text-dim);
       cursor: pointer;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.04em;
-      padding: 6px 12px;
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      padding: 7px 14px;
       text-transform: uppercase;
       transition: color 160ms ease, background 160ms ease;
     }
 
     .depth-btn[aria-pressed="true"] {
-      background: rgba(30, 58, 95, 0.1);
-      color: var(--accent);
+      background: var(--accent);
+      color: #F4F1EA;
     }
 
     .stage-desc {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 64px;
-      z-index: 2;
-      margin: 0;
-      min-height: 2.4em;
+      width: min(100% - calc(var(--gutter) * 2), var(--max));
+      margin: 18px auto 0;
+      position: relative;
+      z-index: 4;
+      min-height: 1.6em;
       color: var(--text);
-      font-size: 0.92rem;
-      line-height: 1.32;
+      font-size: 1rem;
+      line-height: 1.4;
       opacity: 1;
       transition: opacity 240ms ease, transform 240ms ease;
     }
@@ -531,34 +678,9 @@
     }
 
     .stage-desc code {
-      color: var(--accent);
+      color: var(--oxide);
       font-family: var(--font-mono);
-      font-size: 0.86em;
-    }
-
-    /* Corner crop marks on hero blueprint */
-    .hero-blueprint::after {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      content: "";
-      pointer-events: none;
-      --mark-len: 14px;
-      --mark-gap: 10px;
-      --mark-clr: rgba(200, 192, 176, 0.6);
-      background:
-        /* top-left */
-        linear-gradient(90deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 0 var(--mark-gap) / var(--mark-len) 1px no-repeat,
-        linear-gradient(0deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) var(--mark-gap) 0 / 1px var(--mark-len) no-repeat,
-        /* top-right */
-        linear-gradient(270deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 100% var(--mark-gap) / var(--mark-len) 1px no-repeat,
-        linear-gradient(0deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) calc(100% - var(--mark-gap)) 0 / 1px var(--mark-len) no-repeat,
-        /* bottom-left */
-        linear-gradient(90deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 0 calc(100% - var(--mark-gap)) / var(--mark-len) 1px no-repeat,
-        linear-gradient(180deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) var(--mark-gap) 100% / 1px var(--mark-len) no-repeat,
-        /* bottom-right */
-        linear-gradient(270deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) 100% calc(100% - var(--mark-gap)) / var(--mark-len) 1px no-repeat,
-        linear-gradient(180deg, var(--mark-clr) var(--mark-len), transparent var(--mark-len)) calc(100% - var(--mark-gap)) 100% / 1px var(--mark-len) no-repeat;
+      font-size: 0.88em;
     }
 
     .band {
@@ -566,31 +688,56 @@
     }
 
     .section {
-      padding: 74px 0;
+      padding: 92px 0;
     }
 
     .section-grid {
       display: grid;
-      grid-template-columns: minmax(0, 0.64fr) minmax(0, 1fr);
-      gap: 52px;
+      grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+      gap: 64px;
       align-items: start;
     }
 
     .section-label {
-      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
       color: var(--text-dim);
       font-family: var(--font-mono);
       font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .section-label::before {
+      width: 22px;
+      height: 1px;
+      background: var(--oxide);
+      content: "";
     }
 
     h2 {
-      max-width: 540px;
+      max-width: 16ch;
       margin-bottom: 18px;
       color: var(--text);
-      font-size: 2.5rem;
+      font-size: clamp(2.1rem, 3.4vw, 3.1rem);
       font-weight: 610;
-      letter-spacing: 0;
-      line-height: 1.08;
+      letter-spacing: -0.01em;
+      line-height: 1.04;
+    }
+
+    /* Scroll-reveal: elements rise and fade in when scrolled into view */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 720ms var(--ease-out), transform 720ms var(--ease-out);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    .reveal.is-in {
+      opacity: 1;
+      transform: none;
     }
 
     .lead {
@@ -621,9 +768,32 @@
     }
 
     .protocol-step {
-      min-height: 188px;
-      background: rgba(250, 248, 244, 0.62);
-      padding: 18px;
+      position: relative;
+      min-height: 200px;
+      background: rgba(251, 249, 244, 0.7);
+      padding: 22px;
+      transition: background 220ms ease;
+    }
+
+    .protocol-step::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--oxide);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 320ms var(--ease-out);
+      content: "";
+    }
+
+    .protocol-step:hover {
+      background: var(--panel);
+    }
+
+    .protocol-step:hover::before {
+      transform: scaleX(1);
     }
 
     .step-index {
@@ -676,8 +846,16 @@
     .path-card {
       border: 1px solid var(--hairline);
       border-radius: 8px;
-      background: rgba(250, 248, 244, 0.64);
-      padding: 20px;
+      background: rgba(251, 249, 244, 0.72);
+      padding: 24px;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+      transition: border-color 220ms ease, transform 220ms var(--ease-out), box-shadow 220ms ease;
+    }
+
+    .path-card:hover {
+      border-color: rgba(26, 58, 96, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.07);
     }
 
     .path-card a {
@@ -786,17 +964,29 @@
     }
 
     .domain {
-      min-height: 152px;
-      background: rgba(250, 248, 244, 0.48);
-      padding: 18px;
+      min-height: 164px;
+      background: rgba(251, 249, 244, 0.55);
+      padding: 22px;
+      transition: background 220ms ease;
+    }
+
+    .domain:hover {
+      background: var(--panel);
     }
 
     .domain svg {
       display: block;
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       margin-bottom: 18px;
-      color: var(--lines);
+      color: var(--accent);
+      opacity: 0.75;
+      transition: color 220ms ease, opacity 220ms ease;
+    }
+
+    .domain:hover svg {
+      color: var(--oxide);
+      opacity: 1;
     }
 
     .domain h3 {
@@ -891,25 +1081,12 @@
 
     @media (max-width: 1080px) {
       :root {
-        --gutter: 20px;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-
-      .hero-blueprint {
-        min-height: 430px;
-      }
-
-      .hero-blueprint svg {
-        min-height: 430px;
+        --gutter: 22px;
       }
 
       .section-grid {
         grid-template-columns: 1fr;
-        gap: 28px;
+        gap: 30px;
       }
 
       .protocol-grid {
@@ -946,23 +1123,15 @@
 
       .hero {
         min-height: auto;
-        gap: 24px;
-        padding: 36px 0 38px;
-      }
-
-      h1 {
-        margin-bottom: 16px;
-        font-size: 3.2rem;
-        line-height: 0.96;
+        padding: 32px 0 36px;
       }
 
       .tagline {
-        font-size: 1.28rem;
+        font-size: 1.3rem;
       }
 
       .subline {
         margin-bottom: 20px;
-        font-size: 1rem;
       }
 
       .hero-actions {
@@ -970,25 +1139,25 @@
       }
 
       .button {
-        width: 100%;
+        flex: 1 1 auto;
       }
 
-      .hero-blueprint {
-        min-height: 332px;
+      .hero-stage svg.stage-svg {
+        height: 300px;
       }
 
-      .hero-blueprint svg {
-        min-height: 332px;
+      .stage-controls {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: -36px;
       }
 
       .readout {
-        grid-template-columns: 1fr;
-        gap: 4px;
-        font-size: 0.72rem;
+        font-size: 0.74rem;
       }
 
       .section {
-        padding: 52px 0;
+        padding: 60px 0;
       }
 
       h2 {
@@ -1029,72 +1198,85 @@
       }
     }
   </style>
+  <noscript>
+    <style>
+      .reveal { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <svg class="blueprint-field" aria-hidden="true" viewBox="0 0 1440 920" preserveAspectRatio="xMidYMid slice">
-    <g fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.72">
-      <path d="M-40 190H150L190 150H370L410 190H620L690 120H860L940 200H1190L1250 140H1480"></path>
-      <path d="M80 650H280L340 590H510L570 650H790L860 580H1060L1130 650H1370"></path>
-      <path d="M160 80V250M340 150V310M620 190V450M860 120V300M1190 200V430"></path>
-      <path d="M210 430H430L470 390H640L690 440H930L980 390H1210"></path>
-      <path d="M1040 720V560H1220V440M460 790V650M760 730V650M1040 720H1260"></path>
-      <path d="M190 496C276 360 376 360 462 496S642 632 730 496S910 360 998 496S1176 632 1264 496"></path>
-      <rect x="84" y="412" width="212" height="140"></rect>
-      <rect x="356" y="238" width="232" height="140"></rect>
-      <rect x="626" y="550" width="220" height="140"></rect>
-      <rect x="908" y="238" width="236" height="140"></rect>
-      <rect x="1172" y="412" width="184" height="140"></rect>
-      <rect x="128" y="118" width="60" height="60"></rect>
-      <rect x="580" y="416" width="76" height="76"></rect>
-      <rect x="1004" y="356" width="68" height="68"></rect>
-      <circle cx="370" cy="150" r="22"></circle>
-      <circle cx="860" cy="120" r="18"></circle>
-      <circle cx="1130" cy="650" r="24"></circle>
-      <path d="M36 356h108M36 378h74M36 400h132M1264 286h132M1286 310h86M1240 334h156"></path>
+  <svg class="blueprint-field" aria-hidden="true" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+    <!-- Coarse routing bus, primary ink traces -->
+    <g class="bp-trace" fill="none">
+      <path d="M-40 150H180L230 100H470L520 150H760L830 80H1080L1160 170H1440L1520 110H1680"></path>
+      <path d="M-40 760H260L330 690H560L630 760H900L980 680H1240L1320 760H1680"></path>
+      <path d="M160 60V300M360 100V360M620 150V520M860 80V340M1160 170V480M1440 110V420"></path>
+      <path d="M220 500H520L580 440H820L880 510H1180L1260 440H1560"></path>
+      <path d="M1180 860V640H1420V480M520 920V760M900 880V760"></path>
     </g>
-    <!-- Via dots at key junctions -->
-    <g fill="currentColor" opacity="0.45">
-      <circle cx="150" cy="190" r="2.2"></circle><circle cx="370" cy="150" r="2.2"></circle>
-      <circle cx="620" cy="190" r="2.2"></circle><circle cx="860" cy="120" r="2.2"></circle>
-      <circle cx="1190" cy="200" r="2.2"></circle><circle cx="280" cy="650" r="2.2"></circle>
-      <circle cx="510" cy="650" r="2.2"></circle><circle cx="790" cy="650" r="2.2"></circle>
-      <circle cx="1060" cy="650" r="2.2"></circle><circle cx="340" cy="150" r="2"></circle>
-      <circle cx="690" cy="120" r="2"></circle><circle cx="160" cy="250" r="2"></circle>
-      <circle cx="340" cy="310" r="2"></circle><circle cx="620" cy="450" r="2"></circle>
-      <circle cx="860" cy="300" r="2"></circle><circle cx="1190" cy="430" r="2"></circle>
-      <circle cx="210" cy="430" r="2.2"></circle><circle cx="640" cy="390" r="2.2"></circle>
-      <circle cx="930" cy="440" r="2.2"></circle><circle cx="1040" cy="560" r="2"></circle>
-      <circle cx="1220" cy="440" r="2"></circle><circle cx="460" cy="650" r="2"></circle>
-      <circle cx="760" cy="650" r="2"></circle>
+    <!-- Secondary oxide-red traces (patent duotone) -->
+    <g class="bp-oxide" fill="none">
+      <path d="M-40 380H300L360 320H600L660 380H940"></path>
+      <path d="M940 380C1040 240 1160 240 1260 380S1480 520 1580 380"></path>
+      <path d="M1040 640V520H1280V360"></path>
+      <path d="M120 620h120l40 40h180"></path>
     </g>
-    <!-- Dimension lines with tick marks -->
-    <g fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.48">
-      <path d="M84 568h212"></path>
-      <path d="M84 564v8M296 564v8"></path>
-      <path d="M36 190v-32M36 182h14M36 190h14"></path>
-      <path d="M1370 650v-32M1370 642h-14M1370 650h-14"></path>
-      <path d="M1264 496v-70M1260 496h8M1268 496h8M1260 426h8M1268 426h8"></path>
-      <path d="M-20 496h56M-20 492v8M36 492v8"></path>
+    <!-- Component bays -->
+    <g class="bp-faint" fill="none">
+      <rect x="100" y="470" width="240" height="160"></rect>
+      <rect x="400" y="270" width="260" height="160"></rect>
+      <rect x="700" y="610" width="240" height="160"></rect>
+      <rect x="1000" y="270" width="270" height="160"></rect>
+      <rect x="1310" y="470" width="210" height="160"></rect>
+      <rect x="150" y="130" width="64" height="64"></rect>
+      <rect x="640" y="460" width="84" height="84"></rect>
+      <rect x="1110" y="390" width="72" height="72"></rect>
+      <circle cx="410" cy="170" r="24"></circle>
+      <circle cx="960" cy="130" r="20"></circle>
+      <circle cx="1260" cy="760" r="26"></circle>
     </g>
-    <!-- Component glyphs -->
-    <g fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.42">
-      <!-- Resistor zigzag -->
-      <path d="M1352 298h6l4-8h4l4 8h4l4-8h4l4 8h6"></path>
-      <!-- Capacitor plates -->
-      <path d="M44 298h12M64 290v16M72 290v16M80 298h12"></path>
-      <!-- IC pin rows -->
-      <path d="M632 570h12M632 578h12M632 586h12M632 594h12M676 570h12M676 578h12M676 586h12M676 594h12"></path>
+    <!-- Via dots -->
+    <g class="bp-via">
+      <circle cx="180" cy="150" r="2.4"></circle><circle cx="470" cy="100" r="2.4"></circle>
+      <circle cx="760" cy="150" r="2.4"></circle><circle cx="1080" cy="80" r="2.4"></circle>
+      <circle cx="1440" cy="170" r="2.4"></circle><circle cx="260" cy="760" r="2.4"></circle>
+      <circle cx="560" cy="760" r="2.4"></circle><circle cx="900" cy="760" r="2.4"></circle>
+      <circle cx="1240" cy="680" r="2.4"></circle><circle cx="520" cy="500" r="2.2"></circle>
+      <circle cx="820" cy="440" r="2.2"></circle><circle cx="1180" cy="510" r="2.2"></circle>
+      <circle cx="160" cy="300" r="2.2"></circle><circle cx="620" cy="520" r="2.2"></circle>
+      <circle cx="860" cy="340" r="2.2"></circle><circle cx="1160" cy="480" r="2.2"></circle>
+    </g>
+    <g class="bp-via-oxide">
+      <circle cx="300" cy="380" r="2.4"></circle><circle cx="600" cy="320" r="2.4"></circle>
+      <circle cx="940" cy="380" r="2.4"></circle><circle cx="1260" cy="380" r="2.4"></circle>
+    </g>
+    <!-- Dimension lines with end ticks -->
+    <g class="bp-faint" fill="none">
+      <path d="M100 650h240"></path>
+      <path d="M100 644v12M340 644v12"></path>
+      <path d="M40 150v-44M40 138h16M40 150h16"></path>
+      <path d="M1560 760v-44M1560 748h-16M1560 760h-16"></path>
+      <path d="M1520 380v-88M1514 380h12M1526 380h12M1514 292h12M1526 292h12"></path>
+    </g>
+    <!-- Component glyphs: resistor, capacitor, IC pins -->
+    <g class="bp-faint" fill="none">
+      <path d="M1500 470h8l5-10h5l5 10h5l5-10h5l5 10h8"></path>
+      <path d="M52 430h14M74 421v18M84 421v18M92 430h14"></path>
+      <path d="M708 614h14M708 624h14M708 634h14M708 644h14M926 614h14M926 624h14M926 634h14M926 644h14"></path>
     </g>
     <!-- Measurement annotations -->
-    <g fill="currentColor" opacity="0.38" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="0.08em">
-      <text x="150" y="578">212</text>
-      <text x="1280" y="420">~70</text>
-      <text x="1298" y="312">R1 10k</text>
-      <text x="20" y="312">C1 22pF</text>
-      <text x="636" y="564">IC1</text>
+    <g class="bp-anno">
+      <text x="180" y="668">240.0</text>
+      <text x="1538" y="540">~88</text>
+      <text x="1532" y="486">R1 10k</text>
+      <text x="20" y="446">C1 22pF</text>
+      <text x="712" y="606">IC1</text>
+      <text x="950" y="372">NET·A0</text>
     </g>
+    <!-- A live signal perpetually traversing a background bus line -->
+    <path class="bp-bus" d="M-40 380H300L360 320H600L660 380H940C1040 240 1160 240 1260 380S1480 520 1580 380"></path>
   </svg>
 
   <header class="site-header">
@@ -1119,129 +1301,125 @@
   </header>
 
   <main id="main">
-    <section class="wrap hero" id="top" aria-labelledby="hero-title">
-      <div>
-        <p class="kicker">NEUTRAL ACCOUNTABILITY LAYER</p>
-        <h1 id="hero-title">Arky</h1>
-        <p class="tagline">Neutral accountability for AI, blockchain, finance, and space.</p>
-        <p class="subline">Open standards for action and verification across agents, money, chains, and machines.</p>
-        <div class="signature">Receipts or it didn't happen.</div>
-        <div class="hero-actions" aria-label="Primary actions">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="kicker reveal">Neutral accountability layer</p>
+        <h1 id="hero-title" class="reveal"><span class="h1-mark">Arky</span></h1>
+        <p class="tagline reveal" style="--reveal-delay: 80ms">Neutral accountability for AI, blockchain, finance, and space.</p>
+        <p class="subline reveal" style="--reveal-delay: 140ms">Open standards for action and verification across agents, money, chains, and machines.</p>
+        <div class="signature reveal" style="--reveal-delay: 200ms">Receipts or it didn't happen.</div>
+        <div class="hero-actions reveal" style="--reveal-delay: 260ms" aria-label="Primary actions">
           <a class="button primary" href="../specs/core/ARKY-TIM-v1.md">Read the spec</a>
           <a class="button" href="../CONFORMANCE.md">Run vectors</a>
           <a class="button" href="../packages/core/README.md">Implement</a>
         </div>
       </div>
 
-      <div class="hero-blueprint" aria-label="Arky protocol schematic">
-        <svg viewBox="0 0 720 492" role="img" aria-labelledby="schematic-title schematic-desc">
+      <div class="hero-stage reveal" style="--reveal-delay: 320ms" aria-label="Arky protocol schematic">
+        <svg class="stage-svg" viewBox="0 0 1440 440" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="schematic-title schematic-desc">
           <title id="schematic-title">Arky protocol flow</title>
-          <desc id="schematic-desc">Evidence moves through witness, decision, execution, and receipt stages.</desc>
+          <desc id="schematic-desc">Evidence moves through witness, decision, execution, and receipt stages, ending in a signed receipt.</desc>
           <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M0 0L10 5L0 10Z" fill="var(--lines)"></path>
             </marker>
           </defs>
 
-          <!-- Circuitry background texture -->
-          <g opacity="0.36" fill="none" stroke="var(--lines)" stroke-width="0.5" vector-effect="non-scaling-stroke">
-            <path d="M18 442h28M18 450h18M18 458h32"></path>
-            <path d="M624 38h56M632 46h40M620 54h60"></path>
-            <path d="M648 402h44M656 410h32M642 418h50"></path>
-            <path d="M36 38v32M46 38v22M56 38v38"></path>
-            <path d="M674 432v36M684 432v26M694 432v42"></path>
-            <!-- Resistor zigzag -->
-            <path d="M656 344h6l3-6h3l3 6h3l3-6h3l3 6h6"></path>
-            <!-- Capacitor -->
-            <path d="M28 344h8M42 338v12M48 338v12M54 344h8"></path>
-            <!-- Via dots -->
-            <circle cx="28" cy="442" r="1.4"></circle>
-            <circle cx="66" cy="38" r="1.4"></circle>
-            <circle cx="624" cy="38" r="1.4"></circle>
-            <circle cx="648" cy="402" r="1.4"></circle>
+          <!-- Faint circuit substrate spanning the stage -->
+          <g class="schematic-faint">
+            <path d="M40 70h180l30-30h160l30 30h300M900 70h120l40-40h160l40 40h120"></path>
+            <path d="M40 372h220l34 34h220M740 406h160l40-34h260l40 34h160"></path>
+            <path d="M120 96v-46M520 100v-50M1000 96v-46M1320 100v-50"></path>
+            <path d="M40 200h60M40 240h44M1340 200h60M1356 240h44"></path>
+          </g>
+          <g class="schematic-oxide">
+            <path d="M40 300h260l40-40h220l40 40h300"></path>
+            <path d="M1040 300h120l40-40h200"></path>
           </g>
 
-          <g opacity="0.72">
-            <path class="schematic-faint" d="M54 80h116l34-34h92l34 34h158l44-44h98"></path>
-            <path class="schematic-faint" d="M92 390h132l34-34h146l46 46h178"></path>
-            <path class="schematic-faint" d="M140 122V54M342 116V54M548 124V54"></path>
-            <path class="schematic-faint" d="M86 212H36M116 234H36M568 262h104M598 284h74"></path>
-            <circle class="schematic-faint" cx="182" cy="46" r="18"></circle>
-            <circle class="schematic-faint" cx="532" cy="36" r="16"></circle>
-            <rect class="schematic-faint" x="598" y="364" width="56" height="56" rx="2"></rect>
+          <!-- Main signal route across the full width -->
+          <path class="schematic-line" d="M150 220C300 100 430 100 580 220S830 340 980 220S1230 100 1300 220" marker-end="url(#arrow)"></path>
+          <path class="live-route" id="live-route" d="M150 220C300 100 430 100 580 220S830 340 980 220S1230 100 1300 220"></path>
+
+          <!-- Dimension ticks at route endpoints -->
+          <g class="schematic-faint">
+            <path d="M150 244v-12M150 220h-12M1300 244v-12M1300 220h12"></path>
           </g>
 
-          <!-- Via dots on faint paths -->
-          <g fill="var(--lines)" opacity="0.5">
-            <circle cx="54" cy="80" r="2"></circle>
-            <circle cx="204" cy="46" r="2"></circle>
-            <circle cx="342" cy="116" r="2"></circle>
-            <circle cx="548" cy="124" r="2"></circle>
-            <circle cx="92" cy="390" r="2"></circle>
-            <circle cx="258" cy="356" r="2"></circle>
-            <circle cx="628" cy="390" r="2"></circle>
-          </g>
-
-          <path class="schematic-line" d="M95 248C138 180 188 180 231 248S321 316 365 248S455 180 499 248S588 316 632 248" marker-end="url(#arrow)"></path>
-          <path class="live-route" id="live-route" d="M95 248C138 180 188 180 231 248S321 316 365 248S455 180 499 248S588 316 632 248"></path>
-
-          <!-- Dimension ticks on main route -->
-          <g fill="none" stroke="var(--lines)" stroke-width="0.4" opacity="0.4" vector-effect="non-scaling-stroke">
-            <path d="M95 264v-6M95 248h-6M632 264v-6M632 248h6"></path>
+          <!-- Via dots along the substrate -->
+          <g class="bp-via" opacity="0.5">
+            <circle cx="250" cy="40" r="2.4"></circle><circle cx="440" cy="40" r="2.4"></circle>
+            <circle cx="1020" cy="30" r="2.4"></circle><circle cx="1220" cy="30" r="2.4"></circle>
+            <circle cx="294" cy="406" r="2.4"></circle><circle cx="514" cy="406" r="2.4"></circle>
+            <circle cx="900" cy="406" r="2.4"></circle>
           </g>
 
           <g class="flow-node" data-step="0" data-active="true" tabindex="0" role="button" aria-label="Stage 1: TIM, evidence">
-            <rect class="node-box" x="42" y="206" width="106" height="70" rx="4"></rect>
-            <text class="node-label" x="62" y="234">TIM</text>
-            <text class="node-role" x="62" y="255">Evidence</text>
+            <rect class="node-box" x="70" y="178" width="170" height="92" rx="5"></rect>
+            <line class="node-pin" x1="70" y1="200" x2="54" y2="200"></line>
+            <line class="node-pin" x1="70" y1="248" x2="54" y2="248"></line>
+            <text class="node-label" x="96" y="220">TIM</text>
+            <text class="node-role" x="96" y="244">Evidence</text>
           </g>
 
           <g class="flow-node" data-step="1" data-active="false" tabindex="0" role="button" aria-label="Stage 2: Notary, witness">
-            <rect class="node-box" x="178" y="119" width="116" height="70" rx="4"></rect>
-            <text class="node-label" x="198" y="147">Notary</text>
-            <text class="node-role" x="198" y="168">Witness</text>
+            <rect class="node-box" x="478" y="60" width="186" height="92" rx="5"></rect>
+            <line class="node-pin" x1="571" y1="152" x2="571" y2="170"></line>
+            <text class="node-label" x="504" y="102">Notary</text>
+            <text class="node-role" x="504" y="126">Witness</text>
           </g>
 
           <g class="flow-node" data-step="2" data-active="false" tabindex="0" role="button" aria-label="Stage 3: Kernel, policy">
-            <rect class="node-box" x="313" y="275" width="110" height="70" rx="4"></rect>
-            <text class="node-label" x="333" y="303">Kernel</text>
-            <text class="node-role" x="333" y="324">Policy</text>
+            <rect class="node-box" x="632" y="288" width="176" height="92" rx="5"></rect>
+            <line class="node-pin" x1="720" y1="288" x2="720" y2="270"></line>
+            <text class="node-label" x="658" y="330">Kernel</text>
+            <text class="node-role" x="658" y="354">Policy</text>
           </g>
 
           <g class="flow-node" data-step="3" data-active="false" tabindex="0" role="button" aria-label="Stage 4: Settler, execute">
-            <rect class="node-box" x="454" y="119" width="118" height="70" rx="4"></rect>
-            <text class="node-label" x="474" y="147">Settler</text>
-            <text class="node-role" x="474" y="168">Execute</text>
+            <rect class="node-box" x="876" y="60" width="186" height="92" rx="5"></rect>
+            <line class="node-pin" x1="969" y1="152" x2="969" y2="170"></line>
+            <text class="node-label" x="902" y="102">Settler</text>
+            <text class="node-role" x="902" y="126">Execute</text>
           </g>
 
           <g class="flow-node" data-step="4" data-active="false" tabindex="0" role="button" aria-label="Stage 5: XR, receipt">
-            <rect class="node-box" x="586" y="206" width="92" height="70" rx="4"></rect>
-            <text class="node-label" x="606" y="234">XR</text>
-            <text class="node-role" x="606" y="255">Receipt</text>
+            <rect class="node-box" x="1200" y="178" width="170" height="92" rx="5"></rect>
+            <line class="node-pin" x1="1370" y1="200" x2="1386" y2="200"></line>
+            <line class="node-pin" x1="1370" y1="248" x2="1386" y2="248"></line>
+            <text class="node-label" x="1226" y="220">XR</text>
+            <text class="node-role" x="1226" y="244">Receipt</text>
           </g>
 
-          <circle class="signal-dot" id="signal-dot" cx="95" cy="248" r="4.8"></circle>
+          <circle class="signal-halo" id="signal-halo" cx="150" cy="220" r="11"></circle>
+          <circle class="signal-dot" id="signal-dot" cx="150" cy="220" r="6"></circle>
         </svg>
+        <div class="stage-edge-fade" aria-hidden="true"></div>
+      </div>
+
+      <div class="stage-controls reveal" style="--reveal-delay: 360ms">
+        <div class="stage-meta">
+          <span class="readout">
+            <span>signal <strong id="active-stage">TIM / Evidence</strong></span>
+            <span class="receipt">signed receipt path</span>
+          </span>
+        </div>
         <div class="depth-toggle" role="group" aria-label="Explanation depth">
           <button type="button" class="depth-btn" data-mode="plain" aria-pressed="true">Plain</button>
           <button type="button" class="depth-btn" data-mode="engineer" aria-pressed="false">Engineer</button>
         </div>
-        <div class="readout">
-          <span>signal <strong id="active-stage">TIM / Evidence</strong></span>
-          <span class="receipt">signed receipt path</span>
-        </div>
-        <p class="stage-desc" id="stage-desc" aria-live="polite"></p>
       </div>
+      <p class="stage-desc" id="stage-desc" aria-live="polite"></p>
     </section>
 
     <section class="band section" id="standard" aria-labelledby="standard-title">
       <div class="wrap section-grid">
-        <div>
-          <p class="section-label">WHAT ARKY IS</p>
+        <div class="reveal">
+          <p class="section-label">What Arky is</p>
           <h2 id="standard-title">A public protocol for accountable action.</h2>
           <p class="lead">A standard is adopted when independent systems can read the same artifacts, replay the same evidence, and reach the same result.</p>
         </div>
-        <div class="definition">
+        <div class="definition reveal" style="--reveal-delay: 100ms">
           <p>A minimal public protocol that records who acted, with what evidence, under which policy, and what actually happened.</p>
         </div>
       </div>
@@ -1250,35 +1428,35 @@
     <section class="band section" id="loop" aria-labelledby="loop-title">
       <div class="wrap">
         <div class="section-grid">
-          <div>
-            <p class="section-label">CORE LOOP</p>
+          <div class="reveal">
+            <p class="section-label">Core loop</p>
             <h2 id="loop-title">Evidence to decision to receipt.</h2>
           </div>
-          <p class="lead">Arky turns messy, real-world evidence into deterministic decisions and signed receipts that any rail can verify.</p>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Arky turns messy, real-world evidence into deterministic decisions and signed receipts that any rail can verify.</p>
         </div>
 
         <div class="protocol-grid" aria-label="Arky core loop">
-          <article class="protocol-step">
+          <article class="protocol-step reveal">
             <div class="step-index">01</div>
             <h3>TIM</h3>
             <p>Cryptographic evidence: who, what, when, signed and content-addressed.</p>
           </article>
-          <article class="protocol-step">
+          <article class="protocol-step reveal" style="--reveal-delay: 70ms">
             <div class="step-index">02</div>
             <h3>Notary</h3>
             <p>Witness time, order, and finality so evidence can be verified later.</p>
           </article>
-          <article class="protocol-step">
+          <article class="protocol-step reveal" style="--reveal-delay: 140ms">
             <div class="step-index">03</div>
             <h3>Kernel</h3>
             <p>Deterministic decisions under declared policy and assertions.</p>
           </article>
-          <article class="protocol-step">
+          <article class="protocol-step reveal" style="--reveal-delay: 210ms">
             <div class="step-index">04</div>
             <h3>Settlers</h3>
             <p>Execute verbs on banks, blockchains, or devices.</p>
           </article>
-          <article class="protocol-step">
+          <article class="protocol-step reveal" style="--reveal-delay: 280ms">
             <div class="step-index">05</div>
             <h3>Receipt</h3>
             <p>Signed outcome tied to the decision, rail, and anchors.</p>
@@ -1290,25 +1468,25 @@
     <section class="band section" id="adopt" aria-labelledby="adopt-title">
       <div class="wrap">
         <div class="section-grid">
-          <div>
-            <p class="section-label">ADOPTION PATH</p>
+          <div class="reveal">
+            <p class="section-label">Adoption path</p>
             <h2 id="adopt-title">Read the spec. Run the vectors. Ship conformance.</h2>
           </div>
-          <div>
+          <div class="reveal" style="--reveal-delay: 100ms">
             <p class="lead">The conversion is technical adoption, not a signup. Teams validate artifacts locally, compare behavior against vectors, then implement the core loop in their stack.</p>
             <p class="conversion">read spec <span>-&gt;</span> run vectors <span>-&gt;</span> ship implementation</p>
           </div>
         </div>
 
         <div class="path-grid">
-          <article class="path-card">
+          <article class="path-card reveal">
             <p class="claim">1 / SPEC</p>
             <h3>Read</h3>
             <p>Start with the normative core documents for TIM, Notary, Kernel, Settlers, and Policy Packs.</p>
             <a href="../specs/core/README.md">Open core specs</a>
           </article>
 
-          <article class="path-card">
+          <article class="path-card reveal" style="--reveal-delay: 90ms">
             <p class="claim">2 / VERIFY</p>
             <h3>Validate</h3>
             <p>Run the repository checks: JSON syntax, conformance verifier, Kernel schema checks, and link resolution.</p>
@@ -1322,7 +1500,7 @@ bun run validate</code></pre>
             </div>
           </article>
 
-          <article class="path-card">
+          <article class="path-card reveal" style="--reveal-delay: 180ms">
             <p class="claim">3 / IMPLEMENT</p>
             <h3>Build</h3>
             <p>Use the TypeScript and Rust reference packages as executable anchors for conformant behavior.</p>
@@ -1336,25 +1514,25 @@ bun run validate</code></pre>
     <section class="band section" id="conformance" aria-labelledby="conformance-title">
       <div class="wrap">
         <div class="section-grid">
-          <div>
-            <p class="section-label">CONFORMANCE</p>
+          <div class="reveal">
+            <p class="section-label">Conformance</p>
             <h2 id="conformance-title">Vectors over vibes.</h2>
           </div>
-          <p class="lead">Conformance is pass/fail, not marketing. A spec is Stable only once its vectors pass on two or more independent implementations. The TypeScript and Rust reference stacks pass the published vectors and are cross-checked byte-for-byte.</p>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Conformance is pass/fail, not marketing. A spec is Stable only once its vectors pass on two or more independent implementations. The TypeScript and Rust reference stacks pass the published vectors and are cross-checked byte-for-byte.</p>
         </div>
 
         <div class="conformance-grid">
-          <article class="conformance-item">
+          <article class="conformance-item reveal">
             <p class="claim">VECTORS</p>
             <h3>Executable checks</h3>
             <p>Validation recomputes content IDs, verifies signatures and witnesses, and executes canonicalization, Merkle, finality, and Settler vectors.</p>
           </article>
-          <article class="conformance-item">
+          <article class="conformance-item reveal" style="--reveal-delay: 90ms">
             <p class="claim">IMPLEMENTATIONS</p>
             <h3>Two stacks</h3>
             <p><code>@arky/core</code> and <code>arky-core</code> cover the TIM to Kernel to Settler loop across TypeScript and Rust.</p>
           </article>
-          <article class="conformance-item">
+          <article class="conformance-item reveal" style="--reveal-delay: 180ms">
             <p class="claim">STATUS</p>
             <h3>Implementing</h3>
             <p>Formal ratification to stable is pending; the core loop has L2 coverage and production-ready manifests.</p>
@@ -1366,15 +1544,15 @@ bun run validate</code></pre>
     <section class="band section" aria-labelledby="domains-title">
       <div class="wrap">
         <div class="section-grid">
-          <div>
-            <p class="section-label">ADOPTERS</p>
+          <div class="reveal">
+            <p class="section-label">Adopters</p>
             <h2 id="domains-title">One receipt language across industries.</h2>
           </div>
-          <p class="lead">Arky is rail-agnostic and policy-aware: the same accountability surface can be adopted by agents, money systems, chains, and machines.</p>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Arky is rail-agnostic and policy-aware: the same accountability surface can be adopted by agents, money systems, chains, and machines.</p>
         </div>
 
         <div class="domain-list">
-          <article class="domain">
+          <article class="domain reveal">
             <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
               <path d="M10 18h28M10 30h28M18 10v28M30 10v28" stroke="currentColor" stroke-width="1"></path>
               <rect x="14" y="14" width="20" height="20" rx="2" stroke="currentColor" stroke-width="1"></rect>
@@ -1382,21 +1560,21 @@ bun run validate</code></pre>
             <h3>AI and agents</h3>
             <p>Action records with cited evidence and declared policy.</p>
           </article>
-          <article class="domain">
+          <article class="domain reveal" style="--reveal-delay: 80ms">
             <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
               <path d="M10 18h28v18H10zM14 18v-4h20v4M16 27h16" stroke="currentColor" stroke-width="1"></path>
             </svg>
             <h3>Finance</h3>
             <p>Receipts that connect decisions to rails and outcomes.</p>
           </article>
-          <article class="domain">
+          <article class="domain reveal" style="--reveal-delay: 160ms">
             <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
               <path d="M12 18h10v10H12zM26 10h10v10H26zM26 28h10v10H26zM22 23h4M31 20v8" stroke="currentColor" stroke-width="1"></path>
             </svg>
             <h3>Blockchain</h3>
             <p>Neutral verification without capture by any one chain.</p>
           </article>
-          <article class="domain">
+          <article class="domain reveal" style="--reveal-delay: 240ms">
             <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
               <path d="M24 8l6 12 12 6-12 4-6 10-6-10-12-4 12-6zM24 8v32" stroke="currentColor" stroke-width="1" stroke-linejoin="round"></path>
             </svg>
