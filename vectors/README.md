@@ -1,34 +1,53 @@
 # Arky Test Vectors
 
-Standardized test cases to validate implementations against Arky specifications.
+Standardized test cases for validating implementations against the Arky
+specifications. The authoritative suite metadata lives in
+[`manifests/`](manifests/) and the release summary lives in
+[`RELEASES.json`](RELEASES.json).
+
+## Current Status
+
+Current vector release: **0.2.0** (2026-06-15).
+
+The five core-loop suites (TIM, Canonicalization, Kernel, Notary, Settlers) have
+L2-or-better coverage in their manifests and pass on both reference
+implementations: [`@arky/core`](../packages/core/) and
+[`arky-core`](../packages/core-rs/). They are `core_production_ready`, but the
+overall vector set is not production-ready because non-core suites remain
+partial.
+
+| Suite | Spec | L1 | L2 | L3 | Total | Status |
+|---|---|---:|---:|---:|---:|---|
+| TIM | ARKY-TIM-v1 | 7 | 4 | 0 | 11 | core ready |
+| Canonicalization | ARKY-TIM-Canonicalization-v1 | 6 | 7 | 0 | 13 | core ready |
+| Kernel | ARKY-KERNEL-v1 | 10 | 4 | 0 | 14 | core ready |
+| Notary | ARKY-NOTARY-v1 | 8 | 4 | 3 | 15 | core ready |
+| Settlers | ARKY-SETTLERS-v1 | 10 | 2 | 2 | 14 | core ready |
+| Discovery | ARKY-DISCOVERY-v1 | 6 | 1 | 0 | 7 | partial |
+| Attestations | ARKY-ATTESTATIONS-v1 | 2 | 0 | 0 | 2 | basic |
+| **Total** | | **49** | **22** | **5** | **76** | |
+
+See [`../CONFORMANCE.md`](../CONFORMANCE.md) and
+[`../governance/ARKY-COMPAT-MATRIX-v1.md`](../governance/ARKY-COMPAT-MATRIX-v1.md)
+for the exact maturity and implementation claims.
 
 ## Quick Links
-- Testing Guide: `vectors/testing-guide.md`
-- TIM manifest: `vectors/manifests/tim.json`
-- Canonicalization manifest: `vectors/manifests/canonicalization.json`
-- Kernel manifest: `vectors/manifests/kernel.json`
-- Notary manifest: `vectors/manifests/notary.json`
-- Settlers manifest: `vectors/manifests/settlers.json`
-- Discovery manifest: `vectors/manifests/discovery.json`
-- Attestations manifest: `vectors/manifests/attestations.json`
-- Releases index: `vectors/RELEASES.json`
 
-## Suites (status)
-| Suite | Spec | L1 | L2 | L3 | Total | Status |
-|-------|------|----|----|----|----|--------|
-| TIM | ARKY-TIM-v1 | 7 | 0 | 0 | 7 | basic |
-| Canonicalization | ARKY-TIM-Canonicalization-v1 | 6 | 0 | 0 | 6 | basic |
-| Kernel | ARKY-KERNEL-v1 | 10 | 0 | 0 | 10 | basic |
-| Notary | ARKY-NOTARY-v1 | 8 | 0 | 0 | 8 | basic |
-| Settlers | ARKY-SETTLERS-v1 | 10 | 0 | 0 | 10 | basic |
-| Discovery | ARKY-DISCOVERY-v1 | 6 | 1 | 0 | 7 | partial |
-| Attestations | ARKY-ATTESTATION-v1 | 2 | 0 | 0 | 2 | basic |
-| **Total** | | **49** | **1** | **0** | **50** | |
+- Testing guide: [`testing-guide.md`](testing-guide.md)
+- Releases index: [`RELEASES.json`](RELEASES.json)
+- TIM manifest: [`manifests/tim.json`](manifests/tim.json)
+- Canonicalization manifest: [`manifests/canonicalization.json`](manifests/canonicalization.json)
+- Kernel manifest: [`manifests/kernel.json`](manifests/kernel.json)
+- Notary manifest: [`manifests/notary.json`](manifests/notary.json)
+- Settlers manifest: [`manifests/settlers.json`](manifests/settlers.json)
+- Discovery manifest: [`manifests/discovery.json`](manifests/discovery.json)
+- Attestations manifest: [`manifests/attestations.json`](manifests/attestations.json)
 
 ## Layout
-```
+
+```text
 vectors/
-  manifests/          # Consolidated suite manifests
+  manifests/          # Suite manifests and readiness flags
   fixtures/           # Shared test data
     keys/             # Ed25519 test keys
     tims/             # Sample TIM objects
@@ -41,13 +60,34 @@ vectors/
   settlers/           # Settler vectors (S1/S2/S3)
   discovery/          # Discovery vectors (D1/D2/D3)
   attest/             # Attestation vectors (AT1/AT2/AT3)
-  testing-guide.md    # How to run vectors
+  integration/        # End-to-end flows and reference path
+  RESULTS.json        # Example/generated conformance result artifact
   RELEASES.json       # Suite release tracking
+```
+
+## Running Local Checks
+
+```sh
+bun install
+bun run validate
+bun test
+cargo test --manifest-path packages/core-rs/Cargo.toml
+```
+
+`bun run validate` runs JSON parsing, signed artifact/vector verification,
+Kernel schema checks, and link checking. `bun test` exercises the TypeScript
+reference implementation against the vectors. The Rust command exercises the
+second independent implementation.
+
+For just the vector/artifact verifier:
+
+```sh
+bun run verify
 ```
 
 ## Test Vector Format
 
-All vectors follow the ARKY-VECTORS-v1 schema:
+All vectors follow `ARKY-VECTORS-v1`:
 
 ```json
 {
@@ -61,7 +101,7 @@ All vectors follow the ARKY-VECTORS-v1 schema:
       "signing_key": "fixtures/keys/ed25519-test-01.json"
     }
   },
-  "inputs": { ... },
+  "inputs": {},
   "expect": {
     "valid": true,
     "errors": []
@@ -69,97 +109,20 @@ All vectors follow the ARKY-VECTORS-v1 schema:
 }
 ```
 
-## Running Tests
-
-```bash
-# Install the Arky test runner
-npm install -g @arky-foundation/test-runner
-
-# Run all vectors
-arky-test --suite all
-
-# Run specific suite at specific level
-arky-test --suite tim --level T1
-
-# Generate compliance report
-arky-test --all --compliance --report coverage.html
-```
-
-## Contributing
-- Add a vector under the appropriate suite folder
-- Reference it in the suite manifest in `vectors/manifests/`
-- Update `vectors/RELEASES.json` when publishing a release
-- Format and requirements are defined in `specs/development/ARKY-VECTORS-v1.md`
-
-## CI Integration
-
-```yaml
-name: Arky Conformance
-on: [push, pull_request]
-jobs:
-  test-vectors:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run test vectors
-        run: arky-test --suite all --report=coverage.xml
-```
-
 ## Reference Implementations
 
-### Official Test Tools
-- **[arky-test-runner]**: CLI tool for running test vectors
-- **[arky-test-validator]**: Library for validating vector format
-- **[arky-test-generator]**: Tool for generating new test vectors
+- [`packages/core`](../packages/core/) - `@arky/core` TypeScript.
+- [`packages/core-rs`](../packages/core-rs/) - `arky-core` Rust.
 
-### Compatible Implementations
-- **[arky-go]**: Go implementation with full test coverage
-- **[arky-rust]**: Rust implementation with performance tests
-- **[arky-typescript]**: TypeScript implementation for Node.js
+The cross-language check in [`../scripts/cross-check.sh`](../scripts/cross-check.sh)
+compares canonical bytes, CIDs, timestamp parsing, kernel decisions, and
+execution receipts.
 
-## Troubleshooting
+## Contributing
 
-### Common Issues
-
-**Vector Fails with Unexpected Error**
-- Check if your implementation meets specification version requirements
-- Verify input data is processed correctly
-- Compare output with expected results step by step
-
-**Test Runner Cannot Find Vectors**
-- Ensure directory structure matches expected format
-- Check vector file naming conventions
-- Verify manifest.json files are valid
-
-**Coverage Report Shows Gaps**
-- Review missing test cases in each level
-- Consider adding edge case tests
-- Check if all specification features are covered
-
-### Getting Help
-
-- **[GitHub Issues]**: Report bugs or request new vectors
-- **[Discord Community]**: Get help from other developers
-- **[Specification Docs]**: Review detailed requirements
-- **[Reference Implementations]**: Study working examples
-
-## Releases
-
-Version tracking and release history is maintained in [RELEASES.json](RELEASES.json).
-
-**Current Version:** 0.1.0 (2025-10-15)
-
-**Release Process:**
-1. Add new vectors to appropriate directories
-2. Update manifests with new vector references
-3. Update RELEASES.json with new version
-4. Create signed release tag
-5. Update documentation
-
----
-
-**Related Resources:**
-- [Core Specifications](../specs/) - Complete specification documents
-- [Registry Documentation](../registries/) - Registry definitions and examples
-- [Implementation Examples](../examples/) - Code examples and tutorials
-- [Security Guidelines](../examples/security/) - Security best practices
+- Add vectors under the appropriate suite directory.
+- Reference new vectors in the corresponding manifest under `manifests/`.
+- Update `RELEASES.json` when publishing a vector release.
+- Keep fixture keys under `fixtures/keys/` as test keys only.
+- Format and requirements are defined in
+  [`../specs/development/ARKY-VECTORS-v1.md`](../specs/development/ARKY-VECTORS-v1.md).

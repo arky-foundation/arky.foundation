@@ -1,45 +1,45 @@
 {
   "version": "0.2.0",
   "release_date": "2026-06-15",
-  "description": "Arky Test Vectors Release - Level 1 coverage plus executable Level 2/3 algorithmic vectors and an end-to-end reference path",
+  "description": "Arky Test Vectors Release - core-loop L2 coverage, executable Level 2/3 algorithmic vectors, and an end-to-end reference path",
   "suites": {
     "tim": {
       "manifest": "manifests/tim.json",
       "spec": "ARKY-TIM-v1",
-      "status": "basic_coverage",
-      "total_vectors": 7,
+      "status": "core_ready",
+      "total_vectors": 11,
       "levels": {
         "T1": 7,
-        "T2": 0,
+        "T2": 4,
         "T3": 0
       }
     },
     "canonicalization": {
       "manifest": "manifests/canonicalization.json",
       "spec": "ARKY-TIM-Canonicalization-v1",
-      "status": "basic_coverage",
-      "total_vectors": 6,
+      "status": "core_ready",
+      "total_vectors": 13,
       "levels": {
         "C1": 6,
-        "C2": 0,
+        "C2": 7,
         "C3": 0
       }
     },
     "kernel": {
       "manifest": "manifests/kernel.json",
       "spec": "ARKY-KERNEL-v1",
-      "status": "basic_coverage",
-      "total_vectors": 10,
+      "status": "core_ready",
+      "total_vectors": 14,
       "levels": {
         "K1": 10,
-        "K2": 0,
+        "K2": 4,
         "K3": 0
       }
     },
     "notary": {
       "manifest": "manifests/notary.json",
       "spec": "ARKY-NOTARY-v1",
-      "status": "partial_coverage",
+      "status": "core_ready",
       "total_vectors": 15,
       "levels": {
         "N1": 8,
@@ -50,7 +50,7 @@
     "settlers": {
       "manifest": "manifests/settlers.json",
       "spec": "ARKY-SETTLERS-v1",
-      "status": "partial_coverage",
+      "status": "core_ready",
       "total_vectors": 14,
       "levels": {
         "S1": 10,
@@ -145,7 +145,7 @@
       ]
     }
   ],
-  "total_vectors": 61,
+  "total_vectors": 76,
   "status": {
     "overall": "core_production_ready",
     "production_ready": false,
