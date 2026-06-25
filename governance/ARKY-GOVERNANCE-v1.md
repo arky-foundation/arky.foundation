@@ -138,9 +138,9 @@ be re-verifiable from the repository:
    to the technical bar. A spec that meets only the technical bar (vectors + two
    implementations) is at most `implementing`; it MUST NOT be labelled `stable`
    without the recorded vote.
-6. **Results artifact** — `bun run results` regenerates the
-   [vector results artifact](../vectors/RESULTS.json), and the conformance claim
-   cites spec version(s), level(s), and commit hash (§8).
+6. **Results artifact** — `bun run results` regenerates the `RESULTS.json`
+   artifact under `vectors/`, and the conformance claim cites spec version(s),
+   level(s), and commit hash (§8).
 
 Promotion to `stable` additionally requires the recorded TC decision per §5.
 
