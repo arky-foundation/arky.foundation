@@ -1,0 +1,354 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Manifesto - Arky Foundation"
+  description="The mission and philosophy behind Arky: a neutral accountability layer for an autonomous civilization, so space systems, AGI, robots, and markets can act fast and answer for their actions."
+>
+  <main id="main" class="manifesto">
+    <!-- HERO -->
+    <section class="m-hero" aria-labelledby="m-title">
+      <p class="kicker reveal hero-load">Manifesto&ensp;·&ensp;Mission &amp; Philosophy</p>
+      <h1 id="m-title" class="m-h1 reveal hero-load" style="--reveal-delay: 60ms">A neutral accountability layer for an autonomous civilization.</h1>
+      <p class="m-lead reveal hero-load" style="--reveal-delay: 120ms">Make reality <em>verifiable</em> to machines and machine actions <em>accountable</em> to humans &mdash; so autonomous finance, robotics, and AI can operate safely across Earth and beyond.</p>
+    </section>
+
+    <!-- WHY NOW -->
+    <section class="band section" aria-labelledby="why-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">Why now</p>
+            <h2 id="why-title">Autonomy is outrunning its guardrails.</h2>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Systems are deciding and acting faster than any single vendor or platform can be trusted to govern. The fix is not another platform &mdash; it is a shared, neutral standard for what is true and what is allowed.</p>
+        </div>
+
+        <div class="why-grid">
+          <article class="why-card reveal">
+            <h3>AGI &amp; autonomy</h3>
+            <p>Moving faster than governance. We need hard, shared rules for &ldquo;what is true&rdquo; and &ldquo;what is allowed&rdquo; that don&rsquo;t depend on any single vendor.</p>
+          </article>
+          <article class="why-card reveal" style="--reveal-delay: 80ms">
+            <h3>Robotics &amp; space</h3>
+            <p>Trust under latency and loss of connectivity: prove <em>what happened</em> and settle <em>what must happen</em> later, deterministically.</p>
+          </article>
+          <article class="why-card reveal" style="--reveal-delay: 160ms">
+            <h3>Chains &amp; bank rails</h3>
+            <p>Fragmented and siloed. We need a neutral action layer that uses <em>all</em> of them without being captured by <em>any</em> of them.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE LOOP -->
+    <section class="band section" aria-labelledby="loop-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">The loop</p>
+            <h2 id="loop-title">Evidence becomes decisions becomes accountable action.</h2>
+            <p class="head-note">Five components, one chain &mdash; each small, signed, and testable.</p>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Measure, notarize, decide, settle, audit. Separation of concerns is the whole point: measuring is not deciding, and deciding is not settling. Every effect links back to cited, signed facts.</p>
+        </div>
+
+        <div class="dim" aria-hidden="true"><span class="dim-label">MEASURE &rarr; NOTARIZE &rarr; DECIDE &rarr; SETTLE &rarr; AUDIT</span></div>
+        <div class="spec-register reveal">
+          <div class="spec-row">
+            <span class="spec-idx">01</span>
+            <span class="spec-name"><b>TIM</b><span>Measure</span></span>
+            <span class="spec-desc">Makes facts portable and tamper-evident.</span>
+            <span class="spec-algo">signed, content-addressed evidence</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-idx">02</span>
+            <span class="spec-name"><b>Notary</b><span>Notarize</span></span>
+            <span class="spec-desc">Time, order, and finality you can verify offline &mdash; or on Mars.</span>
+            <span class="spec-algo">witness &middot; anchor &middot; inclusion proof</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-idx">03</span>
+            <span class="spec-name"><b>Kernel</b><span>Decide</span></span>
+            <span class="spec-desc">Turns facts into deterministic, policy-aware decisions.</span>
+            <span class="spec-algo">eval(facts, policy) &rarr; decision</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-idx">04</span>
+            <span class="spec-name"><b>Settlers</b><span>Settle</span></span>
+            <span class="spec-desc">Execute on any rail &mdash; chains, banks, devices &mdash; with receipts.</span>
+            <span class="spec-algo">verb(rail) &rarr; execution receipt</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-idx">05</span>
+            <span class="spec-name"><b>Vectors</b><span>Audit</span></span>
+            <span class="spec-desc">Keep the ecosystem consistent, findable, lawful, and testable.</span>
+            <span class="spec-algo">pass / fail conformance</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCIPLES -->
+    <section class="band section" aria-labelledby="principles-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">Design principles</p>
+            <h2 id="principles-title">Non-negotiable.</h2>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">These hold across every spec, every registry, every implementation. Where they conflict with growth, growth loses &mdash; bloat kills interop.</p>
+        </div>
+
+        <ol class="principles">
+          <li class="reveal"><b>Small surface, strong guarantees.</b> Minimal specs; maximal testability.</li>
+          <li class="reveal" style="--reveal-delay: 60ms"><b>Rail-agnostic, policy-aware.</b> Works with any ledger or bank; obeys jurisdiction.</li>
+          <li class="reveal" style="--reveal-delay: 120ms"><b>No central switch.</b> Verifiability replaces trusted intermediaries.</li>
+          <li class="reveal" style="--reveal-delay: 180ms"><b>Evidence before action.</b> Every effect links to cited, signed facts.</li>
+          <li class="reveal" style="--reveal-delay: 240ms"><b>Vectors over vibes.</b> Conformance is pass/fail, not marketing.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- IS / ISN'T + REFUSE -->
+    <section class="band section" aria-labelledby="stance-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">What we will and won&rsquo;t do</p>
+            <h2 id="stance-title">Guarding neutrality is the job.</h2>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">The Foundation stewards the specs, registries, and vectors; publishes policy frameworks so autonomy stays lawful and humane; and operates transparent governance. Neutrality is not a feature &mdash; it is the product.</p>
+        </div>
+
+        <div class="stance-grid">
+          <div class="stance-col is reveal">
+            <h3>Arky is</h3>
+            <ul>
+              <li>A compact protocol suite for verifiable machine action: receipts, decisions, execution, audit.</li>
+              <li>A safe way to mix off-chain evidence with on-chain anchors and off-chain rails.</li>
+              <li>A compatibility layer: registries, discovery, schemas, errors, vectors.</li>
+            </ul>
+          </div>
+          <div class="stance-col isnt reveal" style="--reveal-delay: 100ms">
+            <h3>Arky is not</h3>
+            <ul>
+              <li>A blockchain, wallet, KYC system, or monolithic platform.</li>
+              <li>A policy engine dictating business rules; it only enforces declared Packs.</li>
+              <li>A telemetry store; it carries just enough to prove claims.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="refuse reveal">We refuse to run a proprietary network, issue a currency, or pick winners &middot; embed surveillance or PII in public artifacts &middot; ship complexity for growth.</p>
+      </div>
+    </section>
+
+    <!-- SUCCESS / CLOSING -->
+    <section class="band section" aria-labelledby="success-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">Success looks like</p>
+            <h2 id="success-title">The same receipts, the same rules.</h2>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Multiple independent stacks pass the vectors and interoperate. Finance, logistics, robotics, and space settle against the same receipts. Incidents are resolved by replaying signed evidence &mdash; not by arguing over logs.</p>
+        </div>
+
+        <div class="closing reveal">
+          <p class="closing-text">Make correct behavior the path of least resistance.</p>
+          <div class="closing-actions" aria-label="Get started">
+            <a class="button primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md" target="_blank" rel="noopener">Read the spec</a>
+            <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/Philosophy.md" target="_blank" rel="noopener">Philosophy &amp; examples</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  /* ===== Manifesto-specific styles (design system inherited from Layout) ===== */
+  .m-hero {
+    width: min(100% - calc(var(--gutter) * 2), var(--max-text));
+    margin: 0 auto;
+    padding: clamp(var(--space-12), 12vh, var(--space-14)) 0 var(--space-12);
+  }
+
+  .m-h1 {
+    max-width: 18ch;
+    margin: var(--space-6) 0 var(--space-7);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    font-weight: 620;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+  }
+
+  .m-lead {
+    max-width: 56ch;
+    margin: 0;
+    color: var(--text-dim);
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    font-weight: 400;
+    line-height: 1.32;
+  }
+
+  .m-lead em {
+    color: var(--oxide);
+    font-style: normal;
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-9);
+  }
+
+  .why-card {
+    border: 1px solid var(--hairline);
+    border-top: 2px solid var(--oxide);
+    border-radius: 5px;
+    background: rgba(251, 250, 245, 0.7);
+    padding: var(--space-6);
+  }
+
+  .why-card h3 {
+    margin: 0 0 var(--space-3);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 560;
+    letter-spacing: -0.008em;
+  }
+
+  .why-card p {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+
+  .why-card em { color: var(--text); font-style: italic; }
+
+  /* Principles list */
+  .principles {
+    counter-reset: prin;
+    list-style: none;
+    margin: var(--space-9) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .principles li {
+    counter-increment: prin;
+    position: relative;
+    padding: var(--space-6) 0 var(--space-6) var(--space-12);
+    border-bottom: 1px solid var(--hairline);
+    color: var(--text-dim);
+    font-size: 1.08rem;
+    line-height: 1.5;
+  }
+
+  .principles li::before {
+    content: counter(prin, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: var(--space-6);
+    color: var(--oxide);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+  }
+
+  .principles b {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Is / isn't */
+  .stance-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-9);
+  }
+
+  .stance-col {
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    background: rgba(251, 250, 245, 0.6);
+    padding: var(--space-7) var(--space-6);
+  }
+
+  .stance-col.is { border-left: 2px solid var(--accent); }
+  .stance-col.isnt { border-left: 2px solid var(--oxide); }
+
+  .stance-col h3 {
+    margin: 0 0 var(--space-4);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .stance-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .stance-col li {
+    position: relative;
+    padding-left: var(--space-5);
+    color: var(--text-dim);
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .stance-col li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+  }
+
+  .stance-col.is li::before { background: var(--accent); }
+  .stance-col.isnt li::before {
+    background: transparent;
+    border: 1px solid var(--oxide);
+    transform: rotate(45deg);
+  }
+
+  .refuse {
+    margin: var(--space-7) 0 0;
+    padding: var(--space-5) var(--space-6);
+    border: 1px dashed rgba(188, 75, 42, 0.4);
+    border-radius: 4px;
+    background: var(--oxide-soft);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 1080px) {
+    .why-grid,
+    .stance-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
