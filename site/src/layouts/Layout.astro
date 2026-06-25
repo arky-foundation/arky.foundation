@@ -6,12 +6,63 @@ import Footer from "../components/Footer.astro";
 interface Props {
   title: string;
   description?: string;
+  canonicalPath?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: "website" | "article";
 }
+
+const defaultDescription =
+  "Arky is a neutral public standard for action and verification across agents, money, chains, and machines. Signed, content-addressed receipts any system can replay.";
 
 const {
   title,
-  description = "Arky is a neutral public standard for action and verification across agents, money, chains, and machines. Signed, content-addressed receipts any system can replay.",
+  description = defaultDescription,
+  canonicalPath = Astro.url.pathname,
+  image = "/og-image.png",
+  imageAlt = "Arky Foundation logo and title",
+  type = "website",
 } = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://arky.foundation");
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const imageUrl = new URL(image, siteUrl).toString();
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": new URL("/#organization", siteUrl).toString(),
+      name: "Arky Foundation",
+      url: siteUrl.toString(),
+      logo: new URL("/icon-512.png", siteUrl).toString(),
+      sameAs: ["https://github.com/arky-foundation/arky.foundation"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": new URL("/#website", siteUrl).toString(),
+      name: "Arky Foundation",
+      url: siteUrl.toString(),
+      description: defaultDescription,
+      publisher: {
+        "@id": new URL("/#organization", siteUrl).toString(),
+      },
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: title,
+      description,
+      isPartOf: {
+        "@id": new URL("/#website", siteUrl).toString(),
+      },
+      about: {
+        "@id": new URL("/#organization", siteUrl).toString(),
+      },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -20,9 +71,27 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#F3EFE5" />
     <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Arky Foundation" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
@@ -41,6 +110,7 @@ const {
         .hero-load { animation: none !important; opacity: 1 !important; transform: none !important; }
       </style>
     </noscript>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

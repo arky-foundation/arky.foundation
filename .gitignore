@@ -2,6 +2,7 @@ node_modules/
 dist/
 vectors/RESULTS.json
 target/
+.DS_Store
 
 # arkestra
 .agent-out/

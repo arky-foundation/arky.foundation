@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Arky Foundation</title>
+  <desc id="desc">Neutral accountability standard for agents, money, chains, and machines.</desc>
+  <defs>
+    <radialGradient id="warm" cx="14%" cy="20%" r="92%">
+      <stop offset="0%" stop-color="#F7F3EA"/>
+      <stop offset="58%" stop-color="#F3EFE5"/>
+      <stop offset="100%" stop-color="#EDE8DB"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#warm)"/>
+  <rect x="104" y="208" width="172" height="172" rx="24" fill="#FBFAF5" stroke="#D9D1C0" stroke-width="3"/>
+  <g transform="translate(114 218) scale(2.38)" fill="none" stroke="#BC4B2A" stroke-width="4" stroke-linejoin="round">
+    <path d="M32 10L52 54H12L32 10Z"/>
+    <path d="M22 44H42" stroke-linecap="round"/>
+  </g>
+  <text x="340" y="285" fill="#181612" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-size="78" font-weight="650">Arky Foundation</text>
+  <text x="344" y="350" fill="#6B6258" font-family="Newsreader, Georgia, 'Times New Roman', serif" font-size="36">Neutral accountability standard</text>
+  <text x="344" y="397" fill="#6B6258" font-family="Newsreader, Georgia, 'Times New Roman', serif" font-size="36">for agents, money, chains, and machines.</text>
+</svg>
