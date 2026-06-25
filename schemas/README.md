@@ -27,7 +27,7 @@ const ok = validate(data);
 - Strict: `additionalProperties: false` by default
 
 ## Versioning
-- v1 = current stable
-- Schema versions are independent of specification versions
-- Breaking changes publish a new file/version and `$id`
-
+- `v1` is the current schema major line, not a spec lifecycle claim.
+- Schema versions are independent of specification versions.
+- Breaking changes publish a new file/version and `$id`.
+- See `../CONFORMANCE.md` for current spec maturity status.
