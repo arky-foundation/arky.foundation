@@ -53,7 +53,11 @@
     }
 
     html {
-      background: var(--ground);
+      background:
+        radial-gradient(125% 90% at 78% -8%, rgba(30, 61, 92, 0.06), transparent 52%),
+        radial-gradient(110% 80% at 8% 4%, rgba(188, 75, 42, 0.04), transparent 46%),
+        linear-gradient(192deg, #F7F3EA, #F3EFE5 58%, #EDE8DB),
+        var(--ground);
       color: var(--text);
       scroll-behavior: smooth;
     }
@@ -63,11 +67,7 @@
       min-height: 100vh;
       margin: 0;
       overflow-x: hidden;
-      background:
-        radial-gradient(125% 90% at 78% -8%, rgba(30, 61, 92, 0.06), transparent 52%),
-        radial-gradient(110% 80% at 8% 4%, rgba(188, 75, 42, 0.04), transparent 46%),
-        linear-gradient(192deg, #F7F3EA, #F3EFE5 58%, #EDE8DB),
-        var(--ground);
+      background: transparent;
       color: var(--text);
       font-family: var(--font-body);
       font-size: 17px;
@@ -111,7 +111,7 @@
       content: "";
       pointer-events: none;
       opacity: 0.55;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+      background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='160'%20height='160'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'%20opacity='0.04'/%3E%3C/svg%3E"),
         radial-gradient(120% 120% at 50% 40%, transparent 62%, rgba(60, 50, 38, 0.05));
     }
 
@@ -154,65 +154,25 @@
       transform: translateY(0);
     }
 
-    /* Full-document circuit board: absolutely positioned over the entire
-       page height (top:0/bottom:0 against the relatively-positioned body) so
-       the schematic runs continuously behind every section. */
+    /* Full-document circuit board: an absolutely-positioned div spanning the
+       entire page height (top:0/bottom:0 against the relatively-positioned
+       body), tiled with a dense schematic SVG so the board runs continuously
+       behind every section. A div (not an inline SVG) is used because it
+       reliably fills top/bottom; inline SVGs collapse without intrinsic size. */
     .blueprint-field {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
+      position: fixed;
+      inset: 0;
       z-index: -1;
-      width: 100%;
-      color: var(--lines);
-      opacity: 0.92;
+      opacity: 0.4;
       pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221600%22%20height%3D%22900%22%20viewBox%3D%220%200%201600%20900%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cpath%20d%3D%22M-20%20120H260L320%2070H520L580%20120H980L1050%2060H1340L1410%20130H1620%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221.2%22%20stroke-opacity%3D%220.2%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M-20%20470H300L360%20410H760L820%20470H1180L1260%20410H1620%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221.2%22%20stroke-opacity%3D%220.2%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M-20%20780H360L430%20720H720L800%20790H1160L1240%20730H1620%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221.2%22%20stroke-opacity%3D%220.2%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M-20%20300H320L390%20240H700L770%20300C900%20160%201100%20160%201230%20300S1500%20440%201620%20300%22%20fill%3D%22none%22%20stroke%3D%22%23BC4B2A%22%20stroke-width%3D%221.1%22%20stroke-opacity%3D%220.22%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M320%2070V300%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M580%20120V470%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M820%20300V470%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M1050%2060V300%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M1260%20300V470%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M430%20470V720%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M1160%20470V780%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M700%20300V780%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16000000000000003%22%20stroke-linecap%3D%22round%22%2F%3E%3Crect%20x%3D%22180%22%20y%3D%22520%22%20width%3D%22200%22%20height%3D%22150%22%20rx%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16%22%2F%3E%3Crect%20x%3D%22640%22%20y%3D%22150%22%20width%3D%22240%22%20height%3D%22150%22%20rx%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16%22%2F%3E%3Crect%20x%3D%221080%22%20y%3D%22540%22%20width%3D%22240%22%20height%3D%22160%22%20rx%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16%22%2F%3E%3Crect%20x%3D%221320%22%20y%3D%22180%22%20width%3D%22180%22%20height%3D%22150%22%20rx%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16%22%2F%3E%3Crect%20x%3D%22420%22%20y%3D%22560%22%20width%3D%2290%22%20height%3D%2290%22%20rx%3D%224%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.16%22%2F%3E%3Cpath%20d%3D%22M520%20470h10l6-12h6l6%2012h6l6-12h6l6%2012h10%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.2%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M980%20120h18M1004%20108v24M1016%20108v24M1026%20120h18%22%20fill%3D%22none%22%20stroke%3D%22%231E3D5C%22%20stroke-width%3D%221%22%20stroke-opacity%3D%220.2%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22260%22%20cy%3D%22120%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22520%22%20cy%3D%22120%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22980%22%20cy%3D%22120%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%221340%22%20cy%3D%22120%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22300%22%20cy%3D%22470%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22760%22%20cy%3D%22470%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%221180%22%20cy%3D%22470%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22360%22%20cy%3D%22780%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22720%22%20cy%3D%22780%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%221160%22%20cy%3D%22780%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22320%22%20cy%3D%22300%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22700%22%20cy%3D%22300%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%221230%22%20cy%3D%22300%22%20r%3D%223%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22390%22%20cy%3D%22300%22%20r%3D%223%22%20fill%3D%22%23BC4B2A%22%20fill-opacity%3D%220.4%22%2F%3E%3Ccircle%20cx%3D%22770%22%20cy%3D%22300%22%20r%3D%223%22%20fill%3D%22%23BC4B2A%22%20fill-opacity%3D%220.4%22%2F%3E%3Ctext%20x%3D%2270%22%20y%3D%22108%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.22%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20letter-spacing%3D%221%22%3EEd25519%3C%2Ftext%3E%3Ctext%20x%3D%221090%22%20y%3D%22528%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.22%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20letter-spacing%3D%221%22%3Esha2-256%3C%2Ftext%3E%3Ctext%20x%3D%22650%22%20y%3D%22140%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.22%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20letter-spacing%3D%221%22%3Emerkle.root%3C%2Ftext%3E%3Ctext%20x%3D%22430%22%20y%3D%22548%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.22%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20letter-spacing%3D%221%22%3EJWS.b64%3Afalse%3C%2Ftext%3E%3Ctext%20x%3D%221330%22%20y%3D%22168%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.22%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20letter-spacing%3D%221%22%3Efinality.N3%3C%2Ftext%3E%3Ctext%20x%3D%22185%22%20y%3D%22508%22%20fill%3D%22%231E3D5C%22%20fill-opacity%3D%220.22%22%20font-family%3D%22monospace%22%20font-size%3D%2211%22%20letter-spacing%3D%221%22%3Estatus.success%3C%2Ftext%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
     }
 
-    .blueprint-field path,
-    .blueprint-field line,
-    .blueprint-field circle,
-    .blueprint-field rect,
-    .blueprint-field polyline {
-      vector-effect: non-scaling-stroke;
-    }
-
-    .bp-trace { stroke: var(--lines); stroke-width: 0.9; opacity: 0.5; }
-    .bp-faint { stroke: var(--lines); stroke-width: 0.6; opacity: 0.3; }
-    .bp-oxide { stroke: var(--oxide); stroke-width: 0.7; opacity: 0.26; }
+    /* Via dots inside the hero data-flow stage SVG */
     .bp-via { fill: var(--lines); opacity: 0.4; }
-    .bp-via-oxide { fill: var(--oxide); opacity: 0.34; }
-    .bp-anno { fill: var(--text-dim); opacity: 0.32; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; }
-
-    /* Faint signals perpetually travelling background bus lines */
-    .bp-bus {
-      fill: none;
-      stroke: var(--accent);
-      stroke-width: 1.1;
-      stroke-linecap: round;
-      opacity: 0.5;
-      stroke-dasharray: 26 1400;
-      animation: bus-run 9s linear infinite;
-    }
-
-    .bp-bus-2 {
-      fill: none;
-      stroke: var(--oxide);
-      stroke-width: 1;
-      stroke-linecap: round;
-      opacity: 0.42;
-      stroke-dasharray: 18 1600;
-      animation: bus-run-2 13s linear infinite;
-      animation-delay: -3s;
-    }
-
-    @keyframes bus-run {
-      to { stroke-dashoffset: -1426; }
-    }
-
-    @keyframes bus-run-2 {
-      to { stroke-dashoffset: -1618; }
-    }
 
     .wrap {
       width: min(100% - calc(var(--gutter) * 2), var(--max));
@@ -325,6 +285,19 @@
       padding: clamp(var(--space-7), 6vh, var(--space-12)) 0 clamp(var(--space-6), 4vh, var(--space-9));
     }
 
+    /* Veil: softly mute the background circuit behind the hero so the
+       foreground diagrams (actor-network + data-flow stage) read cleanly. */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -10% -20% 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(62% 60% at 72% 42%, var(--ground) 30%, rgba(243, 239, 229, 0.7) 52%, transparent 78%),
+        radial-gradient(70% 55% at 24% 40%, var(--ground) 24%, rgba(243, 239, 229, 0.55) 50%, transparent 76%);
+    }
+
     /* Hero top band: copy left, live actor-network right */
     .hero-top {
       position: relative;
@@ -427,10 +400,10 @@
     .net-node .net-glyph {
       fill: none;
       stroke: var(--accent);
-      stroke-width: 1.3;
+      stroke-width: 1.6;
       stroke-linecap: round;
       stroke-linejoin: round;
-      opacity: 0.78;
+      opacity: 0.8;
       vector-effect: non-scaling-stroke;
       transition: stroke 280ms var(--ease-out), opacity 280ms var(--ease-out);
     }
@@ -591,6 +564,7 @@
 
     .tagline {
       max-width: 32ch;
+      margin-top: var(--space-9);
       margin-bottom: var(--space-5);
       color: var(--text);
       font-family: var(--font-display);
@@ -608,39 +582,6 @@
       line-height: 1.55;
     }
 
-    .signature {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      max-width: 100%;
-      min-height: 42px;
-      border: 1px solid rgba(188, 75, 42, 0.28);
-      border-radius: 3px;
-      background: rgba(251, 250, 245, 0.8);
-      box-shadow: inset 0 0 0 1px rgba(188, 75, 42, 0.05), 0 1px 0 rgba(255, 255, 255, 0.55);
-      color: var(--oxide);
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      padding: var(--space-2) var(--space-4);
-      white-space: normal;
-      letter-spacing: 0.05em;
-    }
-
-    .signature::before {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--oxide);
-      box-shadow: 0 0 0 3px rgba(188, 75, 42, 0.12);
-      content: "";
-      animation: sig-pulse 2.8s var(--ease-out) infinite;
-    }
-
-    @keyframes sig-pulse {
-      0%, 100% { box-shadow: 0 0 0 3px rgba(188, 75, 42, 0.12); }
-      50% { box-shadow: 0 0 0 7px rgba(188, 75, 42, 0.03); }
-    }
-
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -654,14 +595,15 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      height: 48px;
       border: 1px solid var(--hairline);
       border-radius: 3px;
       background: var(--panel);
       color: var(--text);
-      padding: var(--space-3) var(--space-5);
+      padding: 0 var(--space-5);
       font-size: 1rem;
       font-weight: 520;
+      line-height: 1;
       letter-spacing: 0.006em;
       box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
       transition: border-color 220ms var(--ease-out), color 220ms var(--ease-out), background 220ms var(--ease-out), transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
@@ -695,6 +637,18 @@
       margin-left: calc(50% - 50vw);
       margin-top: clamp(var(--space-7), 6vh, var(--space-11));
       padding: 0;
+    }
+
+    /* Mute the background circuit behind the full-bleed data-flow stage so
+       the diagram reads cleanly; fades out to the edges. */
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: -16% 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(58% 92% at 50% 50%, var(--ground) 42%, rgba(243, 239, 229, 0.66) 64%, transparent 88%);
     }
 
     .hero-stage svg.stage-svg {
@@ -1229,60 +1183,63 @@
     .path-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-4);
-      border: 1px solid var(--hairline);
-      border-radius: 6px;
-      background: rgba(251, 250, 245, 0.42);
+      gap: var(--space-5);
       margin-top: 0;
-      padding: var(--space-4);
     }
 
     .path-card {
       position: relative;
+      display: flex;
+      flex-direction: column;
       border: 1px solid var(--hairline);
-      border-radius: 4px;
+      border-top: 2px solid var(--accent);
+      border-radius: 5px;
       background: rgba(251, 250, 245, 0.7);
-      padding: var(--space-5);
+      padding: var(--space-6);
       transition: border-color 240ms ease, transform 240ms var(--ease-out), box-shadow 240ms ease;
     }
 
-    .path-card::before {
-      position: absolute;
-      left: 0;
-      top: var(--space-4);
-      bottom: var(--space-4);
-      width: 1px;
-      background: var(--lines);
-      opacity: 0.2;
-      content: "";
-    }
-
     .path-card:hover {
-      border-color: rgba(30, 61, 92, 0.36);
       transform: translateY(-3px);
       box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
     }
 
-    .path-card:hover::before {
-      background: var(--accent);
-      opacity: 0.4;
+    /* Card links rendered as clear, labelled link rows with an arrow */
+    .path-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-top: auto;
+      padding-top: var(--space-5);
     }
 
-    .path-card a {
+    .path-link {
       display: inline-flex;
-      margin-top: var(--space-5);
-      color: var(--text);
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--accent);
       font-family: var(--font-body);
-      font-size: 0.94rem;
-      font-weight: 540;
+      font-size: 0.95rem;
+      font-weight: 560;
+      border-bottom: 1px solid rgba(30, 61, 92, 0.28);
+      padding-bottom: 2px;
+      transition: color 200ms ease, border-color 200ms ease, gap 200ms var(--ease-out);
     }
 
-    .path-card a:hover {
+    .path-link::after {
+      content: "\2192";
+      font-size: 1.05em;
+      line-height: 1;
+    }
+
+    .path-link:hover {
       color: var(--oxide);
+      border-color: var(--oxide);
+      gap: var(--space-3);
     }
 
     .terminal {
-      margin-top: var(--space-5);
+      margin-top: auto;
       border: 1px solid var(--hairline);
       border-radius: 4px;
       background: #EDE9DF;
@@ -1801,169 +1758,11 @@
       .hero-load { animation: none !important; opacity: 1 !important; transform: none !important; }
     </style>
   </noscript>
-  <style media="print">
-    .reveal, .hero-load { opacity: 1 !important; transform: none !important; animation: none !important; }
-    .blueprint-field, body::before, body::after, .drawing-block { display: none !important; }
-  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <svg class="blueprint-field" aria-hidden="true" viewBox="0 0 1600 3200" preserveAspectRatio="none">
-    <!-- ============================================================
-         FULL-PAGE CIRCUIT BOARD. viewBox is 1600 x 3200 and is stretched
-         (preserveAspectRatio=none) to the whole document height; every
-         element uses non-scaling-stroke so line weights stay crisp. The
-         board is organised in horizontal bands so each section scrolls over
-         a distinct, busy region of the schematic.
-         ============================================================ -->
-
-    <!-- BAND 1 (hero ~0-1000) primary ink traces -->
-    <g class="bp-trace" fill="none">
-      <path d="M-40 150H180L230 100H470L520 150H760L830 80H1080L1160 170H1440L1520 110H1680"></path>
-      <path d="M-40 760H260L330 690H560L630 760H900L980 680H1240L1320 760H1680"></path>
-      <path d="M160 60V300M360 100V360M620 150V520M860 80V340M1160 170V480M1440 110V420"></path>
-      <path d="M220 500H520L580 440H820L880 510H1180L1260 440H1560"></path>
-      <path d="M1180 860V640H1420V480M520 920V760M900 880V760"></path>
-    </g>
-    <!-- BAND 2 (~1000-1800) -->
-    <g class="bp-trace" fill="none">
-      <path d="M-40 1180H240L300 1120H540L600 1180H880L960 1100H1240L1320 1190H1680"></path>
-      <path d="M240 1120V1420M600 1180V1520M960 1100V1460M1320 1190V1500"></path>
-      <path d="M-40 1560H300L360 1500H620L680 1560H1000L1080 1620H1680"></path>
-      <path d="M120 1240H420L480 1300H720M1100 1340H1400V1620"></path>
-    </g>
-    <!-- BAND 3 (~1800-2500) -->
-    <g class="bp-trace" fill="none">
-      <path d="M-40 1980H220L280 1920H520L580 1980H860L940 2060H1680"></path>
-      <path d="M220 1920V2240M580 1980V2300M940 2060V2360M1360 2000V2320"></path>
-      <path d="M-40 2360H320L380 2300H640L700 2360H1040L1120 2300H1680"></path>
-      <path d="M1360 2000H1560M180 2120H460L520 2180H760"></path>
-    </g>
-    <!-- BAND 4 (~2500-3200) -->
-    <g class="bp-trace" fill="none">
-      <path d="M-40 2760H260L320 2700H560L620 2760H900L980 2840H1680"></path>
-      <path d="M260 2700V3000M620 2760V3060M980 2840V3120M1400 2720V3040"></path>
-      <path d="M-40 3060H300L360 3120H620L700 3060H1680"></path>
-      <path d="M160 2840H440L500 2900H740M1120 2900H1420V3120"></path>
-    </g>
-
-    <!-- Secondary oxide-red traces, threaded down the whole board -->
-    <g class="bp-oxide" fill="none">
-      <path d="M-40 380H300L360 320H600L660 380H940"></path>
-      <path d="M940 380C1040 240 1160 240 1260 380S1480 520 1580 380"></path>
-      <path d="M1040 640V520H1280V360"></path>
-      <path d="M120 620h120l40 40h180"></path>
-      <path d="M-40 1380H280L340 1320H580L640 1380H920V1640"></path>
-      <path d="M1080 1240H1360V1480H1180"></path>
-      <path d="M-40 2180H260L320 2120H560L620 2180H900"></path>
-      <path d="M900 2180C1000 2040 1120 2040 1220 2180S1440 2320 1540 2180"></path>
-      <path d="M-40 2980H300L360 2920H600L660 2980H940V3160"></path>
-      <path d="M1060 2840H1340V3080"></path>
-    </g>
-
-    <!-- Component bays distributed across all bands -->
-    <g class="bp-faint" fill="none">
-      <rect x="100" y="470" width="240" height="160"></rect>
-      <rect x="400" y="270" width="260" height="160"></rect>
-      <rect x="700" y="610" width="240" height="160"></rect>
-      <rect x="1000" y="270" width="270" height="160"></rect>
-      <rect x="1310" y="470" width="210" height="160"></rect>
-      <rect x="150" y="130" width="64" height="64"></rect>
-      <rect x="640" y="460" width="84" height="84"></rect>
-      <rect x="1110" y="390" width="72" height="72"></rect>
-      <rect x="160" y="1240" width="240" height="150"></rect>
-      <rect x="520" y="1320" width="260" height="150"></rect>
-      <rect x="1080" y="1240" width="280" height="160"></rect>
-      <rect x="700" y="1140" width="78" height="78"></rect>
-      <rect x="200" y="1980" width="240" height="150"></rect>
-      <rect x="600" y="2080" width="260" height="160"></rect>
-      <rect x="1120" y="2000" width="280" height="160"></rect>
-      <rect x="940" y="2300" width="80" height="80"></rect>
-      <rect x="160" y="2760" width="250" height="160"></rect>
-      <rect x="560" y="2860" width="260" height="150"></rect>
-      <rect x="1100" y="2760" width="280" height="170"></rect>
-      <rect x="780" y="2680" width="80" height="80"></rect>
-    </g>
-
-    <!-- Via dots -->
-    <g class="bp-via">
-      <circle cx="180" cy="150" r="2.4"></circle><circle cx="470" cy="100" r="2.4"></circle>
-      <circle cx="760" cy="150" r="2.4"></circle><circle cx="1080" cy="80" r="2.4"></circle>
-      <circle cx="1440" cy="170" r="2.4"></circle><circle cx="260" cy="760" r="2.4"></circle>
-      <circle cx="560" cy="760" r="2.4"></circle><circle cx="900" cy="760" r="2.4"></circle>
-      <circle cx="1240" cy="680" r="2.4"></circle><circle cx="520" cy="500" r="2.2"></circle>
-      <circle cx="820" cy="440" r="2.2"></circle><circle cx="1180" cy="510" r="2.2"></circle>
-      <circle cx="240" cy="1120" r="2.4"></circle><circle cx="600" cy="1180" r="2.4"></circle>
-      <circle cx="960" cy="1100" r="2.4"></circle><circle cx="1320" cy="1190" r="2.4"></circle>
-      <circle cx="360" cy="1500" r="2.2"></circle><circle cx="680" cy="1560" r="2.2"></circle>
-      <circle cx="220" cy="1920" r="2.4"></circle><circle cx="580" cy="1980" r="2.4"></circle>
-      <circle cx="940" cy="2060" r="2.4"></circle><circle cx="1360" cy="2000" r="2.4"></circle>
-      <circle cx="380" cy="2300" r="2.2"></circle><circle cx="700" cy="2360" r="2.2"></circle>
-      <circle cx="260" cy="2700" r="2.4"></circle><circle cx="620" cy="2760" r="2.4"></circle>
-      <circle cx="980" cy="2840" r="2.4"></circle><circle cx="1400" cy="2720" r="2.4"></circle>
-      <circle cx="360" cy="3120" r="2.2"></circle><circle cx="700" cy="3060" r="2.2"></circle>
-    </g>
-    <g class="bp-via-oxide">
-      <circle cx="300" cy="380" r="2.4"></circle><circle cx="600" cy="320" r="2.4"></circle>
-      <circle cx="940" cy="380" r="2.4"></circle><circle cx="1260" cy="380" r="2.4"></circle>
-      <circle cx="340" cy="1320" r="2.4"></circle><circle cx="640" cy="1380" r="2.4"></circle>
-      <circle cx="320" cy="2120" r="2.4"></circle><circle cx="620" cy="2180" r="2.4"></circle>
-      <circle cx="360" cy="2920" r="2.4"></circle><circle cx="660" cy="2980" r="2.4"></circle>
-    </g>
-
-    <!-- Component glyphs: resistors, capacitors, IC pins down the board -->
-    <g class="bp-faint" fill="none">
-      <path d="M1500 470h8l5-10h5l5 10h5l5-10h5l5 10h8"></path>
-      <path d="M52 430h14M74 421v18M84 421v18M92 430h14"></path>
-      <path d="M708 614h14M708 624h14M708 634h14M708 644h14M926 614h14M926 624h14M926 634h14M926 644h14"></path>
-      <path d="M420 254h8l5-9h5l5 9h5l5-9h5l5 9h8"></path>
-      <path d="M1010 254h14M1032 245v18M1042 245v18M1050 254h14"></path>
-      <path d="M168 1248h14M190 1239v18M200 1239v18M208 1248h14"></path>
-      <path d="M1090 1340h8l5-10h5l5 10h5l5-10h5l5 10h8"></path>
-      <path d="M708 1144h14M708 1154h14M708 1164h14M708 1174h14"></path>
-      <path d="M208 1988h8l5-9h5l5 9h5l5-9h5l5 9h8"></path>
-      <path d="M948 2308h14M948 2318h14M948 2328h14M948 2338h14"></path>
-      <path d="M1130 2008h8l5-10h5l5 10h5l5-10h5l5 10h8"></path>
-      <path d="M168 2768h14M190 2759v18M200 2759v18M208 2768h14"></path>
-      <path d="M788 2688h14M788 2698h14M788 2708h14M788 2718h14"></path>
-    </g>
-
-    <!-- Dimension lines with end ticks -->
-    <g class="bp-faint" fill="none">
-      <path d="M100 650h240M100 644v12M340 644v12"></path>
-      <path d="M40 150v-44M40 138h16M40 150h16"></path>
-      <path d="M1520 380v-88M1514 380h12M1526 380h12M1514 292h12M1526 292h12"></path>
-      <path d="M160 1410h240M160 1404v12M400 1404v12"></path>
-      <path d="M200 2150h240M200 2144v12M440 2144v12"></path>
-      <path d="M160 2940h250M160 2934v12M410 2934v12"></path>
-    </g>
-
-    <!-- Measurement annotations scattered through the substrate -->
-    <g class="bp-anno">
-      <text x="180" y="668">240.0</text>
-      <text x="1532" y="486">R1 10k</text>
-      <text x="20" y="446">C1 22pF</text>
-      <text x="712" y="606">IC1</text>
-      <text x="950" y="372">NET·A0</text>
-      <text x="404" y="246">Ed25519</text>
-      <text x="1004" y="246">sha2-256</text>
-      <text x="106" y="124">JCS·RFC8785</text>
-      <text x="170" y="1232">IC2</text>
-      <text x="540" y="1312">multihash</text>
-      <text x="1084" y="1232">merkle·root</text>
-      <text x="210" y="1972">IC3</text>
-      <text x="620" y="2072">finality·N3</text>
-      <text x="1124" y="1992">idempotency</text>
-      <text x="170" y="2752">IC4</text>
-      <text x="580" y="2852">b64:false</text>
-      <text x="1104" y="2752">status·success</text>
-    </g>
-
-    <!-- Live signals perpetually traversing the longest buses -->
-    <path class="bp-bus" d="M-40 380H300L360 320H600L660 380H940C1040 240 1160 240 1260 380S1480 520 1580 380"></path>
-    <path class="bp-bus-2" d="M-40 2180H260L320 2120H560L620 2180H900C1000 2040 1120 2040 1220 2180S1440 2320 1540 2180"></path>
-  </svg>
+  <div class="blueprint-field" aria-hidden="true"></div>
 
   <header class="site-header">
     <div class="wrap header-inner">
@@ -1993,8 +1792,7 @@
           <h1 id="hero-title" class="reveal hero-load" style="--reveal-delay: 60ms"><span class="h1-mark">Arky</span></h1>
           <p class="tagline reveal hero-load" style="--reveal-delay: 120ms">A public standard for action and verification across agents, money, chains, and machines.</p>
           <p class="subline reveal hero-load" style="--reveal-delay: 180ms">Every action records who acted, on what evidence, under which policy, and what happened &mdash; as a signed, content-addressed receipt any system can replay.</p>
-          <div class="signature reveal hero-load" style="--reveal-delay: 240ms">Receipts or it didn't happen.</div>
-          <div class="hero-actions reveal hero-load" style="--reveal-delay: 300ms" aria-label="Primary actions">
+          <div class="hero-actions reveal hero-load" style="--reveal-delay: 240ms" aria-label="Primary actions">
             <a class="button primary" href="../specs/core/ARKY-TIM-v1.md">Read the spec</a>
             <a class="button" href="../CONFORMANCE.md">Run vectors</a>
             <a class="button" href="../packages/core/README.md">Implement</a>
@@ -2028,13 +1826,17 @@
               <path class="net-spoke-live outbound" d="M200 200L96 304" style="animation-delay:-2.7s"></path>
             </g>
 
-            <!-- ACTOR: AI agent (top-left) -->
+            <!-- ACTOR: AI agent (top-left) — robot head -->
             <g class="net-node" data-actor="agent" transform="translate(96 96)" aria-label="AI agent">
               <rect class="net-chip" x="-30" y="-30" width="60" height="60" rx="9"></rect>
-              <g class="net-glyph">
-                <rect x="-13" y="-11" width="26" height="20" rx="4"></rect>
-                <path d="M0 -11V-19M-6 -1h2M5 -1h2"></path>
-                <path d="M-9 14h18"></path>
+              <!-- Lucide "bot" -->
+              <g class="net-glyph" transform="translate(-18 -18) scale(1.5)">
+                <path d="M12 8V4H8"></path>
+                <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                <path d="M2 14h2"></path>
+                <path d="M20 14h2"></path>
+                <path d="M15 13v2"></path>
+                <path d="M9 13v2"></path>
               </g>
               <text class="net-name" x="0" y="44" text-anchor="middle">Agents</text>
             </g>
@@ -2042,10 +1844,13 @@
             <!-- ACTOR: Space device (top-right) -->
             <g class="net-node" data-actor="space" transform="translate(304 96)" aria-label="Space device">
               <rect class="net-chip" x="-30" y="-30" width="60" height="60" rx="9"></rect>
-              <g class="net-glyph">
-                <rect x="-5" y="-7" width="10" height="14" rx="2"></rect>
-                <path d="M-5 -3l-9 -5 4 -7 9 5M5 3l9 5 -4 7 -9 -5"></path>
-                <path d="M0 7v8"></path>
+              <!-- Lucide "satellite" -->
+              <g class="net-glyph" transform="translate(-18 -18) scale(1.5)">
+                <path d="m13.5 6.5-3.148-3.148a1.205 1.205 0 0 0-1.704 0L6.352 5.648a1.205 1.205 0 0 0 0 1.704L9.5 10.5"></path>
+                <path d="M16.5 7.5 19 5"></path>
+                <path d="m17.5 10.5 3.148 3.148a1.205 1.205 0 0 1 0 1.704l-2.296 2.296a1.205 1.205 0 0 1-1.704 0L13.5 14.5"></path>
+                <path d="M9 21a6 6 0 0 0-6-6"></path>
+                <path d="M9.352 10.648a1.205 1.205 0 0 0 0 1.704l2.296 2.296a1.205 1.205 0 0 0 1.704 0l4.296-4.296a1.205 1.205 0 0 0 0-1.704l-2.296-2.296a1.205 1.205 0 0 0-1.704 0z"></path>
               </g>
               <text class="net-name" x="0" y="44" text-anchor="middle">Space</text>
             </g>
@@ -2053,10 +1858,14 @@
             <!-- ACTOR: Bank (bottom-right) -->
             <g class="net-node" data-actor="bank" transform="translate(304 304)" aria-label="Bank">
               <rect class="net-chip" x="-30" y="-30" width="60" height="60" rx="9"></rect>
-              <g class="net-glyph">
-                <path d="M-14 -4l14 -9 14 9"></path>
-                <path d="M-11 -2v12M-3 -2v12M3 -2v12M11 -2v12"></path>
-                <path d="M-14 13h28"></path>
+              <!-- Lucide "landmark" -->
+              <g class="net-glyph" transform="translate(-18 -18) scale(1.5)">
+                <path d="M10 18v-7"></path>
+                <path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z"></path>
+                <path d="M14 18v-7"></path>
+                <path d="M18 18v-7"></path>
+                <path d="M3 22h18"></path>
+                <path d="M6 18v-7"></path>
               </g>
               <text class="net-name" x="0" y="44" text-anchor="middle">Banks</text>
             </g>
@@ -2064,11 +1873,10 @@
             <!-- ACTOR: Blockchain (bottom-left) -->
             <g class="net-node" data-actor="chain" transform="translate(96 304)" aria-label="Blockchain">
               <rect class="net-chip" x="-30" y="-30" width="60" height="60" rx="9"></rect>
-              <g class="net-glyph">
-                <rect x="-13" y="-13" width="11" height="11" rx="2"></rect>
-                <rect x="3" y="-13" width="11" height="11" rx="2"></rect>
-                <rect x="-5" y="3" width="11" height="11" rx="2"></rect>
-                <path d="M-2 -7H3M0 -2V3"></path>
+              <!-- Lucide "link" -->
+              <g class="net-glyph" transform="translate(-18 -18) scale(1.5)">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
               </g>
               <text class="net-name" x="0" y="44" text-anchor="middle">Chains</text>
             </g>
@@ -2313,20 +2121,21 @@
             <p class="claim">1 / SPEC</p>
             <h3>Read</h3>
             <p>The normative core documents for TIM, Notary, Kernel, Settlers, and Policy Packs.</p>
-            <a href="../specs/core/README.md">Open core specs</a>
+            <div class="path-links">
+              <a class="path-link" href="../specs/core/README.md">Open core specs</a>
+            </div>
           </article>
 
           <article class="path-card reveal" style="--reveal-delay: 90ms">
             <p class="claim">2 / VERIFY</p>
             <h3>Validate</h3>
-            <p>Recompute every artifact locally: cids, signatures, witnesses, algorithmic vectors, and link resolution.</p>
+            <p>Recompute every artifact locally and replay the published vectors against the Rust reference stack.</p>
             <div class="terminal">
               <div class="terminal-head">
-                <span>local conformance</span>
-                <button class="copy-command" type="button" data-copy="bun install&#10;bun run validate">copy</button>
+                <span>core-rs conformance</span>
+                <button class="copy-command" type="button" data-copy="cargo test -p arky-core">copy</button>
               </div>
-              <pre><code>bun install
-bun run validate</code></pre>
+              <pre><code>cargo test -p arky-core</code></pre>
             </div>
           </article>
 
@@ -2334,8 +2143,10 @@ bun run validate</code></pre>
             <p class="claim">3 / IMPLEMENT</p>
             <h3>Build</h3>
             <p>Use the TypeScript and Rust reference packages as executable anchors for conformant behavior.</p>
-            <a href="../packages/core/README.md">TypeScript</a>
-            <a href="../packages/core-rs/README.md">Rust</a>
+            <div class="path-links">
+              <a class="path-link" href="../packages/core/README.md">TypeScript</a>
+              <a class="path-link" href="../packages/core-rs/README.md">Rust</a>
+            </div>
           </article>
         </div>
       </div>
