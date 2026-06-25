@@ -954,16 +954,23 @@
       margin-bottom: 0;
     }
 
+    .section-head .head-note {
+      margin: var(--space-4) 0 0;
+      max-width: 40ch;
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      line-height: 1.55;
+    }
+
     /* Align the right-column prose with the h2, not the eyebrow above it.
        Offset ~= section-label line-height (0.7rem x 1.65) + its bottom margin. */
-    .section-grid > .lead,
-    .section-grid > .definition {
+    .section-grid > .lead {
       margin-top: calc(0.7rem * 1.65 + var(--space-4));
     }
 
     @media (max-width: 1080px) {
-      .section-grid > .lead,
-      .section-grid > .definition {
+      .section-grid > .lead {
         margin-top: 0;
       }
     }
@@ -1031,45 +1038,6 @@
       font-family: var(--font-body);
       font-size: 1.08rem;
       line-height: 1.55;
-    }
-
-    .definition {
-      position: relative;
-      border: 1px solid var(--hairline);
-      border-left: 2px solid rgba(30, 61, 92, 0.5);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 1.32rem;
-      line-height: 1.5;
-      padding: var(--space-6) var(--space-6) var(--space-6) var(--space-7);
-      margin: 0;
-    }
-
-    .definition::before {
-      position: absolute;
-      top: -0.6em;
-      left: var(--space-6);
-      background: var(--ground);
-      padding: 0 var(--space-2);
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      line-height: 1;
-      content: "DEFINITION";
-    }
-
-    .definition::after {
-      position: absolute;
-      right: -0.6em;
-      bottom: var(--space-6);
-      width: 10px;
-      height: 10px;
-      border-right: 2px solid var(--oxide);
-      border-bottom: 2px solid var(--oxide);
-      opacity: 0.45;
-      content: "";
     }
 
     /* Dimension bar — blueprint measured-drawing annotation.
@@ -1726,16 +1694,6 @@
         padding: var(--space-11) 0;
       }
 
-      .definition {
-        font-size: 1.14rem;
-        padding: var(--space-5) var(--space-4);
-        border-left-width: 1px;
-      }
-
-      .definition::after {
-        display: none;
-      }
-
       .path-grid,
       .metric-row,
       .domain-list,
@@ -2041,10 +1999,9 @@
           <div class="section-head reveal">
             <p class="section-label">What Arky is</p>
             <h2 id="standard-title">A public protocol for accountable action.</h2>
+            <p class="head-note">A minimal record of who acted, on what evidence, under which policy, and what actually happened.</p>
           </div>
-          <div class="definition reveal" style="--reveal-delay: 100ms">
-            <p>A minimal public protocol that records who acted, with what evidence, under which policy, and what actually happened.</p>
-          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Five artifacts form one chain. Each is a signed, content-addressed document that references the one before it &mdash; so the whole sequence, from raw evidence to final receipt, can be replayed and verified independently. The right column is the exact algorithm each step is pinned to.</p>
         </div>
 
         <div class="dim" aria-hidden="true"><span class="dim-label">CORE ARTIFACTS&ensp;·&ensp;TIM &rarr; NOTARY &rarr; KERNEL &rarr; SETTLER &rarr; XR</span></div>
