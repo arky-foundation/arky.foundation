@@ -106,6 +106,15 @@ sequenceDiagram
 - Examples: `examples/`
 - Governance: `governance/`, RFCs: `rfcs/`
 
+## Current Status
+
+The core loop (TIM, Canonicalization, Kernel, Notary, Settlers) is at
+`status: implementing`: L2-or-better vectors are published, both reference
+implementations pass them, and cross-language checks agree byte-for-byte.
+Formal promotion to `stable` is still pending TC ratification. Non-core specs
+remain at `status: review` or partial vector coverage. See `CONFORMANCE.md` and
+`governance/ARKY-COMPAT-MATRIX-v1.md`.
+
 ## Implementations
 
 Two independent reference implementations cover the TIM → Kernel → Settler loop

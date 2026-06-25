@@ -37,9 +37,9 @@ dependency and is not part of `validate`.
 ## What the verifier executes
 
 `bun run verify` does more than schema-shape checking — it **recomputes**
-results from inputs and compares them to each vector's `expect` block. Of the
-current checks, roughly 45 are actively executed crypto/algorithm checks; the
-rest are negative vectors or pure schema-shape vectors deferred to the AJV step.
+results from inputs and compares them to each vector's `expect` block. Current
+runs report 100 passing vector/artifact checks; negative vectors and pure
+schema-shape vectors are still deferred to the AJV step where appropriate.
 
 **Cryptographic checks**
 - **cid** = `multibase(multihash(sha2-256, JCS(body)))`, recomputed and compared
@@ -84,11 +84,13 @@ README for the scenario and content IDs.
 
 | Suite | Levels | Executable vectors today |
 |---|---|---|
-| TIM Canonicalization | C1 canonicalize, C2 hash+sign, C3 cross-verify | C1 (6) |
-| TIM | T1 verify, T2 completeness, T3 witnessed | T1 + witness fixture |
-| Kernel | K1 eval, K2 policy-aware, K3 orchestrated | K1 |
-| Notary | N1 witness, N2 anchor, N3 multi-anchor/DTN | N1 + N2 (Merkle/inclusion) + N3 (finality depth) |
-| Settlers | 1 basic, 2 anchored, 3 multi-rail | S1 + S2 (idempotency/cascade) + S3 (compensation/transitions) |
+| TIM Canonicalization | C1 canonicalize, C2 hash/sign edge cases, C3 cross-verify | C1 (6) + C2 (7) |
+| TIM | T1 verify, T2 freshness/witnessing, T3 multi-witness | T1 (7) + T2 (4) |
+| Kernel | K1 eval, K2 behavioral decisions, K3 conflicts | K1 (10) + K2 (4) |
+| Notary | N1 witness, N2 anchor, N3 multi-anchor/DTN | N1 (8) + N2 (4) + N3 (3) |
+| Settlers | S1 basic, S2 failure/idempotency, S3 rollback/compensation | S1 (10) + S2 (2) + S3 (2) |
+| Discovery | D1 discovery, D2 descriptors, D3 advanced compatibility | D1 (6) + D2 (1) |
+| Attestations | AT1 intake, AT2 chains/freshness, AT3 policy/error handling | AT1 (2) |
 
 A product **MAY** claim a level only if it passes the Foundation vectors for
 that level. Empty levels in the manifests (`coverage: 0`) are future work.
