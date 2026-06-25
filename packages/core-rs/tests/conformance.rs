@@ -5,7 +5,7 @@
 
 use arky_core::canonicalize::canonicalize;
 use arky_core::cid::cid_from_canonical;
-use arky_core::tim::{canonical_body, resolve_did_key, verify_tim};
+use arky_core::tim::{canonical_body, resolve_did_key, verify_tim, verify_tim_at};
 use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 use serde_json::Value;
 use std::fs;
@@ -71,6 +71,9 @@ fn resolver(tim: &Value, witness_kid: Option<&str>) -> Option<Vec<u8>> {
             "notary-key-2025-01" => return b64u("HDl_cQgT9vSiYMsH8q1dOdyb5prCuQYuRVBRhTTk1P8"),
             _ => {}
         }
+        if let Some(key) = resolve_did_key(kid) {
+            return Some(key);
+        }
     }
     let id = tim.get("identity")?.get("id")?.as_str()?;
     resolve_did_key(id)
@@ -88,7 +91,11 @@ fn tim_t1_vectors() {
         if tim.is_null() {
             continue;
         }
-        let res = verify_tim(tim, &resolver);
+        let res = verify_tim_at(
+            tim,
+            &resolver,
+            v["context"]["verify_options"]["at"].as_str(),
+        );
         let expect = &v["expect"];
         match expect.get("valid").and_then(|x| x.as_bool()) {
             Some(true) => {

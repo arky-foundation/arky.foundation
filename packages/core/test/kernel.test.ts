@@ -1,5 +1,5 @@
 /**
- * Kernel conformance: @arky/core's evaluateKernel against the K1 vectors.
+ * Kernel conformance: @arky/core's evaluateKernel against the K1/K2 vectors.
  * Independent evaluation of commitments over TIM evidence, producing the
  * Decision the vectors expect.
  */
@@ -43,7 +43,7 @@ describe('Assertion language (Kleene tri-state)', () => {
   });
 });
 
-describe('Kernel K1 vectors', () => {
+describe('Kernel K1/K2 vectors', () => {
   const dir = 'vectors/kernel';
   for (const f of readdirSync(join(REPO, dir))
     .filter((x) => x.endsWith('.json'))
@@ -58,10 +58,11 @@ describe('Kernel K1 vectors', () => {
         return;
       }
 
-      // Resolve the TIM evidence from context.fixtures.tim.
+      // Resolve TIM evidence from either shared fixtures or inline vector cases.
       const tims: any[] = [];
       const timPath = v.context?.fixtures?.tim;
       if (timPath) tims.push(read(`vectors/${timPath}`).tim);
+      if (Array.isArray(v.context?.evidence)) tims.push(...v.context.evidence);
 
       const decision = evaluateKernel(commitment, tims, { time: v.context?.time });
 
@@ -74,6 +75,8 @@ describe('Kernel K1 vectors', () => {
           expect(got).toBeDefined();
           if (ea.result) expect(got!.result).toBe(ea.result);
           if (ea.input_value !== undefined) expect(got!.input_value).toBe(ea.input_value);
+          if (ea.unit !== undefined) expect(got!.unit).toBe(ea.unit);
+          if (Array.isArray(ea.inputs)) expect(got!.inputs).toEqual(ea.inputs);
           if (ea.error) expect(got!.error).toContain('mismatch');
         }
       }

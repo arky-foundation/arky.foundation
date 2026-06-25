@@ -42,7 +42,7 @@ describe('Canonicalization C1 vectors', () => {
   }
 });
 
-describe('TIM T1 vectors', () => {
+describe('TIM T1/T2 vectors', () => {
   for (const path of listVectors('vectors/tim')) {
     const v = read(path);
     test(`${v.id}: ${v.description}`, () => {
@@ -52,14 +52,21 @@ describe('TIM T1 vectors', () => {
         expect(v.expect.valid === false || v.expect).toBeTruthy();
         return;
       }
-      const res = verifyTim(tim);
+      const res = verifyTim(tim, undefined, v.context?.verify_options ?? {});
       if (v.expect.valid === true) {
         expect(res.valid).toBe(true);
         if (v.expect.cid_valid !== undefined) expect(res.cid_valid).toBe(v.expect.cid_valid);
         if (v.expect.signature_valid !== undefined)
           expect(res.signature_valid).toBe(v.expect.signature_valid);
+        if (v.expect.fresh !== undefined) expect(res.fresh).toBe(v.expect.fresh);
       } else if (v.expect.valid === false) {
         expect(res.valid).toBe(false);
+        if (v.expect.fresh !== undefined) {
+          expect(res.fresh).toBe(v.expect.fresh);
+          if (Array.isArray(v.expect.errors)) {
+            for (const e of v.expect.errors) expect(res.errors).toContain(e);
+          }
+        }
         if (Array.isArray(v.expect.missing_fields)) {
           for (const f of v.expect.missing_fields) expect(res.missing_fields).toContain(f);
         }

@@ -1,4 +1,4 @@
-//! Kernel conformance: arky-core (Rust) evaluate_kernel against the K1 vectors.
+//! Kernel conformance: arky-core (Rust) evaluate_kernel against the K1/K2 vectors.
 //! A second-language check of the spec's tri-valued assertion + decision logic.
 
 use arky_core::kernel::{DecisionStatus, evaluate_kernel};
@@ -28,7 +28,7 @@ fn list(dir: &str) -> Vec<PathBuf> {
 }
 
 #[test]
-fn kernel_k1_vectors() {
+fn kernel_k1_k2_vectors() {
     for path in list("vectors/kernel") {
         let v: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
         let id = v["id"].as_str().unwrap();
@@ -37,10 +37,13 @@ fn kernel_k1_vectors() {
             continue;
         }
 
-        // Resolve TIM evidence from context.fixtures.tim.
+        // Resolve TIM evidence from either shared fixtures or inline vector cases.
         let mut tims: Vec<Value> = Vec::new();
         if let Some(tp) = v["context"]["fixtures"]["tim"].as_str() {
             tims.push(read(&format!("vectors/{}", tp))["tim"].clone());
+        }
+        if let Some(ev) = v["context"]["evidence"].as_array() {
+            tims.extend(ev.iter().cloned());
         }
         let eval_time = v["context"]["time"]
             .as_str()
