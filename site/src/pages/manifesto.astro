@@ -353,4 +353,34 @@ import Layout from "../layouts/Layout.astro";
       grid-template-columns: 1fr;
     }
   }
+
+  @media (max-width: 768px) {
+    .m-hero {
+      padding: var(--space-11) 0 var(--space-9);
+    }
+
+    .principles {
+      margin-top: var(--space-7);
+    }
+
+    .principles li {
+      padding: var(--space-5) 0 var(--space-5) var(--space-9);
+      font-size: 1rem;
+    }
+
+    .principles li::before {
+      top: var(--space-5);
+    }
+  }
+
+  @media (max-width: 400px) {
+    .principles li {
+      padding-left: var(--space-8);
+    }
+
+    .refuse {
+      font-size: 0.76rem;
+      padding: var(--space-4) var(--space-5);
+    }
+  }
 </style>

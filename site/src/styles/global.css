@@ -50,11 +50,16 @@
       scroll-behavior: smooth;
     }
 
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
     body {
       position: relative;
       min-height: 100vh;
       margin: 0;
-      overflow-x: hidden;
       background: transparent;
       color: var(--text);
       font-family: var(--font-body);
@@ -63,6 +68,13 @@
       letter-spacing: 0.002em;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+    }
+
+    /* Long, unbreakable mono strings (CIDs, algorithms) must never force the
+       page wider than the viewport. */
+    pre,
+    code {
+      overflow-wrap: anywhere;
     }
 
     /* Fine dot-grid + coarse module grid + blueprint texture, full viewport */
@@ -547,7 +559,7 @@
     }
 
     .kicker {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: var(--space-4);
       margin: 0 0 var(--space-6);
@@ -560,6 +572,7 @@
 
     .kicker::before {
       display: block;
+      flex-shrink: 0;
       width: 48px;
       height: 1px;
       background: linear-gradient(90deg, var(--oxide), rgba(188, 75, 42, 0.2));
@@ -583,7 +596,7 @@
     h1 {
       margin-bottom: var(--space-5);
       color: var(--text);
-      font-size: clamp(4.5rem, 13vw, 12rem);
+      font-size: clamp(3.4rem, 10vw, 11rem);
       font-weight: 650;
       letter-spacing: -0.03em;
       line-height: 0.84;
@@ -928,6 +941,122 @@
       font-size: 0.86em;
     }
 
+    /* ============ MOBILE PROTOCOL FLOW ============
+       Hidden on desktop; on phones it replaces the #standard spec-register
+       table, since the same five artifacts read far more clearly as a stacked,
+       legible stepper than as a dense table or a squished horizontal diagram.
+       Lives inside .wrap, so it fills its parent column. */
+    .flow-mobile {
+      display: none;
+      margin: 0;
+    }
+
+    .flow-mobile-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-5);
+    }
+
+    .flow-mobile-title {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .depth-toggle-m {
+      flex-shrink: 0;
+    }
+
+    .flow-steps {
+      counter-reset: flow;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--hairline);
+      border-radius: 5px;
+      overflow: hidden;
+      background: rgba(251, 250, 245, 0.55);
+    }
+
+    .flow-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      gap: var(--space-4);
+      padding: var(--space-5) var(--space-5);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .flow-step:last-child {
+      border-bottom: 0;
+    }
+
+    /* Connector spine running down the left index column */
+    .flow-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: calc(var(--space-5) + 12px);
+      top: calc(var(--space-5) + 26px);
+      bottom: -1px;
+      width: 1px;
+      background: var(--lines);
+      opacity: 0.4;
+    }
+
+    .flow-step-idx {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      background: rgba(251, 250, 245, 0.96);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
+    }
+
+    .flow-step-name {
+      display: block;
+      margin-top: 2px;
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 1.06rem;
+      font-weight: 560;
+      letter-spacing: -0.006em;
+    }
+
+    .flow-step-name em {
+      margin-left: var(--space-2);
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-style: normal;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .flow-step-desc {
+      margin: var(--space-2) 0 0;
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-size: 0.94rem;
+      line-height: 1.5;
+    }
+
+    .flow-step-desc code {
+      color: var(--oxide);
+      font-family: var(--font-mono);
+      font-size: 0.84em;
+      overflow-wrap: anywhere;
+    }
+
     .band {
       border-top: 1px solid var(--hairline);
     }
@@ -1058,6 +1187,8 @@
       display: flex;
       align-items: center;
       gap: 0;
+      width: 100%;
+      max-width: 100%;
       margin: 0 0 var(--space-5);
     }
 
@@ -1077,14 +1208,17 @@
     }
 
     .dim-label {
-      flex-shrink: 0;
+      flex-shrink: 1;
+      min-width: 0;
       padding: 0 var(--space-3);
       color: var(--text-dim);
       font-family: var(--font-mono);
       font-size: 0.6rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      line-height: 1;
+      line-height: 1.3;
+      text-align: center;
+      overflow-wrap: anywhere;
     }
 
     /* Spec register — a measured-drawing data table of the core artifacts */
@@ -1672,13 +1806,24 @@
       color: var(--oxide);
     }
 
+    /* =====================================================================
+       RESPONSIVE SYSTEM
+       Layered, mobile-considerate breakpoints:
+         1080px  laptop / large tablet  — collapse two-column intros
+          900px  tablet                 — tame the oversized hero h1
+          768px  small tablet / phone   — single-column, mobile nav
+          560px  large phone            — flatten remaining grids
+          400px  small phone            — tighten gutters and type
+       ===================================================================== */
+
+    /* ---- 1080px: large tablet — collapse section intros ---- */
     @media (max-width: 1080px) {
       :root {
-        --gutter: 24px;
+        --gutter: 28px;
       }
 
       .hero-top {
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
         gap: var(--space-7);
       }
 
@@ -1688,12 +1833,12 @@
 
       .section-grid {
         grid-template-columns: 1fr;
-        gap: var(--space-7);
+        gap: var(--space-6);
       }
 
       .spec-row {
         grid-template-columns: 22px minmax(96px, 0.8fr) minmax(0, 1.4fr);
-        gap: var(--space-4);
+        gap: var(--space-4) var(--space-5);
       }
 
       .spec-row .spec-algo {
@@ -1725,10 +1870,22 @@
       }
     }
 
-    @media (max-width: 760px) {
+    /* ---- 900px: tablet — the hero h1 is the main "stretched" offender ---- */
+    @media (max-width: 900px) {
+      h1 {
+        font-size: clamp(3.4rem, 14vw, 7rem);
+      }
+
+      .section {
+        padding: var(--space-12) 0;
+      }
+    }
+
+    /* ---- 768px: phone / small tablet — single column, mobile nav ---- */
+    @media (max-width: 768px) {
       :root {
         --header-h: 60px;
-        --gutter: 18px;
+        --gutter: 20px;
       }
 
       .header-inner {
@@ -1752,26 +1909,24 @@
 
       .hero {
         min-height: auto;
-        padding: var(--space-7) 0 var(--space-8);
+        padding: var(--space-8) 0 var(--space-8);
       }
 
       .hero-top {
         grid-template-columns: 1fr;
-        gap: var(--space-8);
+        gap: var(--space-7);
       }
 
       .hero-net {
         order: 2;
+        width: min(100%, 320px);
         max-width: 320px;
         margin: 0 auto;
       }
 
-      h1 {
-        font-size: clamp(3.2rem, 11vw, 5rem);
-      }
-
       .tagline {
-        font-size: 1.25rem;
+        margin-top: var(--space-6);
+        font-size: clamp(1.2rem, 5.5vw, 1.6rem);
       }
 
       .subline {
@@ -1782,33 +1937,32 @@
         margin-top: var(--space-6);
       }
 
-      .hero-stage svg.stage-svg {
-        height: 300px;
+      /* The wide horizontal schematic and its floating controls don't work
+         on phones — hide them entirely in the hero. */
+      .hero-stage,
+      .stage-controls,
+      .stage-desc {
+        display: none;
       }
 
-      .stage-controls {
-        flex-direction: column;
-        align-items: stretch;
-        margin-top: calc(-1 * var(--space-8));
+      /* In #standard, the spec-register table is replaced by the stacked,
+         legible protocol-flow stepper on phones. */
+      .spec-register,
+      #standard .dim {
+        display: none;
       }
 
-      .readout {
-        font-size: 0.7rem;
+      .flow-mobile {
+        display: block;
       }
 
-      .section {
-        padding: var(--space-11) 0;
-      }
-
-      .path-grid,
-      .metric-row,
-      .domain-list {
+      .path-grid {
         grid-template-columns: 1fr;
       }
 
       .footer-grid {
         grid-template-columns: 1fr 1fr;
-        gap: var(--space-7) var(--space-5);
+        gap: var(--space-8) var(--space-5);
       }
 
       .spec-row {
@@ -1838,8 +1992,38 @@
         display: none;
       }
 
+      .closing {
+        gap: var(--space-5);
+      }
+
+      .closing-actions {
+        width: 100%;
+      }
+    }
+
+    /* ---- 560px: large phone — flatten remaining multi-column grids ---- */
+    @media (max-width: 560px) {
+      .section {
+        padding: var(--space-11) 0;
+      }
+
+      .dim-label {
+        letter-spacing: 0.06em;
+      }
+
+      .metric-row,
+      .domain-list {
+        grid-template-columns: 1fr;
+      }
+
       .metric .num {
         font-size: 2.2rem;
+      }
+
+      .hero-actions .button,
+      .closing-actions .button {
+        flex: 1 1 auto;
+        justify-content: center;
       }
 
       .footer-bottom {
@@ -1847,13 +2031,53 @@
         flex-direction: column;
         gap: var(--space-3);
       }
+    }
 
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        transition-duration: 0.001ms !important;
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
+    /* ---- 400px: small phone — tighten gutters, type, and the footer ---- */
+    @media (max-width: 400px) {
+      :root {
+        --gutter: 16px;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 16vw, 4.2rem);
+      }
+
+      .kicker {
+        gap: var(--space-3);
+        font-size: 0.66rem;
+        letter-spacing: 0.1em;
+      }
+
+      .kicker::before {
+        width: 28px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-7);
+      }
+
+      .net-readout {
+        font-size: 0.58rem;
+        padding: var(--space-1) var(--space-2);
+      }
+
+      .flow-step {
+        padding: var(--space-4);
+        gap: var(--space-3);
+      }
+
+      .flow-step:not(:last-child)::after {
+        left: calc(var(--space-4) + 12px);
+        top: calc(var(--space-4) + 26px);
+      }
+
+      .terminal-head {
+        font-size: 0.64rem;
+      }
+
+      pre {
+        font-size: 0.8rem;
       }
     }

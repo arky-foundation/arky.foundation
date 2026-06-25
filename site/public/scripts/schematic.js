@@ -20,7 +20,6 @@ const lerp = (a, b, t) => a + (b - a) * t;
   };
 
   const stageDesc = document.querySelector("#stage-desc");
-  const depthButtons = Array.from(document.querySelectorAll(".depth-btn"));
 
   const labels = [
     "TIM / Evidence",
@@ -50,6 +49,36 @@ const lerp = (a, b, t) => a + (b - a) * t;
   let mode = "plain";
   let current = 0;
   let paused = reduceMotion;
+
+  // Callbacks invoked whenever the Plain/Engineer mode changes, so the desktop
+  // schematic and the mobile vertical flow stay in sync from one source.
+  const modeListeners = [];
+
+  // Mobile vertical flow: stacked, legible steps that mirror the desktop
+  // schematic's per-stage copy. Populated/swapped in sync with the toggle.
+  const mobileSteps = Array.from(document.querySelectorAll(".flow-step"));
+  const fillMobileSteps = () => {
+    mobileSteps.forEach((step) => {
+      const index = Number(step.dataset.step);
+      const target = step.querySelector(".flow-step-desc");
+      if (target) target.innerHTML = copy[mode][index] || "";
+    });
+  };
+  if (mobileSteps.length > 0) {
+    fillMobileSteps();
+    modeListeners.push(fillMobileSteps);
+  }
+
+  // Single toggle wiring for every .depth-btn (desktop + mobile share state).
+  Array.from(document.querySelectorAll(".depth-btn")).forEach((button) => {
+    button.addEventListener("click", () => {
+      mode = button.dataset.mode || "plain";
+      document.querySelectorAll(".depth-btn").forEach((other) => {
+        other.setAttribute("aria-pressed", String(other.dataset.mode === mode));
+      });
+      modeListeners.forEach((fn) => fn());
+    });
+  });
 
   if (route && dot && stage && nodes.length > 0) {
     const length = route.getTotalLength();
@@ -108,15 +137,8 @@ const lerp = (a, b, t) => a + (b - a) * t;
       });
     });
 
-    depthButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        mode = button.dataset.mode || "plain";
-        depthButtons.forEach((other) => {
-          other.setAttribute("aria-pressed", String(other === button));
-        });
-        writeDesc(current);
-      });
-    });
+    // Keep the desktop schematic's live description in sync with the toggle.
+    modeListeners.push(() => writeDesc(current));
 
     // Seed the description for the initial stage.
     if (stageDesc) stageDesc.innerHTML = copy[mode][0];

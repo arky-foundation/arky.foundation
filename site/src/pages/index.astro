@@ -229,6 +229,57 @@ import Layout from "../layouts/Layout.astro";
         </div>
 
         <div class="dim" aria-hidden="true"><span class="dim-label">CORE ARTIFACTS&ensp;·&ensp;TIM &rarr; NOTARY &rarr; KERNEL &rarr; SETTLER &rarr; XR</span></div>
+
+        <!-- Mobile-only protocol flow: replaces the spec-register table on
+             phones with a clean, legible stepper. Descriptions are populated
+             and swapped (Plain/Engineer) by schematic.js. -->
+        <div class="flow-mobile reveal" aria-label="Arky protocol flow">
+          <div class="flow-mobile-head">
+            <span class="flow-mobile-title">Protocol flow</span>
+            <div class="depth-toggle depth-toggle-m" role="group" aria-label="Explanation depth">
+              <button type="button" class="depth-btn" data-mode="plain" aria-pressed="true">Plain</button>
+              <button type="button" class="depth-btn" data-mode="engineer" aria-pressed="false">Engineer</button>
+            </div>
+          </div>
+          <ol class="flow-steps">
+            <li class="flow-step" data-step="0">
+              <span class="flow-step-idx">01</span>
+              <div class="flow-step-body">
+                <span class="flow-step-name">TIM <em>Evidence</em></span>
+                <p class="flow-step-desc"></p>
+              </div>
+            </li>
+            <li class="flow-step" data-step="1">
+              <span class="flow-step-idx">02</span>
+              <div class="flow-step-body">
+                <span class="flow-step-name">Notary <em>Witness</em></span>
+                <p class="flow-step-desc"></p>
+              </div>
+            </li>
+            <li class="flow-step" data-step="2">
+              <span class="flow-step-idx">03</span>
+              <div class="flow-step-body">
+                <span class="flow-step-name">Kernel <em>Policy</em></span>
+                <p class="flow-step-desc"></p>
+              </div>
+            </li>
+            <li class="flow-step" data-step="3">
+              <span class="flow-step-idx">04</span>
+              <div class="flow-step-body">
+                <span class="flow-step-name">Settler <em>Execute</em></span>
+                <p class="flow-step-desc"></p>
+              </div>
+            </li>
+            <li class="flow-step" data-step="4">
+              <span class="flow-step-idx">05</span>
+              <div class="flow-step-body">
+                <span class="flow-step-name">XR <em>Receipt</em></span>
+                <p class="flow-step-desc"></p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
         <div class="spec-register reveal" aria-label="Core artifact register">
           <div class="spec-row">
             <span class="spec-idx">01</span>
