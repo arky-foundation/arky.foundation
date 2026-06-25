@@ -7,15 +7,19 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "bun run build && wrangler dev",
     "lint": "oxlint -D correctness -D suspicious -D pedantic src/ public/scripts/",
-    "fmt": "oxfmt --write src/ public/scripts/"
+    "fmt": "oxfmt --write src/ public/scripts/",
+    "generate-types": "wrangler types",
+    "deploy": "bun run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.0.0",
     "astro": "^7.0.0"
   },
   "devDependencies": {
+    "oxfmt": "^0.56.0",
     "oxlint": "^1.71.0",
-    "oxfmt": "^0.56.0"
+    "wrangler": "^4.104.0"
   }
 }
