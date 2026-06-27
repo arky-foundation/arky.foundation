@@ -1947,7 +1947,7 @@
 
       /* In #standard, the spec-register table is replaced by the stacked,
          legible protocol-flow stepper on phones. */
-      .spec-register,
+      #standard .spec-register,
       #standard .dim {
         display: none;
       }
