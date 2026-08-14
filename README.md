@@ -1,8 +1,8 @@
 # Arky
 
-Neutral accountability for AI, blockchain, finance, and space.
+Neutral accountability for AI agents, finance, blockchain, and space.
 
-Open standards for action and verification across agents, money, chains, and machines.
+An open protocol for action and verification across agents, money, chains, and machines.
 
 Receipts or it didn’t happen.
 

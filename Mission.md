@@ -2,17 +2,19 @@
 
 **North Star**
 
-Make reality **verifiable** to machines and make machine actions **accountable** to humans - so autonomous finance, robotics, and AI can operate safely across Earth and beyond.
+Make reality **verifiable** to machines and make machine actions **accountable** to humans - so AI agents, autonomous finance, and robotics can operate safely across Earth and beyond.
 
 **Why this matters now**
 
-* **AGI & autonomy** are moving faster than governance. We need hard, shared rules for "what is true" and "what is allowed" that don't depend on any single vendor or platform.
-* **Robotics & space** demand trust under latency and loss of connectivity: prove *what happened* and settle *what must happen* later, deterministically.
+* **AI agents & autonomy** are moving faster than governance. Agents now act and spend on our behalf; we need hard, shared rules for "what is true" and "what is allowed" that don't depend on any single vendor or platform.
 * **Blockchains & bank rails** are fragmented. We need a neutral action layer that uses *all* of them without being captured by *any* of them.
+* **Robotics & space** demand trust under latency and loss of connectivity: prove *what happened* and settle *what must happen* later, deterministically.
 
 **What Arky is (at mission level)**
 
-A **minimal public standard** that turns **evidence -> decisions -> actions** with cryptographic accountability.
+A **minimal public protocol** that turns **evidence -> decisions -> actions** with cryptographic accountability.
+
+Adoption is deliberately sequenced: **AI agents first** (every tool call, purchase, and command an agent makes becomes a verifiable receipt), **finance and blockchain second** (the rails those agents settle on), **space and autonomous devices third** (the same receipts, verifiable offline and under latency).
 
 Five components work together:
 * **TIM** makes facts portable and tamper-evident.
@@ -45,8 +47,8 @@ Five components work together:
 **Success looks like**
 
 * Multiple independent stacks pass vectors and interoperate.
-* Real industries (finance, logistics, robotics, space) settle against **the same receipts** and **the same rules**.
+* Real industries (AI agents, finance, logistics, robotics, space) settle against **the same receipts** and **the same rules**.
 * Incidents are resolved by replaying signed evidence, not arguing over logs.
 
 **Concise definition**
-Arky is the **neutral accountability layer** for an autonomous civilization - so space systems, AGI, robots, and markets can act fast **and** answer for their actions.
+Arky is the **neutral accountability protocol** for an autonomous civilization - so AI agents, markets, robots, and space systems can act fast **and** answer for their actions.
