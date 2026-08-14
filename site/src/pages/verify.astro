@@ -310,12 +310,14 @@ import Layout from "../layouts/Layout.astro";
     run();
   }
 
-  document.querySelector("#v-run")!.addEventListener("click", run);
-  document.querySelector("#v-example")!.addEventListener("click", () => {
+  function loadExample(): void {
     droppedItems = [];
     input.value = JSON.stringify(EXAMPLE_TIM, null, 2);
     run();
-  });
+  }
+  document.querySelector("#v-run")!.addEventListener("click", run);
+  document.querySelector("#v-example")!.addEventListener("click", loadExample);
+  if (new URLSearchParams(window.location.search).has("example")) loadExample();
   document.querySelector("#v-clear")!.addEventListener("click", () => {
     droppedItems = [];
     input.value = "";

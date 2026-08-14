@@ -125,6 +125,21 @@ body::after {
   }
 }
 
+::selection {
+  background: rgba(188, 75, 42, 0.16);
+  color: var(--text);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -198,6 +213,17 @@ button {
   border-bottom: 1px solid rgba(210, 203, 186, 0.5);
   background: rgba(247, 243, 234, 0.82);
   backdrop-filter: blur(20px);
+  transition:
+    background 260ms var(--ease-out),
+    box-shadow 260ms var(--ease-out);
+}
+
+/* Once the page scrolls, the header lifts off the paper slightly */
+.site-header.is-scrolled {
+  background: rgba(247, 243, 234, 0.92);
+  box-shadow:
+    0 1px 0 rgba(210, 203, 186, 0.4),
+    0 8px 28px rgba(24, 22, 18, 0.05);
 }
 
 .header-inner {
@@ -290,6 +316,15 @@ button {
 }
 
 .nav a:not(.nav-cta):hover::after {
+  transform: scaleX(1);
+}
+
+/* Current page: persistent oxide underline, full-weight text */
+.nav a[aria-current="page"] {
+  color: var(--text);
+}
+
+.nav a[aria-current="page"]::after {
   transform: scaleX(1);
 }
 
@@ -748,6 +783,12 @@ h1 .h1-mark::after {
   color: var(--accent);
   transform: translateY(-1px);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.button:active {
+  transform: translateY(0);
+  transition-duration: 60ms;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .button.primary {
@@ -1601,6 +1642,7 @@ code {
   font-family: var(--font-mono);
   font-size: 0.86rem;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
@@ -1673,6 +1715,7 @@ code {
   font-family: var(--font-display);
   font-size: 2.6rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   line-height: 1;
 }
@@ -1755,6 +1798,231 @@ code {
   font-family: var(--font-body);
   font-size: 0.92rem;
   line-height: 1.45;
+}
+
+/* ============ SPECIMEN RECEIPT ============
+       A real, signed TIM (vector t1-001) typeset as a physical receipt.
+       The one deliberately "object-like" element on the page: paper white,
+       perforated edges, a verification stamp, a slight tilt that levels
+       out on hover. */
+.receipt-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-11);
+}
+
+.receipt-card {
+  position: relative;
+  background: #fdfcf7;
+  border: 1px solid var(--hairline);
+  border-top: 0;
+  border-bottom: 0;
+  box-shadow:
+    0 1px 2px rgba(24, 22, 18, 0.05),
+    0 12px 32px rgba(24, 22, 18, 0.08),
+    0 32px 64px rgba(24, 22, 18, 0.05);
+  padding: var(--space-7) var(--space-7) var(--space-6);
+  transform: rotate(-0.8deg);
+  transition:
+    transform 420ms var(--ease-out),
+    box-shadow 420ms var(--ease-out);
+}
+
+.receipt-card:hover {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow:
+    0 1px 2px rgba(24, 22, 18, 0.05),
+    0 16px 40px rgba(24, 22, 18, 0.1),
+    0 40px 80px rgba(24, 22, 18, 0.06);
+}
+
+/* Perforated tear edges: paper-colored teeth extend past the top and bottom,
+   so the card ends in a torn perforation instead of a hard border. */
+.receipt-card::before,
+.receipt-card::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  height: 8px;
+  background-image: radial-gradient(circle at 6px 0, transparent 4.5px, #fdfcf7 5px);
+  background-size: 13px 8px;
+  background-repeat: repeat-x;
+}
+
+.receipt-card::before {
+  top: -8px;
+  transform: scaleY(-1);
+}
+
+.receipt-card::after {
+  bottom: -8px;
+}
+
+.receipt-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid var(--text);
+  margin-bottom: var(--space-4);
+}
+
+.receipt-org {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1.14rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+}
+
+.receipt-kind {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.receipt-rows,
+.receipt-hash {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.receipt-rows > div,
+.receipt-hash > div {
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.receipt-rows dt,
+.receipt-hash dt {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.receipt-rows dd,
+.receipt-hash dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.receipt-hash {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--lines);
+}
+
+.receipt-hash dd {
+  color: var(--accent);
+}
+
+.receipt-foot {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--text);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Circular verification stamp, pressed slightly off-square */
+.receipt-stamp {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 2px;
+  width: 88px;
+  height: 88px;
+  border: 1.5px solid rgba(188, 75, 42, 0.75);
+  outline: 1px solid rgba(188, 75, 42, 0.3);
+  outline-offset: 3px;
+  border-radius: 50%;
+  color: var(--oxide);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.receipt-stamp b {
+  font-weight: 500;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+}
+
+.receipt-anatomy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.anatomy-item {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: baseline;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.anatomy-key {
+  color: var(--oxide);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.anatomy-item p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.anatomy-item code {
+  color: var(--text);
+  font-size: 0.82em;
+}
+
+.receipt-cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.receipt-cta-note {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  max-width: 26ch;
+  line-height: 1.5;
 }
 
 /* Closing CTA band — gives the final content section a real ending */
@@ -1964,6 +2232,15 @@ code {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .receipt-stage {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .receipt-card {
+    max-width: 480px;
+  }
+
   .footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -2165,6 +2442,33 @@ code {
   .net-readout {
     font-size: 0.58rem;
     padding: var(--space-1) var(--space-2);
+  }
+
+  .receipt-card {
+    padding: var(--space-6) var(--space-5) var(--space-5);
+  }
+
+  .receipt-rows > div,
+  .receipt-hash > div {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .receipt-stamp {
+    width: 72px;
+    height: 72px;
+    top: var(--space-4);
+    right: var(--space-4);
+    font-size: 0.5rem;
+  }
+
+  .receipt-stamp b {
+    font-size: 0.58rem;
+  }
+
+  .anatomy-item {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
   }
 
   .flow-step {

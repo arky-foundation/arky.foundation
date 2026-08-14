@@ -315,6 +315,59 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </section>
 
+    <section class="band section" id="receipt" aria-labelledby="receipt-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">The artifact</p>
+            <h2 id="receipt-title">This is a receipt.</h2>
+            <p class="head-note">Vector <code>t1-001</code> from the published conformance suite &mdash; a real, signed TIM, not an illustration.</p>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Everything Arky produces reduces to documents like this one: small, canonical, content-addressed, signed. It carries everything needed to check itself &mdash; no API, no issuer, no network. Replay it in your browser right now.</p>
+        </div>
+
+        <div class="receipt-stage">
+          <article class="receipt-card reveal" aria-label="Specimen TIM receipt, vector t1-001">
+            <header class="receipt-head">
+              <span class="receipt-org">Arky Foundation</span>
+              <span class="receipt-kind">TIM receipt &middot; specimen t1-001</span>
+            </header>
+            <dl class="receipt-rows">
+              <div><dt>recorded</dt><dd>2025-10-15T12:00:00Z</dd></div>
+              <div><dt>identity</dt><dd>did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw</dd></div>
+              <div><dt>measurement</dt><dd>temperature = 22.5 &middot; arky:unit/temp.C</dd></div>
+              <div><dt>method</dt><dd>sensor &middot; device:temp-sensor-01</dd></div>
+            </dl>
+            <dl class="receipt-hash">
+              <div><dt>cid</dt><dd>zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH</dd></div>
+              <div><dt>sig</dt><dd>eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIs&hellip;M1zGNWECg</dd></div>
+            </dl>
+            <footer class="receipt-foot">replayable offline &middot; anyone can verify</footer>
+            <span class="receipt-stamp" aria-hidden="true"><b>verified</b>Ed25519</span>
+          </article>
+
+          <div class="receipt-anatomy reveal" style="--reveal-delay: 120ms">
+            <div class="anatomy-item">
+              <span class="anatomy-key">cid</span>
+              <p>The content address. Recompute <code>multihash(sha2-256, JCS(body))</code> and it must match, byte for byte &mdash; any edit breaks it.</p>
+            </div>
+            <div class="anatomy-item">
+              <span class="anatomy-key">sig</span>
+              <p>A detached Ed25519 signature (RFC 7797) over the same canonical bytes the cid covers.</p>
+            </div>
+            <div class="anatomy-item">
+              <span class="anatomy-key">identity.id</span>
+              <p>A did:key that resolves to the signing key itself &mdash; verification needs nothing beyond the document.</p>
+            </div>
+            <div class="receipt-cta">
+              <a class="button primary" href="/verify?example">Replay this receipt</a>
+              <span class="receipt-cta-note">loads this exact artifact into the in-browser verifier</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="band section" id="conformance" aria-labelledby="conformance-title">
       <div class="wrap">
         <div class="section-grid">

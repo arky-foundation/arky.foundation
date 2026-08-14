@@ -1,4 +1,6 @@
 ---
+const path = Astro.url.pathname.replace(/\/$/u, "") || "/";
+const current = (href: string) => (path === href ? "page" : undefined);
 ---
 <header class="site-header">
   <div class="wrap header-inner">
@@ -17,8 +19,8 @@
     <nav class="nav" aria-label="Primary navigation">
       <a href="/#standard">Protocol</a>
       <a href="/#conformance">Conformance</a>
-      <a href="/verify">Verify</a>
-      <a href="/manifesto">Manifesto</a>
+      <a href="/verify" aria-current={current("/verify")}>Verify</a>
+      <a href="/manifesto" aria-current={current("/manifesto")}>Manifesto</a>
       <a href="/#adopt">Adopt</a>
       <a class="nav-github" href="https://github.com/arky-foundation/arky.foundation" target="_blank" rel="noopener" aria-label="Arky Foundation on GitHub">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

@@ -248,6 +248,14 @@ const lerp = (a, b, t) => a + (b - a) * t;
     }
   }
 
+  // Header lift: once the page scrolls off the top, the header casts a shadow.
+  const siteHeader = document.querySelector(".site-header");
+  if (siteHeader) {
+    const onScroll = () => siteHeader.classList.toggle("is-scrolled", window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
   // Scroll-reveal: fade + rise elements as they enter the viewport.
   const reveals = Array.from(document.querySelectorAll(".reveal:not(.hero-load)"));
   if (reveals.length > 0) {
