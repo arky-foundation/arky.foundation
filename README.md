@@ -100,6 +100,10 @@ sequenceDiagram
   - `specs/development/ARKY-EXAMPLES-v1.md`
   - `specs/development/ARKY-SDK-v1.md`
   - `specs/development/ARKY-GLOSSARY-v1.md`
+- Guides
+  - `guides/ARKY-IMPL-GUIDE-v1.md` — implementers' checklists
+  - `guides/ARKY-POSITIONING-v1.md` — how Arky relates to AP2, ACP, x402, SCITT, C2PA, MCP
+  - `guides/ARKY-COMPLIANCE-MAP-v1.md` — EU AI Act / NIST AI RMF / ISO 42001 mapping
 - Schemas: `schemas/`
 - Registries: `registries/`
 - Vectors: `vectors/`
