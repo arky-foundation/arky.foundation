@@ -132,6 +132,14 @@ and are cross‑checked **byte‑for‑byte** against each other in CI:
 - [`packages/core-rs`](packages/core-rs) — **`arky-core`** (Rust). Same loop;
   systems‑language stack for embedded/high‑assurance use.
 
+Built on them:
+
+- [`packages/mcp`](packages/mcp) — **`@arky/mcp`** — policy‑gated audit proxy
+  for MCP servers: every tool call an agent makes becomes a signed
+  TIM → Decision → XR chain, denied calls never reach the server, and
+  `arky-mcp verify` replays the whole session offline. The fastest way to see
+  Arky receipts come out of a real agent.
+
 ## Repo Map
 - `specs/` — Normative protocol definitions
 - `schemas/` — JSON Schemas for validation/codegen

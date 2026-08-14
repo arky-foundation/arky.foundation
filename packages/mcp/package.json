@@ -1,0 +1,40 @@
+{
+  "name": "@arky/mcp",
+  "version": "0.1.0",
+  "description": "Policy-gated audit proxy for MCP servers: every tool call becomes a signed Arky TIM -> Decision -> Execution Receipt chain, replayable offline.",
+  "keywords": [
+    "agents",
+    "arky",
+    "audit",
+    "mcp",
+    "policy",
+    "receipts"
+  ],
+  "homepage": "https://arky.foundation",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arky-foundation/arky.foundation.git",
+    "directory": "packages/mcp"
+  },
+  "bin": {
+    "arky-mcp": "./src/cli.ts"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@arky/core": "file:../core"
+  },
+  "devDependencies": {
+    "oxfmt": "0.56.0",
+    "oxlint": "1.71.0",
+    "typescript": "6.0.3"
+  }
+}

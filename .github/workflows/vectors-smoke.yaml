@@ -54,6 +54,17 @@ jobs:
         run: bun test
         working-directory: packages/core
 
+      - name: Build @arky/core dist (consumed by @arky/mcp)
+        run: bun run build
+        working-directory: packages/core
+
+      - name: Install @arky/mcp deps
+        run: bun install --cwd packages/mcp --frozen-lockfile
+
+      - name: "@arky/mcp tests (policy gating, audit bundle, e2e proxy)"
+        run: bun test
+        working-directory: packages/mcp
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "scope": "arky:scope/mcp-tools",
+  "rules": [
+    { "tool": "read_file" },
+    { "tool": "list_directory" },
+    {
+      "tool": "pay",
+      "where": {
+        "amount": "amount <= 50",
+        "currency": "currency == \"USD\""
+      }
+    }
+  ]
+}
