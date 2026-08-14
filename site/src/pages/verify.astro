@@ -1,0 +1,549 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Verify a Receipt - Arky Foundation"
+  description="Verify any Arky artifact offline, in your browser: recompute the cid, check the Ed25519 signature and witnesses, and replay decisions deterministically. Nothing leaves this page."
+  canonicalPath="/verify"
+>
+  <main id="main" class="verify-page">
+    <section class="v-hero" aria-labelledby="v-title">
+      <p class="kicker reveal hero-load">Verify&ensp;·&ensp;offline, in your browser</p>
+      <h1 id="v-title" class="v-h1 reveal hero-load" style="--reveal-delay: 60ms">Receipts or it didn&rsquo;t happen.</h1>
+      <p class="v-lead reveal hero-load" style="--reveal-delay: 120ms">
+        Paste any Arky artifact &mdash; a TIM, a Decision, an Execution Receipt, a Commitment, or a whole
+        <code>@arky/mcp</code> audit bundle &mdash; and verify it here. The cid is recomputed, the Ed25519
+        signature and witnesses are checked, and decisions are <em>replayed</em> through the reference Kernel.
+        Everything runs locally; nothing is uploaded.
+      </p>
+    </section>
+
+    <section class="band section" aria-labelledby="panel-title">
+      <div class="wrap">
+        <h2 id="panel-title" class="sr-only">Verification panel</h2>
+        <div class="v-panel reveal">
+          <label class="v-label" for="v-input">Artifact JSON (one object, an array, or drop files below)</label>
+          <textarea id="v-input" spellcheck="false" placeholder='{"time":{"ts":"..."},"identity":{"id":"did:key:z6Mk..."},"measurement":{...},"cid":"zQm...","sig":"eyJ..."}'></textarea>
+          <div id="v-drop" class="v-drop" tabindex="0" role="button" aria-label="Drop artifact files here or click to choose">
+            drop artifact files here (or click to choose) &mdash; e.g. the contents of an <code>.arky-audit</code> bundle
+          </div>
+          <input id="v-file" type="file" multiple accept=".json,application/json" class="sr-only" />
+          <div class="v-actions">
+            <button id="v-run" class="button primary" type="button">Verify</button>
+            <button id="v-example" class="button" type="button">Load example</button>
+            <button id="v-clear" class="button" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div id="v-results" class="v-results" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<script>
+  import {
+    argsHash,
+    canonicalize,
+    cidFromCanonical,
+    evaluateKernel,
+    resolveDidKey,
+    verifyDetached,
+    verifyTim,
+    type Commitment,
+    type Tim,
+  } from "@arky/core";
+
+  interface Item {
+    label: string;
+    data: Record<string, unknown>;
+  }
+  interface Check {
+    name: string;
+    /** null means not applicable / unverifiable */
+    ok: boolean | null;
+    note?: string;
+  }
+  interface Result {
+    label: string;
+    kind: string;
+    cid?: string;
+    checks: Check[];
+  }
+
+  const EXAMPLE_TIM = {
+    time: { ts: "2025-10-15T12:00:00Z" },
+    identity: { id: "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw" },
+    measurement: {
+      name: "temperature",
+      value: 22.5,
+      unit: "arky:unit/temp.C",
+      method: { type: "sensor", source: "device:temp-sensor-01" },
+    },
+    cid: "zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH",
+    sig: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..i3Wael9VfCyFE-2O-ncTcghG_MxzkRIP_BLf3Et3-2QH-61rjdX7daXtLL4Qfr1Lxaw31aKFSouEZM1zGNWECg",
+  };
+
+  function detectKind(a: Record<string, unknown>): string {
+    const t = a["@type"];
+    if (typeof t === "string" && t.startsWith("ARKY:")) return t.slice(5).replace("@v1", "");
+    if (a.measurement && a.time && a.sig) return "TIM";
+    if (a.actor && a.measure && a.consequence) return "Commitment";
+    if (a.status && a.assertions && a.commitment_cid !== undefined) return "Decision";
+    if (a.args_hash && a.idempotency_key) return "ExecutionReceipt";
+    return "Artifact";
+  }
+
+  /** Recompute cid + verify signature for a generic signed artifact. */
+  function checkGeneric(a: Record<string, unknown>, did: string | undefined): Check[] {
+    const checks: Check[] = [];
+    const { cid, sig, ...body } = a;
+    if (typeof cid !== "string" || typeof sig !== "string") {
+      return [{ name: "structure", ok: false, note: "missing cid or sig" }];
+    }
+    let canonical: string;
+    try {
+      canonical = canonicalize(body);
+    } catch (e) {
+      return [{ name: "canonicalization", ok: false, note: (e as Error).message }];
+    }
+    checks.push({ name: "cid recomputes", ok: cidFromCanonical(canonical) === cid });
+    if (!did) {
+      checks.push({ name: "signature", ok: null, note: "no resolvable did:key identity in artifact" });
+      return checks;
+    }
+    const key = resolveDidKey({ identity: { id: did } });
+    checks.push({
+      name: "signature (Ed25519)",
+      ok: key ? verifyDetached(sig, new TextEncoder().encode(canonical), key) : false,
+      note: key ? undefined : `could not resolve ${did}`,
+    });
+    return checks;
+  }
+
+  function verifyOne(item: Item): Result {
+    const a = item.data;
+    const kind = detectKind(a);
+    if (kind === "TIM") {
+      const r = verifyTim(a);
+      const witnesses = (a.time as any)?.witnesses;
+      const checks: Check[] = [
+        { name: "required fields", ok: r.schema_valid, note: r.missing_fields?.join(", ") },
+        { name: "cid recomputes", ok: r.cid_valid },
+        { name: "signature (Ed25519)", ok: r.signature_valid },
+        {
+          name: "witnesses",
+          ok: Array.isArray(witnesses) && witnesses.length > 0 ? r.witnesses_valid : null,
+          note: Array.isArray(witnesses) && witnesses.length > 0 ? `${witnesses.length} co-signature(s)` : "none present",
+        },
+      ];
+      return { label: item.label, kind, cid: a.cid as string, checks };
+    }
+    const did = kind === "Commitment" ? (a.actor as string) : ((a.identity as any)?.id as string | undefined);
+    return { label: item.label, kind, cid: a.cid as string, checks: checkGeneric(a, did) };
+  }
+
+  function decisionChecks(d: Record<string, unknown>, tims: Tim[], commitments: Map<string, Record<string, unknown>>): Check[] {
+    const checks: Check[] = [];
+    const cited = (d.evidence as string[]) ?? [];
+    if (tims.length > 0 && cited.length > 0) {
+      const have = new Set(tims.map((t) => t.cid));
+      const missing = cited.filter((c) => !have.has(c));
+      checks.push({
+        name: "decision cites the provided evidence",
+        ok: missing.length === 0,
+        note: missing.length > 0 ? `${missing.length} cited TIM(s) not provided` : `${cited.length} TIM cid(s) matched`,
+      });
+    }
+    const commitment = commitments.get(d.commitment_cid as string);
+    if (commitment && tims.length > 0) {
+      const replay = evaluateKernel(commitment as unknown as Commitment, tims, { time: (d.time as any)?.ts });
+      const same =
+        replay.status === d.status &&
+        canonicalize(replay.assertions) === canonicalize(d.assertions) &&
+        canonicalize(replay.authorized) === canonicalize(d.authorized);
+      checks.push({
+        name: "decision replays deterministically",
+        ok: same,
+        note: same ? `kernel re-run agrees: ${replay.status}` : `kernel re-run says ${replay.status}, artifact says ${d.status}`,
+      });
+    }
+    return checks;
+  }
+
+  function xrChecks(xr: Record<string, unknown>, tims: Tim[], decisions: Map<string, Record<string, unknown>>): Check[] {
+    const checks: Check[] = [];
+    if (xr.decision_cid !== undefined && decisions.size > 0) {
+      checks.push({
+        name: "receipt links to a provided decision",
+        ok: decisions.has(xr.decision_cid as string),
+      });
+    }
+    const toolTim = tims.find((t) => (t.measurement as any)?.code === "tool");
+    const rawArgs = (toolTim?.measurement as any)?.provenance?.arguments;
+    if (rawArgs !== undefined && xr.args_hash !== undefined) {
+      checks.push({
+        name: "receipt args_hash matches recorded arguments",
+        ok: xr.args_hash === argsHash(rawArgs),
+      });
+    }
+    return checks;
+  }
+
+  /** Cross-artifact checks when related pieces are pasted together. */
+  function crossChecks(items: { item: Item; result: Result }[]): Check[] {
+    const byKind = (k: string) => items.filter((x) => x.result.kind === k).map((x) => x.item.data);
+    const tims = byKind("TIM") as unknown as Tim[];
+    const commitments = new Map(byKind("Commitment").map((c) => [c.cid as string, c]));
+    const decisions = new Map(byKind("Decision").map((d) => [d.cid as string, d]));
+    return [
+      ...byKind("Decision").flatMap((d) => decisionChecks(d, tims, commitments)),
+      ...byKind("ExecutionReceipt").flatMap((xr) => xrChecks(xr, tims, decisions)),
+    ];
+  }
+
+  // --- input handling and rendering ---
+
+  const input = document.querySelector("#v-input") as HTMLTextAreaElement;
+  const results = document.querySelector("#v-results") as HTMLElement;
+  const drop = document.querySelector("#v-drop") as HTMLElement;
+  const fileInput = document.querySelector("#v-file") as HTMLInputElement;
+  let droppedItems: Item[] = [];
+
+  function parseTextarea(): Item[] {
+    const text = input.value.trim();
+    if (!text) return [];
+    const parsed = JSON.parse(text);
+    const list = Array.isArray(parsed) ? parsed : [parsed];
+    return list.map((data, i) => {
+      // Accept conformance-vector files directly: verify their inner TIM.
+      if (data !== null && typeof data === "object" && data.inputs?.tim) {
+        return { label: data.id ? `vector ${data.id}` : `pasted #${i + 1}`, data: data.inputs.tim };
+      }
+      return { label: list.length > 1 ? `pasted #${i + 1}` : "pasted artifact", data };
+    });
+  }
+
+  function render(all: { item: Item; result: Result }[], cross: Check[], error?: string): void {
+    results.innerHTML = "";
+    if (error) {
+      results.append(el(`<div class="v-card v-error"><span class="v-badge fail">ERROR</span> ${esc(error)}</div>`));
+      return;
+    }
+    for (const { result } of all) {
+      const ok = result.checks.every((c) => c.ok !== false);
+      const rows = result.checks
+        .map(
+          (c) =>
+            `<li><span class="v-badge ${c.ok === false ? "fail" : c.ok === null ? "na" : "pass"}">${
+              c.ok === false ? "FAIL" : c.ok === null ? "N/A" : "PASS"
+            }</span><span class="v-check-name">${esc(c.name)}</span>${c.note ? `<span class="v-note">${esc(c.note)}</span>` : ""}</li>`,
+        )
+        .join("");
+      results.append(
+        el(
+          `<div class="v-card ${ok ? "" : "v-invalid"}">
+            <div class="v-card-head">
+              <span class="v-kind">${esc(result.kind)}</span>
+              <span class="v-verdict ${ok ? "pass" : "fail"}">${ok ? "VALID" : "INVALID"}</span>
+            </div>
+            <p class="v-meta">${esc(result.label)}${result.cid ? ` &middot; <code>${esc(String(result.cid))}</code>` : ""}</p>
+            <ul class="v-checks">${rows}</ul>
+          </div>`,
+        ),
+      );
+    }
+    if (cross.length > 0) {
+      const rows = cross
+        .map(
+          (c) =>
+            `<li><span class="v-badge ${c.ok === false ? "fail" : "pass"}">${c.ok === false ? "FAIL" : "PASS"}</span><span class="v-check-name">${esc(c.name)}</span>${c.note ? `<span class="v-note">${esc(c.note)}</span>` : ""}</li>`,
+        )
+        .join("");
+      results.append(
+        el(
+          `<div class="v-card v-cross">
+            <div class="v-card-head"><span class="v-kind">Chain</span><span class="v-verdict ${cross.every((c) => c.ok !== false) ? "pass" : "fail"}">${cross.every((c) => c.ok !== false) ? "LINKED" : "BROKEN"}</span></div>
+            <ul class="v-checks">${rows}</ul>
+          </div>`,
+        ),
+      );
+    }
+  }
+
+  function el(html: string): HTMLElement {
+    const t = document.createElement("template");
+    t.innerHTML = html.trim();
+    return t.content.firstElementChild as HTMLElement;
+  }
+  const esc = (s: string) => s.replaceAll(/[&<>"']/gu, (c) => `&#${c.codePointAt(0)};`);
+
+  function run(): void {
+    try {
+      const items = [...parseTextarea(), ...droppedItems];
+      if (items.length === 0) {
+        render([], [], "Paste an artifact or drop files first.");
+        return;
+      }
+      const all = items.map((item) => ({ item, result: verifyOne(item) }));
+      render(all, crossChecks(all));
+    } catch (e) {
+      render([], [], `Could not parse input as JSON: ${(e as Error).message}`);
+    }
+  }
+
+  async function addFiles(files: FileList | File[]): Promise<void> {
+    for (const f of files) {
+      try {
+        const data = JSON.parse(await f.text());
+        if (data && typeof data === "object" && data.inputs?.tim) {
+          droppedItems.push({ label: f.name, data: data.inputs.tim });
+        } else {
+          droppedItems.push({ label: f.name, data });
+        }
+      } catch {
+        droppedItems.push({ label: f.name, data: { parse_error: true } });
+      }
+    }
+    drop.textContent = `${droppedItems.length} file(s) loaded — press Verify`;
+    run();
+  }
+
+  document.querySelector("#v-run")!.addEventListener("click", run);
+  document.querySelector("#v-example")!.addEventListener("click", () => {
+    droppedItems = [];
+    input.value = JSON.stringify(EXAMPLE_TIM, null, 2);
+    run();
+  });
+  document.querySelector("#v-clear")!.addEventListener("click", () => {
+    droppedItems = [];
+    input.value = "";
+    results.innerHTML = "";
+    drop.innerHTML =
+      'drop artifact files here (or click to choose) &mdash; e.g. the contents of an <code>.arky-audit</code> bundle';
+  });
+  drop.addEventListener("click", () => fileInput.click());
+  drop.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") fileInput.click();
+  });
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files) addFiles(fileInput.files);
+  });
+  drop.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    drop.classList.add("over");
+  });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault();
+    drop.classList.remove("over");
+    if (e.dataTransfer?.files) addFiles(e.dataTransfer.files);
+  });
+</script>
+
+<style>
+  .v-hero {
+    width: min(100% - calc(var(--gutter) * 2), var(--max-text));
+    margin: 0 auto;
+    padding: clamp(var(--space-12), 12vh, var(--space-14)) 0 var(--space-10);
+  }
+
+  .v-h1 {
+    max-width: 18ch;
+    margin: var(--space-6) 0 var(--space-7);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+    font-weight: 620;
+    letter-spacing: -0.025em;
+    line-height: 1.04;
+  }
+
+  .v-lead {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--text-dim);
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    line-height: 1.5;
+  }
+
+  .v-lead code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--text);
+  }
+
+  .v-panel {
+    border: 1px solid var(--hairline);
+    border-top: 2px solid var(--accent);
+    border-radius: 5px;
+    background: rgba(251, 250, 245, 0.7);
+    padding: var(--space-6);
+  }
+
+  .v-label {
+    display: block;
+    margin-bottom: var(--space-3);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #v-input {
+    width: 100%;
+    min-height: 14rem;
+    resize: vertical;
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    background: #fff;
+    padding: var(--space-4);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  #v-input:focus-visible {
+    outline: 1px solid var(--accent);
+  }
+
+  .v-drop {
+    margin-top: var(--space-4);
+    border: 1px dashed var(--hairline);
+    border-radius: 4px;
+    padding: var(--space-5);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .v-drop.over,
+  .v-drop:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .v-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    flex-wrap: wrap;
+  }
+
+  .v-results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-top: var(--space-7);
+  }
+
+  .v-card {
+    border: 1px solid var(--hairline);
+    border-left: 2px solid var(--accent);
+    border-radius: 5px;
+    background: rgba(251, 250, 245, 0.7);
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .v-card.v-invalid {
+    border-left-color: var(--oxide);
+  }
+
+  .v-card.v-cross {
+    border-left-color: var(--text-dim);
+  }
+
+  .v-card.v-error {
+    border-left-color: var(--oxide);
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+
+  .v-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .v-kind {
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .v-verdict {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+  }
+
+  .v-verdict.pass { color: var(--accent); }
+  .v-verdict.fail { color: var(--oxide); }
+
+  .v-meta {
+    margin: var(--space-2) 0 var(--space-4);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .v-meta code {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .v-checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .v-checks li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-size: 0.9rem;
+    color: var(--text);
+    flex-wrap: wrap;
+  }
+
+  .v-badge {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--hairline);
+  }
+
+  .v-badge.pass { color: var(--accent); border-color: var(--accent); }
+  .v-badge.fail { color: #fff; background: var(--oxide); border-color: var(--oxide); }
+  .v-badge.na { color: var(--text-dim); }
+
+  .v-note {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+</style>

@@ -12,6 +12,7 @@
     "fmt": "oxfmt --write src/ public/scripts/"
   },
   "dependencies": {
+    "@arky/core": "file:../packages/core",
     "astro": "^7.0.0"
   },
   "devDependencies": {
