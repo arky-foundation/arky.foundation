@@ -104,6 +104,7 @@ sequenceDiagram
   - `guides/ARKY-IMPL-GUIDE-v1.md` — implementers' checklists
   - `guides/ARKY-POSITIONING-v1.md` — how Arky relates to AP2, ACP, x402, SCITT, C2PA, MCP
   - `guides/ARKY-COMPLIANCE-MAP-v1.md` — EU AI Act / NIST AI RMF / ISO 42001 mapping
+  - `guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md` — build the external implementation that unlocks `stable`
 - Schemas: `schemas/`
 - Registries: `registries/`
 - Vectors: `vectors/`
@@ -115,9 +116,11 @@ sequenceDiagram
 The core loop (TIM, Canonicalization, Kernel, Notary, Settlers) is at
 `status: implementing`: L2-or-better vectors are published, both reference
 implementations pass them, and cross-language checks agree byte-for-byte.
-Formal promotion to `stable` is still pending TC ratification. Non-core specs
-remain at `status: review` or partial vector coverage. See `CONFORMANCE.md` and
-`governance/ARKY-COMPAT-MATRIX-v1.md`.
+Promotion to `stable` deliberately waits on an implementation we did not
+write: at least one external implementation must pass the published vectors
+(`guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md`), followed by a recorded TC vote.
+Non-core specs remain at `status: review` or partial vector coverage. See
+`CONFORMANCE.md` and `governance/ARKY-COMPAT-MATRIX-v1.md`.
 
 ## Implementations
 

@@ -23,18 +23,24 @@ or partial vector coverage.
 
 ## Development Priorities
 
-### 1. Ratify The Core Loop
+### 1. Recruit An External Implementer
 
-Complete the governance step that moves the five core-loop specs from
-`implementing` to `stable`.
+Per governance §9.1.7, `stable` requires an implementation built outside the
+editors' team passing the published vectors. Both reference stacks share
+authorship, so they count as one party; the TC vote records the gates, it does
+not substitute for them. This is now the top priority — ratification follows
+from it.
 
 Definition of done:
 
-- TC vote minutes are published.
+- At least one external implementation passes the core-loop vectors against a
+  tagged vector release and publishes results per
+  `guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md`.
+- The implementation is listed in the public conformance directory (§8).
+- The §5 TC vote is then held; minutes are published citing the external
+  results plus both reference implementations' artifacts.
 - `governance/ARKY-COMPAT-MATRIX-v1.md`, spec front matter, and
   `CONFORMANCE.md` agree on the lifecycle state.
-- Any stable claim cites vector release `0.2.0` or later plus results artifacts
-  for both reference implementations.
 
 ### 2. Bring Non-Core Suites Up To L2
 

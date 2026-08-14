@@ -73,7 +73,8 @@ Artifacts required by state:
 - Last Call — frozen text; registry diffs; vectors ready.
 - Accepted — spec_id assigned; version plan declared.
 - Implementing — ≥2 independent implementations in progress.
-- Stable — vectors published; ≥2 implementations pass.
+- Stable — vectors published; ≥2 implementations pass, at least one of them
+  external (developed outside the spec editors' team, §9.1.7).
 - Deprecated — sunset date + migration path.
 - Obsoleted — successor spec_id; archival notice.
 
@@ -141,8 +142,17 @@ be re-verifiable from the repository:
 6. **Results artifact** — `bun run results` regenerates the `RESULTS.json`
    artifact under `vectors/`, and the conformance claim cites spec version(s),
    level(s), and commit hash (§8).
+7. **External implementation** — promotion to `stable` requires at least one
+   implementation developed OUTSIDE the spec editors' team that passes the
+   component's published vectors, with results cited per §8. Self‑ratification
+   is not credibility: both current reference stacks share authorship, so they
+   jointly count as ONE party for this gate. The gate is met by an independent
+   party publishing passing results against a tagged vector release. See
+   `guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md`.
 
 Promotion to `stable` additionally requires the recorded TC decision per §5.
+The TC vote records that the §9.1 gates — including the external
+implementation — are met; it cannot substitute for them.
 
 ## 10. Security Incident Response
 

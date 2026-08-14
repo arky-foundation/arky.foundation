@@ -32,9 +32,11 @@ versions and supported ranges across specs, SDKs, registries, and vectors.
 
 Concrete state as of vectors release **0.2.0** (`vectors/RELEASES.json`). The
 five **core-loop** specs are at `status: implementing` — they meet the
-`ARKY-GOVERNANCE-v1` §4 *technical* bar for Stable (vectors published at L2 +
-≥2 independent implementations passing), pending formal TC ratification to
-`stable`. All other specs remain at `status: review`.
+`ARKY-GOVERNANCE-v1` §4 *technical* bar (vectors published at L2 + ≥2
+implementations passing), but promotion to `stable` additionally requires an
+**external** implementation (§9.1.7 — both reference stacks share authorship
+and count as one party) plus formal TC ratification. All other specs remain at
+`status: review`.
 
 | Component | Spec | Status | Schema `$id` | Executable vector levels |
 |---|---|---|---|---|
