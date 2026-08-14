@@ -60,7 +60,8 @@ Definition of done:
 ### 3. Keep Docs And Manifests In Lockstep
 
 Status claims should converge on one story: core-loop implementing and
-production-ready by technical bar; non-core review/partial; stable pending TC.
+production-ready by technical bar; non-core review/partial; stable pending an
+external implementation (§9.1.7) plus the recorded TC vote.
 
 Definition of done:
 

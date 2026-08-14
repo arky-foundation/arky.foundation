@@ -75,7 +75,7 @@ Terminology: Notary (specs/core/ARKY-NOTARY-v1.md), Anchors (specs/core/ARKY-TRA
   "@type": "ARKY:Decision@v1",
   "rule": "arky:policy/cooling.on",
   "inputs": {"tim": "zBase58..."},
-  "result": "ALLOW",
+  "status": "APPROVED",
   "cid": "zBase58..."
 }
 ```
@@ -88,7 +88,7 @@ Terminology: Kernel/Decision (specs/core/ARKY-KERNEL-v1.md), Policy Packs (specs
   "@type": "ARKY:ExecutionReceipt@v1",
   "verb": "arky:verb/evm.transfer",
   "params": {"to": "0x...", "value": "1"},
-  "status": "SUCCESS",
+  "status": "success",
   "anchors": [{"rail": "eth:1", "txid": "0xdef..."}]
 }
 ```

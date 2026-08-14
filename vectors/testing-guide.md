@@ -37,7 +37,9 @@ the Rust reference implementation.
 
 The five core-loop suites are technically production-ready by vector manifest
 and implementation evidence, but their specs remain `status: implementing`
-until formal TC ratification to `stable`.
+until an external implementation passes the published vectors (governance
+§9.1.7 — see `guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md`) and the TC vote is
+recorded.
 
 ## Running Individual Checks
 

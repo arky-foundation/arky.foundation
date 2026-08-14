@@ -95,8 +95,9 @@ Pre-1.0 (`v0.1.0`). The five core-loop specs (TIM, Canonicalization, Kernel,
 Notary, Settlers) are at `status: implementing` with L2 conformance coverage;
 other specs remain at `status: review`. This library passes the published
 conformance vectors at L2 and is cross-checked byte-for-byte against the Rust
-stack, but formal ratification of the core specs to **stable** is still pending.
-See the repository [`CONFORMANCE.md`](../../CONFORMANCE.md).
+stack. Promotion of the core specs to **stable** additionally waits on an
+external implementation passing the vectors (governance §9.1.7) plus the
+recorded TC vote. See the repository [`CONFORMANCE.md`](../../CONFORMANCE.md).
 
 **The fixture keys under `vectors/fixtures/keys/` are TEST KEYS — never use them
 in production.** Generate your own with `generateKeyPair()`.

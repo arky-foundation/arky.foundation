@@ -340,15 +340,15 @@ import Layout from "../layouts/Layout.astro";
           </div>
         </div>
 
-        <div class="dim" aria-hidden="true"><span class="dim-label">SUITE LEVELS&ensp;·&ensp;A SPEC IS STABLE ONLY WHEN ≥2 IMPLEMENTATIONS PASS</span></div>
+        <div class="dim" aria-hidden="true"><span class="dim-label">SUITE LEVELS&ensp;·&ensp;A SPEC IS STABLE ONLY WHEN ≥2 IMPLEMENTATIONS PASS, AT LEAST ONE EXTERNAL</span></div>
         <div class="ledger reveal" aria-label="Conformance levels by suite">
           <div class="ledger-head" aria-hidden="true">
             <span>Suite</span><span>Levels</span><span style="text-align:right">Vectors</span><span style="justify-self:end">Status</span>
           </div>
           <div class="ledger-row">
             <span class="ledger-suite">TIM</span>
-            <span class="ledger-levels">C1 canonicalize &middot; C2 hash+sign &middot; C3 cross-verify &middot; T1 verify</span>
-            <span class="ledger-count">7+</span>
+            <span class="ledger-levels">C1 canonicalize &middot; C2 hash+sign &middot; C3 cross-verify &middot; T1 verify &middot; T2 freshness/witness</span>
+            <span class="ledger-count">T1&ndash;T2</span>
             <span class="pass-pill">Pass</span>
           </div>
           <div class="ledger-row">
@@ -360,7 +360,7 @@ import Layout from "../layouts/Layout.astro";
           <div class="ledger-row">
             <span class="ledger-suite">Kernel</span>
             <span class="ledger-levels">K1 eval &middot; K2 policy-aware &middot; K3 orchestrated</span>
-            <span class="ledger-count">K1</span>
+            <span class="ledger-count">K1&ndash;K2</span>
             <span class="pass-pill">Pass</span>
           </div>
           <div class="ledger-row">
@@ -371,7 +371,7 @@ import Layout from "../layouts/Layout.astro";
           </div>
           <div class="ledger-row">
             <span class="ledger-suite">Ratification</span>
-            <span class="ledger-levels">formal TC vote to Stable &middot; vectors + cross-check already hold</span>
+            <span class="ledger-levels">external implementation + TC vote to Stable &middot; vectors + cross-check already hold</span>
             <span class="ledger-count">&mdash;</span>
             <span class="pass-pill pending">Pending</span>
           </div>
@@ -468,10 +468,11 @@ import Layout from "../layouts/Layout.astro";
         </div>
 
         <div class="closing reveal">
-          <p class="closing-text">Ready to adopt? Read the spec, replay the vectors, and ship conformance against two independent reference stacks.</p>
+          <p class="closing-text">Ready to adopt? Read the spec, replay the vectors, and ship conformance against two independent reference stacks. The first external implementation to pass the vectors unlocks Stable.</p>
           <div class="closing-actions" aria-label="Get started">
             <a class="button primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md" target="_blank" rel="noopener">Read the spec</a>
             <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md" target="_blank" rel="noopener">Run vectors</a>
+            <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md" target="_blank" rel="noopener">Become an implementer</a>
           </div>
         </div>
       </div>
