@@ -87,16 +87,26 @@ of exactly 34 bytes, matching `@arky/core` byte for byte.
 
 ## Regression coverage
 
-Both stacks now carry a mirrored adversarial suite, so the *failure* behaviour is
-pinned on each side rather than only on the TS one:
+All three stacks now carry a mirrored adversarial suite, so the *failure*
+behaviour is pinned on each side rather than only on the TS one:
 
 - `packages/core/test/security.test.ts` (26 cases, TS)
 - `packages/core-rs/tests/security.rs` (19 cases, Rust) — the same forgery,
   downgrade, malformed-input, freshness, Settler-amount, and Kernel-evidence
   attacks, plus the `did:key` length/prefix contract from finding 5.
+- `packages/core-go/security_test.go` (Go) — the same attack set again, plus
+  JWS-shape rejections and an enumeration showing that for Ed25519 did:keys the
+  `z6Mk` prefix check already implies the 34-byte length check.
 
-The Rust crate's unit tests additionally lock the RFC 8785 number forms and
-amount validation. CI runs both suites plus the cross-language `cross-check.sh`.
+The Rust and Go suites additionally lock the RFC 8785 number forms and amount
+validation. CI runs all three suites plus the cross-language `cross-check.sh`.
 
 Each new assertion was negative-tested (break the guard → the test must fail →
-restore), so the suite is known to have teeth rather than rubber-stamping.
+restore), so the suite is known to have teeth rather than rubber-stamping. The
+Go suite was additionally mutation-tested against eight independent defects
+(signature check bypassed, `Valid` ignoring cid/witness/freshness, the did:key
+prefix loosened, amount and verb-registry checks removed in both the Settler and
+the Kernel, UTF-8 key ordering, and the public-key size check dropped); every one
+was caught. That exercise corrected a test whose name claimed the 34-byte length
+check was load-bearing when the prefix check was in fact rejecting those inputs
+first.

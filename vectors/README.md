@@ -78,12 +78,17 @@ bun install
 bun run validate
 bun test
 cargo test --manifest-path packages/core-rs/Cargo.toml
+go test ./... # from packages/core-go
 ```
 
 `bun run validate` runs JSON parsing, signed artifact/vector verification,
 Kernel schema checks, and link checking. `bun test` exercises the TypeScript
-reference implementation against the vectors. The Rust command exercises the
-second independent implementation.
+reference implementation against the vectors. The Rust and Go commands exercise
+the second and third independent implementations.
+
+`scripts/cross-check.sh` then asserts that all three stacks agree
+byte-for-byte end to end: canonical bytes, cids, Ed25519 signatures, Kernel
+decisions, and execution receipts.
 
 For just the vector/artifact verifier:
 

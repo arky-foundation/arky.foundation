@@ -75,5 +75,26 @@ jobs:
         run: cargo test --locked
         working-directory: packages/core-rs
 
-      - name: Cross-language agreement (TS == Rust, bytes -> cids -> decisions -> receipts)
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: packages/core-go/go.mod
+
+      - name: "arky-core-go (Go) conformance (third independent stack)"
+        run: go test ./...
+        working-directory: packages/core-go
+
+      - name: "arky-core-go formatting and vet"
+        working-directory: packages/core-go
+        run: |
+          set -euo pipefail
+          unformatted="$(gofmt -l .)"
+          if [[ -n "$unformatted" ]]; then
+            echo "[FAIL] gofmt needed for:" >&2
+            echo "$unformatted" >&2
+            exit 1
+          fi
+          go vet ./...
+
+      - name: Cross-language agreement (TS == Rust == Go, bytes -> cids -> decisions -> receipts)
         run: bash scripts/cross-check.sh
