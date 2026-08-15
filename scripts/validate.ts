@@ -56,7 +56,7 @@ async function checkJsonSyntax(): Promise<boolean> {
 async function main() {
   const results: [string, boolean][] = [];
   results.push(['JSON syntax', await checkJsonSyntax()]);
-  results.push(['Conformance verifier', await run('Conformance verifier', ['bun', 'run', 'scripts/verify-artifacts.ts'])]);
+  results.push(['Conformance verifier', await run('Conformance verifier', ['bun', 'run', 'scripts/verify-artifacts.ts', '--results', 'vectors/RESULTS.json'])]);
   results.push(['Kernel vectors vs schema', await run('Kernel vectors vs schema', ['bun', 'run', 'scripts/validate-kernel-vectors.ts'])]);
   results.push(['Link checker', await run('Link checker', ['bun', 'run', 'scripts/check-links.ts'])]);
   results.push(['Release counts', await run('Release counts', ['bun', 'run', 'scripts/release-check.ts'])]);

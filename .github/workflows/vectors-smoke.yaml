@@ -45,7 +45,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Verify CIDs, signatures, and algorithmic vectors (conformance)
-        run: bun run scripts/verify-artifacts.ts
+        run: bun run scripts/verify-artifacts.ts --results vectors/RESULTS.json
 
       - name: Release counts consistent (manifests, RELEASES.json, README)
         run: bun run scripts/release-check.ts
