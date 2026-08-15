@@ -488,8 +488,6 @@ import Button from "../components/Button.astro";
           <p class="lead reveal" style="--reveal-delay: 100ms">Each one is written clean-room from the specs, then held to the same line in CI: canonical bytes &rarr; content IDs &rarr; Ed25519 signatures &rarr; Kernel decisions &rarr; execution receipts must match <em>byte-for-byte</em> across every stack. A disagreement anywhere fails the build.</p>
         </div>
 
-        <div class="dim" aria-hidden="true"><span class="dim-label">APACHE-2.0&ensp;·&ensp;CLEAN-ROOM FROM THE SPECS&ensp;·&ensp;CROSS-CHECKED IN CI</span></div>
-
         <div class="impl-grid">
           <article class="impl-card reveal">
             <div class="impl-head">
@@ -528,7 +526,7 @@ import Button from "../components/Button.astro";
           <article class="impl-card reveal" style="--reveal-delay: 160ms">
             <div class="impl-head">
               <h3>Go</h3>
-              <span class="impl-pkg">go get &hellip;/packages/core-go</span>
+              <span class="impl-pkg">pkg.go.dev / core-go</span>
             </div>
             <p class="impl-role">Standard library only. A hand-written JSON parser keeps key order and number precision that <code>encoding/json</code> would discard before signing.</p>
             <ul class="impl-facts">
@@ -559,6 +557,8 @@ import Button from "../components/Button.astro";
             </div>
           </article>
         </div>
+
+        <div class="dim dim-foot" aria-hidden="true"><span class="dim-label">APACHE-2.0&ensp;·&ensp;CLEAN-ROOM FROM THE SPECS&ensp;·&ensp;CROSS-CHECKED</span></div>
       </div>
     </section>
 

@@ -1444,6 +1444,12 @@ h2 {
   margin: 0 0 var(--space-5);
 }
 
+/* Footer variant: the label sits BELOW its content rather than captioning it,
+   so the margin flips to the top edge. */
+.dim-foot {
+  margin: var(--space-8) 0 0;
+}
+
 /* When a dim divider follows another content block (e.g. metric-row),
        restore a top gap so it doesn't collide. */
 .metric-row + .dim {
