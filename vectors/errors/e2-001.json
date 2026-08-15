@@ -1,0 +1,26 @@
+{
+  "id": "e2-001",
+  "spec": "ARKY-ERRORS-v1",
+  "level": "E2",
+  "description": "Code outside the section-5 namespaces is rejected (spec 5 taxonomy)",
+  "check": "error_envelope",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "envelope": {
+      "type": "about:blank",
+      "code": "foo.bar",
+      "title": "Unknown namespace",
+      "severity": "error",
+      "ts": "2025-10-15T12:00:00Z"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "code.unknown_namespace"
+    ],
+    "effective_retry": "never"
+  }
+}

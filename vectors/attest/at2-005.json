@@ -1,0 +1,22 @@
+{
+  "id": "at2-005",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT2",
+  "description": "Content binding: nonce equals cid of canonical content (spec 6)",
+  "check": "content_binding",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "content": {
+      "n": 1,
+      "subject": "arky:unit/temp.C"
+    },
+    "nonce": "zQmSWgfzwqHMg3Q5ef2pbyCsW6NYpxBMYNijQBwYmM35d68"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "bound": true
+  }
+}

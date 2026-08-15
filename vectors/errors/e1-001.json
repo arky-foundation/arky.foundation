@@ -1,0 +1,29 @@
+{
+  "id": "e1-001",
+  "spec": "ARKY-ERRORS-v1",
+  "level": "E1",
+  "description": "Full error envelope with after-retry hint validates (spec 3/4)",
+  "check": "error_envelope",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "envelope": {
+      "type": "https://arky.foundation/specs/core/ARKY-ERRORS-v1#notary",
+      "code": "notary.finality_unmet",
+      "title": "Finality depth not yet reached",
+      "status": 202,
+      "severity": "error",
+      "retry": {
+        "policy": "after",
+        "after_ms": 300000
+      },
+      "ts": "2025-10-15T12:00:00Z"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "effective_retry": "after"
+  }
+}

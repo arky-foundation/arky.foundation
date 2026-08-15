@@ -1,0 +1,46 @@
+{
+  "suite": "registries",
+  "spec": "ARKY-REGISTRIES-v1",
+  "version": "0.1.0",
+  "description": "Registry vectors: provider snapshot signatures (R1) and consumer-side validation - signature rejection and URN/CAIP-2 grammar (R2).",
+  "levels": {
+    "R1": {
+      "name": "Provider",
+      "description": "Published registry snapshots are signed and verify",
+      "vectors": [
+        "r1-001.json"
+      ],
+      "coverage": 1,
+      "focus_areas": [
+        "Snapshot JWS verification (spec section 11 R1)"
+      ]
+    },
+    "R2": {
+      "name": "Consumer",
+      "description": "Consumers validate signatures and enforce URN grammar",
+      "vectors": [
+        "r2-001.json",
+        "r2-002.json"
+      ],
+      "coverage": 2,
+      "focus_areas": [
+        "Tampered snapshot rejection",
+        "URN arky:<namespace>/<name>[@v<major>] and CAIP-2 grammar"
+      ]
+    }
+  },
+  "total_vectors": 3,
+  "status": {
+    "overall_coverage": "r1-r2 executable",
+    "ready_for_production": false,
+    "last_updated": "2026-08-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/infrastructure/registries-v1.json"
+  ],
+  "references": {
+    "spec": "../specs/infrastructure/ARKY-REGISTRIES-v1.md",
+    "registries": "../registries/",
+    "schemas": "../schemas/"
+  }
+}

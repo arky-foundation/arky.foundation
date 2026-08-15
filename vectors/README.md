@@ -23,9 +23,12 @@ partial.
 | Kernel | ARKY-KERNEL-v1 | 10 | 4 | 0 | 14 | core ready |
 | Notary | ARKY-NOTARY-v1 | 8 | 4 | 3 | 15 | core ready |
 | Settlers | ARKY-SETTLERS-v1 | 10 | 2 | 2 | 14 | core ready |
-| Discovery | ARKY-DISCOVERY-v1 | 6 | 1 | 0 | 7 | partial |
-| Attestations | ARKY-ATTESTATIONS-v1 | 2 | 0 | 0 | 2 | basic |
-| **Total** | | **49** | **22** | **5** | **76** | |
+| Discovery | ARKY-DISCOVERY-v1 | 6 | 9 | 4 | 19 | executable D1-D3 |
+| Attestations | ARKY-ATTESTATIONS-v1 | 2 | 8 | 4 | 14 | AT1 structural; AT2-AT3 executable |
+| Policy Packs | ARKY-POLICY-PACKS-v1 | 1 | 2 | 0 | 3 | P1-P2 executable; P3 future |
+| Registries | ARKY-REGISTRIES-v1 | 1 | 2 | — | 3 | R1-R2 executable |
+| Errors | ARKY-ERRORS-v1 | 3 | 1 | 0 | 4 | E1-E2 executable; E3 future |
+| **Total** | | **54** | **39** | **13** | **106** | |
 
 See [`../CONFORMANCE.md`](../CONFORMANCE.md) and
 [`../governance/ARKY-COMPAT-MATRIX-v1.md`](../governance/ARKY-COMPAT-MATRIX-v1.md)
@@ -42,6 +45,9 @@ for the exact maturity and implementation claims.
 - Settlers manifest: [`manifests/settlers.json`](manifests/settlers.json)
 - Discovery manifest: [`manifests/discovery.json`](manifests/discovery.json)
 - Attestations manifest: [`manifests/attestations.json`](manifests/attestations.json)
+- Policy Packs manifest: [`manifests/policy-packs.json`](manifests/policy-packs.json)
+- Registries manifest: [`manifests/registries.json`](manifests/registries.json)
+- Errors manifest: [`manifests/errors.json`](manifests/errors.json)
 
 ## Layout
 

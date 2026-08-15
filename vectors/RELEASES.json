@@ -1,7 +1,7 @@
 {
-  "version": "0.2.0",
-  "release_date": "2026-06-15",
-  "description": "Arky Test Vectors Release - core-loop L2 coverage, executable Level 2/3 algorithmic vectors, and an end-to-end reference path",
+  "version": "0.3.0",
+  "release_date": "2026-08-15",
+  "description": "Arky Test Vectors Release - core-loop L2 coverage plus executable non-core suites (Discovery D2/D3, Attestations AT2/AT3, Policy Packs, Registries, Errors)",
   "suites": {
     "tim": {
       "manifest": "manifests/tim.json",
@@ -61,27 +61,75 @@
     "discovery": {
       "manifest": "manifests/discovery.json",
       "spec": "ARKY-DISCOVERY-v1",
-      "status": "partial_coverage",
-      "total_vectors": 7,
+      "status": "executable_coverage",
+      "total_vectors": 19,
       "levels": {
         "D1": 6,
-        "D2": 1,
-        "D3": 0
+        "D2": 9,
+        "D3": 4
       }
     },
     "attestations": {
       "manifest": "manifests/attestations.json",
       "spec": "ARKY-ATTESTATION-v1",
-      "status": "basic_coverage",
-      "total_vectors": 2,
+      "status": "executable_coverage",
+      "total_vectors": 14,
       "levels": {
         "AT1": 2,
-        "AT2": 0,
-        "AT3": 0
+        "AT2": 8,
+        "AT3": 4
+      }
+    },
+    "policy_packs": {
+      "manifest": "manifests/policy-packs.json",
+      "spec": "ARKY-POLICY-PACKS-v1",
+      "status": "executable_coverage",
+      "total_vectors": 3,
+      "levels": {
+        "P1": 1,
+        "P2": 2,
+        "P3": 0
+      }
+    },
+    "registries": {
+      "manifest": "manifests/registries.json",
+      "spec": "ARKY-REGISTRIES-v1",
+      "status": "executable_coverage",
+      "total_vectors": 3,
+      "levels": {
+        "R1": 1,
+        "R2": 2
+      }
+    },
+    "errors": {
+      "manifest": "manifests/errors.json",
+      "spec": "ARKY-ERRORS-v1",
+      "status": "executable_coverage",
+      "total_vectors": 4,
+      "levels": {
+        "E1": 3,
+        "E2": 1,
+        "E3": 0
       }
     }
   },
   "changes": [
+    {
+      "version": "0.3.0",
+      "date": "2026-08-15",
+      "type": "minor",
+      "description": "Non-core suite expansion: check-dispatched executable vectors, negative-tested",
+      "changes": [
+        "Discovery D2 (8 new): descriptor JWS/cid verify (+tampered), spec-level compatibility, security.auth allowlist, policy-binding precedence",
+        "Discovery D3 (4): capability accuracy vs live capabilities, health/readiness endpoints",
+        "Attestations AT2 (8): AttestationResult cid+JWS verify (+tampered), registry-driven freshness, content binding (nonce==cid), key binding (did:key verifies TIM sig)",
+        "Attestations AT3 (4): claims-vs-policy evaluation, registered-type enforcement",
+        "New policy-packs suite (3): pack signature validity, most-restrictive-wins merge, forbidden-override rejection",
+        "New registries suite (3): snapshot signature verify (+tampered), URN/CAIP-2 grammar",
+        "New errors suite (4): envelope structure, retry-hint rules, code-namespace taxonomy",
+        "Verifier: check-dispatched executor runs positive AND negative vectors; every new check corrupt-tested"
+      ]
+    },
     {
       "version": "0.2.0",
       "date": "2026-06-15",
@@ -150,7 +198,13 @@
     "overall": "core_production_ready",
     "production_ready": false,
     "core_production_ready": true,
-    "core_suites": ["tim", "canonicalization", "kernel", "notary", "settlers"],
+    "core_suites": [
+      "tim",
+      "canonicalization",
+      "kernel",
+      "notary",
+      "settlers"
+    ],
     "core_readiness_note": "The five core-loop suites (TIM, Canonicalization, Kernel, Notary, Settlers) have L2 conformance coverage and pass on two independent implementations (TS @arky/core and Rust arky-core), cross-checked byte-identically. Their specs are at lifecycle state 'implementing' (>=2 implementations) pending formal TC ratification to 'stable'. Non-core suites remain in development.",
     "level_1_coverage": "complete",
     "level_2_coverage": "core complete; non-core partial",
@@ -186,7 +240,9 @@
     ]
   },
   "metadata": {
-    "maintainers": ["Arky Foundation Test Working Group"],
+    "maintainers": [
+      "Arky Foundation Test Working Group"
+    ],
     "contact": "test-wg@arky.foundation",
     "repository": "https://github.com/arky-foundation/arky.foundation",
     "documentation": "https://arky.foundation/vectors/",

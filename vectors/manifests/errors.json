@@ -1,0 +1,53 @@
+{
+  "suite": "errors",
+  "spec": "ARKY-ERRORS-v1",
+  "version": "0.1.0",
+  "description": "Error-envelope vectors: structure and retry semantics (E1) and code-taxonomy namespace enforcement (E2). E3 (transport bindings) is HTTP/gRPC-operational and remains future work.",
+  "levels": {
+    "E1": {
+      "name": "Envelope",
+      "description": "Required fields, severity enum, retry-hint rules, omitted retry = never",
+      "vectors": [
+        "e1-001.json",
+        "e1-002.json",
+        "e1-003.json"
+      ],
+      "coverage": 3,
+      "focus_areas": [
+        "Required envelope fields (spec section 3)",
+        "RetryHint rules: after requires after_ms; omitted retry means never (section 4)"
+      ]
+    },
+    "E2": {
+      "name": "Taxonomy",
+      "description": "Codes restricted to section-5 namespaces",
+      "vectors": [
+        "e2-001.json"
+      ],
+      "coverage": 1,
+      "focus_areas": [
+        "Namespace enforcement (section 5)"
+      ]
+    },
+    "E3": {
+      "name": "Transport",
+      "description": "HTTP/gRPC bindings (operational; future work)",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Transport mappings (future work)"
+      ]
+    }
+  },
+  "total_vectors": 4,
+  "status": {
+    "overall_coverage": "e1-e2 executable; e3 future work",
+    "ready_for_production": false,
+    "last_updated": "2026-08-15T00:00:00Z"
+  },
+  "dependencies": [],
+  "references": {
+    "spec": "../specs/core/ARKY-ERRORS-v1.md",
+    "schemas": "../schemas/"
+  }
+}

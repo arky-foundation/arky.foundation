@@ -1,0 +1,55 @@
+{
+  "suite": "policy-packs",
+  "spec": "ARKY-POLICY-PACKS-v1",
+  "version": "0.1.0",
+  "description": "Policy Pack vectors: pack validity (P1) and deterministic most-restrictive-wins merge with forbidden-override detection (P2). P3 (auditability) is operational and remains future work.",
+  "levels": {
+    "P1": {
+      "name": "Pack Validity",
+      "description": "JCS canonicalization and JWS signature of published packs",
+      "vectors": [
+        "p1-001.json"
+      ],
+      "coverage": 1,
+      "focus_areas": [
+        "Signed pack verification (spec section 7 P1)"
+      ]
+    },
+    "P2": {
+      "name": "Enforcement",
+      "description": "Deterministic merge: witnesses/finality higher, retention/caps lower; forbidden overrides rejected",
+      "vectors": [
+        "p2-001.json",
+        "p2-002.json"
+      ],
+      "coverage": 2,
+      "focus_areas": [
+        "Most-restrictive-wins merge (section 4.1)",
+        "Overlay MUST NOT weaken min_witnesses below root (section 4)"
+      ]
+    },
+    "P3": {
+      "name": "Auditability",
+      "description": "Verifiable decision logs tied to packs (operational; future work)",
+      "vectors": [],
+      "coverage": 0,
+      "focus_areas": [
+        "Decision log retention (future work)"
+      ]
+    }
+  },
+  "total_vectors": 3,
+  "status": {
+    "overall_coverage": "p1-p2 executable; p3 future work",
+    "ready_for_production": false,
+    "last_updated": "2026-08-15T00:00:00Z"
+  },
+  "dependencies": [
+    "schemas/core/policy-pack-v1.json"
+  ],
+  "references": {
+    "spec": "../specs/core/ARKY-POLICY-PACKS-v1.md",
+    "packs": "../policies/",
+    "schemas": "../schemas/"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "d2-005",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Spec-level incompatibility: advertised N1 below required N2 MUST abort (spec 6)",
+  "check": "spec_compat",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "required": {
+      "ARKY-NOTARY-v1": "N2"
+    },
+    "advertised": [
+      "ARKY-NOTARY-v1 N1"
+    ]
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "discovery.unsupported_level"
+    ],
+    "compatible": false
+  }
+}

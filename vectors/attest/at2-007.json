@@ -1,0 +1,37 @@
+{
+  "id": "at2-007",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT2",
+  "description": "Key binding: evidence subject did:key verifies the TIM signature (spec 6)",
+  "check": "key_binding",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "subject_id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
+    "tim": {
+      "time": {
+        "ts": "2025-10-15T12:00:00Z"
+      },
+      "identity": {
+        "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+      },
+      "measurement": {
+        "name": "temperature",
+        "value": 22.5,
+        "unit": "arky:unit/temp.C",
+        "method": {
+          "type": "sensor",
+          "source": "device:temp-sensor-01"
+        }
+      },
+      "cid": "zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..i3Wael9VfCyFE-2O-ncTcghG_MxzkRIP_BLf3Et3-2QH-61rjdX7daXtLL4Qfr1Lxaw31aKFSouEZM1zGNWECg"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "bound": true
+  }
+}

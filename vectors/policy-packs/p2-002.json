@@ -1,0 +1,39 @@
+{
+  "id": "p2-002",
+  "spec": "ARKY-POLICY-PACKS-v1",
+  "level": "P2",
+  "description": "Overlay MUST NOT weaken min_witnesses below the root pack - forbidden override (spec 4)",
+  "check": "pack_merge",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "root": {
+      "witness_policy": {
+        "min_witnesses": 2
+      },
+      "privacy": {
+        "retention_days": 180
+      }
+    },
+    "overlays": [
+      {
+        "witness_policy": {
+          "min_witnesses": 1
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "policy.forbidden_override"
+    ],
+    "effective": {
+      "min_witnesses": 2,
+      "retention_days": 180,
+      "finality": {},
+      "amount_caps": {}
+    }
+  }
+}

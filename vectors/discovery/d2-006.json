@@ -1,0 +1,25 @@
+{
+  "id": "d2-006",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "security.auth restricted to allowed values - mtls+oauth2 accepted (spec 4.1)",
+  "check": "auth_values",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "security": {
+      "transport": [
+        "https"
+      ],
+      "auth": [
+        "mtls",
+        "oauth2"
+      ]
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": []
+  }
+}

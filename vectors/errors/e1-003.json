@@ -1,0 +1,29 @@
+{
+  "id": "e1-003",
+  "spec": "ARKY-ERRORS-v1",
+  "level": "E1",
+  "description": "retry.policy=after without after_ms is invalid (spec 3 RetryHint)",
+  "check": "error_envelope",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "envelope": {
+      "type": "about:blank",
+      "code": "common.too_many_requests",
+      "title": "Rate limit exceeded",
+      "severity": "error",
+      "retry": {
+        "policy": "after"
+      },
+      "ts": "2025-10-15T12:00:00Z"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "retry.after_ms_missing"
+    ],
+    "effective_retry": "after"
+  }
+}

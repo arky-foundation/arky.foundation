@@ -1,0 +1,20 @@
+{
+  "id": "at3-003",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT3",
+  "description": "Unknown attestation type MUST be rejected unless allowlisted (spec 4 rules, 7 step 7)",
+  "check": "attest_type",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "type": "arky:attest/unknown.scheme@v1"
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "common.invalid_argument"
+    ],
+    "registered": false
+  }
+}

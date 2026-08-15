@@ -1,0 +1,26 @@
+{
+  "id": "d2-007",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Unknown security.auth value MUST be rejected (spec 4.1 constraints)",
+  "check": "auth_values",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "security": {
+      "transport": [
+        "https"
+      ],
+      "auth": [
+        "basic"
+      ]
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "common.invalid_argument"
+    ]
+  }
+}

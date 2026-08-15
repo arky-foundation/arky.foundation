@@ -32,8 +32,11 @@ the Rust reference implementation.
 | Kernel | K1 (10), K2 (4) | `ready_for_production: true` |
 | Notary | N1 (8), N2 (4), N3 (3) | `ready_for_production: true` |
 | Settlers | S1 (10), S2 (2), S3 (2) | `ready_for_production: true` |
-| Discovery | D1 (6), D2 (1) | `ready_for_production: false` |
-| Attestations | AT1 (2) | `ready_for_production: false` |
+| Discovery | D1 (6), D2 (9), D3 (4) | `ready_for_production: false` |
+| Attestations | AT1 (2), AT2 (8), AT3 (4) | `ready_for_production: false` |
+| Policy Packs | P1 (1), P2 (2) | `ready_for_production: false` |
+| Registries | R1 (1), R2 (2) | `ready_for_production: false` |
+| Errors | E1 (3), E2 (1) | `ready_for_production: false` |
 
 The five core-loop suites are technically production-ready by vector manifest
 and implementation evidence, but their specs remain `status: implementing`

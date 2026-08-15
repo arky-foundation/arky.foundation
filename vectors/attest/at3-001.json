@@ -1,0 +1,36 @@
+{
+  "id": "at3-001",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT3",
+  "description": "Normalized claims satisfy policy requirements - pass (spec 5.1/7 step 3)",
+  "check": "attest_policy",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "claims": {
+      "debug": false,
+      "boot_state": "secure",
+      "tee": "sgx",
+      "anti_rollback": true
+    },
+    "require": {
+      "equals": {
+        "debug": false,
+        "boot_state": "secure"
+      },
+      "one_of": {
+        "tee": [
+          "sgx",
+          "tdx"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "status": "pass",
+    "violations": []
+  }
+}

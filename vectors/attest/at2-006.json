@@ -1,0 +1,24 @@
+{
+  "id": "at2-006",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT2",
+  "description": "Content binding mismatch: nonce does not hash the content (spec 6)",
+  "check": "content_binding",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "content": {
+      "n": 1,
+      "subject": "arky:unit/temp.C"
+    },
+    "nonce": "zQmWrongNonce1111111111111111111111111111111"
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "tim.cid_mismatch"
+    ],
+    "bound": false
+  }
+}

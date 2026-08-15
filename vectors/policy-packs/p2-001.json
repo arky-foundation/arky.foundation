@@ -1,0 +1,68 @@
+{
+  "id": "p2-001",
+  "spec": "ARKY-POLICY-PACKS-v1",
+  "level": "P2",
+  "description": "Most-restrictive-wins merge: witnesses/finality higher, retention/caps lower (spec 4.1)",
+  "check": "pack_merge",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "root": {
+      "witness_policy": {
+        "min_witnesses": 1
+      },
+      "privacy": {
+        "retention_days": 365
+      },
+      "finality_policy": {
+        "chains": {
+          "caip2:eip155:1": {
+            "depth": 12
+          }
+        }
+      },
+      "limits": {
+        "amount_caps": {
+          "USD": 1000
+        }
+      }
+    },
+    "overlays": [
+      {
+        "witness_policy": {
+          "min_witnesses": 2
+        },
+        "privacy": {
+          "retention_days": 90
+        },
+        "finality_policy": {
+          "chains": {
+            "caip2:eip155:1": {
+              "depth": 64
+            }
+          }
+        },
+        "limits": {
+          "amount_caps": {
+            "USD": 500
+          }
+        }
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "effective": {
+      "min_witnesses": 2,
+      "retention_days": 90,
+      "finality": {
+        "caip2:eip155:1": 64
+      },
+      "amount_caps": {
+        "USD": 500
+      }
+    }
+  }
+}

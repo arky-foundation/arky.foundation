@@ -456,6 +456,290 @@ function verifyCanonVector(vector: any): { ok: boolean; detail: string } | null 
   return { ok: true, detail: '' };
 }
 
+// =====================================================================
+// Check-dispatched executors — non-core suites (Discovery D2/D3,
+// Attestations AT2/AT3, policy-packs, registries, errors). Each vector
+// names its `check`; the executor recomputes the result from inputs and
+// compares EVERY expectation field it produced (valid, errors, and the
+// check-specific outputs), for positive AND negative vectors alike.
+// =====================================================================
+
+const ALLOWED_AUTH = new Set(['none', 'mtls', 'oauth2', 'apikey']);
+const ERROR_NAMESPACES = new Set([
+  'common', 'tim', 'keys', 'discovery', 'kernel', 'notary', 'settler', 'registry', 'policy', 'vectors',
+]);
+const URN_RE = /^arky:[a-z0-9_-]+\/[A-Za-z0-9._-]+(@v[0-9]+)?$/;
+const CAIP2_RE = /^caip2:[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$/;
+
+let attestEntriesCache: Record<string, any> | undefined;
+async function attestEntries(): Promise<Record<string, any>> {
+  attestEntriesCache ??= JSON.parse(
+    await readFile(join(rootDir, 'registries/attestations@v1.json'), 'utf-8'),
+  ).entries;
+  return attestEntriesCache!;
+}
+
+const eqJson = (a: unknown, b: unknown) => jcsCanonical(a) === jcsCanonical(b);
+
+/** Compare every computed field against the vector's expect block. */
+function expectMatch(expect: any, got: Record<string, unknown>): { ok: boolean; detail: string } {
+  const diffs: string[] = [];
+  for (const [k, v] of Object.entries(got)) {
+    if (expect[k] === undefined) continue;
+    if (!eqJson(expect[k], v)) {
+      diffs.push(`${k}: computed ${JSON.stringify(v)}, expected ${JSON.stringify(expect[k])}`);
+    }
+  }
+  return { ok: diffs.length === 0, detail: diffs.join('; ') };
+}
+
+/** Crypto validity of an embedded signed artifact (cid optional, sig-only ok). */
+async function embeddedArtifactValid(artifact: Record<string, unknown>, publicKey: jose.KeyLike) {
+  const res = await verifyArtifact(artifact, publicKey);
+  const cidOk = !res.hasCid || res.cidMatch;
+  return { valid: cidOk && res.sigValid && res.witnessesValid, cidOk, sigOk: res.sigValid };
+}
+
+async function verifyCheckVector(
+  vector: any,
+  publicKey: jose.KeyLike,
+): Promise<{ ok: boolean; detail: string }> {
+  const { check, inputs = {}, expect = {}, context = {} } = vector;
+  let got: Record<string, unknown>;
+
+  switch (check) {
+    // --- embedded signed artifacts: descriptor (D2), AR (AT2), pack, registry ---
+    case 'descriptor_verify':
+    case 'ar_verify':
+    case 'pack_verify':
+    case 'registry_verify': {
+      const artifact = inputs.descriptor ?? inputs.ar ?? inputs.pack ?? inputs.snapshot;
+      if (!artifact) return { ok: false, detail: `${check}: no embedded artifact in inputs` };
+      const r = await embeddedArtifactValid(artifact, publicKey);
+      const failCode =
+        check === 'descriptor_verify' ? 'discovery.unverified_descriptor'
+        : check === 'ar_verify' ? 'tim.cid_mismatch'
+        : 'tim.invalid_signature';
+      got = {
+        valid: r.valid,
+        errors: r.valid ? [] : [failCode],
+        cid_valid: r.cidOk,
+        signature_valid: r.sigOk,
+      };
+      break;
+    }
+
+    // --- Discovery §6 step 4: advertised spec levels satisfy the required ones ---
+    case 'spec_compat': {
+      const advertised = new Map<string, number>();
+      for (const entry of inputs.advertised ?? []) {
+        const [spec, level] = String(entry).split(' ');
+        const n = Number((level ?? '').replace(/^[A-Z]+/, ''));
+        if (spec && Number.isFinite(n)) {
+          advertised.set(spec, Math.max(advertised.get(spec) ?? 0, n));
+        }
+      }
+      const compatible = Object.entries(inputs.required ?? {}).every(([spec, level]) => {
+        const need = Number(String(level).replace(/^[A-Z]+/, ''));
+        return (advertised.get(spec) ?? 0) >= need;
+      });
+      got = {
+        valid: compatible,
+        errors: compatible ? [] : ['discovery.unsupported_level'],
+        compatible,
+      };
+      break;
+    }
+
+    // --- Discovery §4.1: security.auth restricted to the allowed value set ---
+    case 'auth_values': {
+      const auth = inputs.security?.auth;
+      const ok = Array.isArray(auth) && auth.length > 0 && auth.every((a: string) => ALLOWED_AUTH.has(a));
+      got = { valid: ok, errors: ok ? [] : ['common.invalid_argument'] };
+      break;
+    }
+
+    // --- Discovery §6 step 5: explicit request -> scope default -> provider default ---
+    case 'policy_binding': {
+      const bound = inputs.explicit ?? inputs.scope_default ?? inputs.provider_default ?? null;
+      got = {
+        valid: bound !== null,
+        errors: bound !== null ? [] : ['policy.unresolvable_pack'],
+        ...(bound !== null ? { bound } : {}),
+      };
+      break;
+    }
+
+    // --- Discovery §8 D3: descriptors accurately reflect live capabilities ---
+    case 'capability_accuracy': {
+      const adv = new Set<string>(inputs.advertised ?? []);
+      const obs = new Set<string>(inputs.observed ?? []);
+      const missing = [...adv].filter((v) => !obs.has(v));
+      const undeclared = [...obs].filter((v) => !adv.has(v));
+      const match = missing.length === 0 && undeclared.length === 0;
+      got = { valid: match, errors: [], match, missing, undeclared };
+      break;
+    }
+
+    // --- Discovery §5: /health and /ready as unauthenticated GET ---
+    case 'health_endpoints': {
+      const eps: any[] = inputs.endpoints ?? [];
+      const errors = ['health', 'ready']
+        .filter((name) => !eps.some((e) => e?.name === name && e?.method === 'GET'))
+        .map((name) => `health.missing:${name}`);
+      got = { valid: errors.length === 0, errors };
+      break;
+    }
+
+    // --- Attestations §6: nonce fresh per the registry's max_age + accept_skew ---
+    case 'freshness': {
+      const entry = (await attestEntries())[inputs.type];
+      if (!entry?.freshness) {
+        got = { valid: false, errors: ['common.invalid_argument'], fresh: false };
+        break;
+      }
+      const age = Date.parse(context.time) - Date.parse(inputs.ts);
+      const { max_age_ms, accept_skew_ms } = entry.freshness;
+      const fresh = age >= -accept_skew_ms && age <= max_age_ms + accept_skew_ms;
+      got = {
+        valid: fresh,
+        errors: fresh ? [] : ['common.unauthorized'],
+        fresh,
+        retry: 'never',
+      };
+      break;
+    }
+
+    // --- Attestations §6: content binding — nonce hashes the canonical content ---
+    case 'content_binding': {
+      const bound = inputs.nonce === computeCid(jcsCanonical(inputs.content));
+      got = { valid: bound, errors: bound ? [] : ['tim.cid_mismatch'], bound };
+      break;
+    }
+
+    // --- Attestations §6: key binding — subject did:key verifies the TIM's sig ---
+    case 'key_binding': {
+      const { cid: _c, sig, ...rest } = inputs.tim ?? {};
+      const canonical = jcsCanonical(stripWitnesses(rest));
+      const key = await resolveDidKey(inputs.subject_id);
+      let bound = false;
+      if (key && typeof sig === 'string') {
+        const [header, , signature] = sig.split('.');
+        try {
+          await jose.flattenedVerify(
+            { protected: header, signature, payload: new TextEncoder().encode(canonical) },
+            key,
+            { crit: { b64: true } },
+          );
+          bound = true;
+        } catch { /* mismatched key: bound stays false */ }
+      }
+      got = { valid: bound, errors: bound ? [] : ['discovery.key_mismatch'], bound };
+      break;
+    }
+
+    // --- Attestations §5.1/§7: normalized claims against policy requirements ---
+    case 'attest_policy': {
+      const claims = inputs.claims ?? {};
+      const violations: string[] = [];
+      for (const [k, v] of Object.entries(inputs.require?.equals ?? {})) {
+        if (!eqJson(claims[k], v)) violations.push(k);
+      }
+      for (const [k, allowed] of Object.entries(inputs.require?.one_of ?? {})) {
+        if (!(allowed as unknown[]).includes(claims[k])) violations.push(k);
+      }
+      const status = violations.length === 0 ? 'pass' : 'fail';
+      got = { valid: status === 'pass', errors: [], status, violations };
+      break;
+    }
+
+    // --- Attestations §4: unknown arky:attest/* types are rejected ---
+    case 'attest_type': {
+      const registered = inputs.type in (await attestEntries());
+      got = { valid: registered, errors: registered ? [] : ['common.invalid_argument'], registered };
+      break;
+    }
+
+    // --- Policy Packs §4/§4.1: most-restrictive-wins merge + forbidden overrides ---
+    case 'pack_merge': {
+      const packs: any[] = [inputs.root, ...(inputs.overlays ?? [])];
+      const defined = <T,>(vals: (T | undefined)[]) => vals.filter((v): v is T => v !== undefined);
+      const witnesses = defined(packs.map((p) => p?.witness_policy?.min_witnesses));
+      const retentions = defined(packs.map((p) => p?.privacy?.retention_days));
+      const finality: Record<string, number> = {};
+      const caps: Record<string, number> = {};
+      for (const p of packs) {
+        for (const [chain, v] of Object.entries(p?.finality_policy?.chains ?? {})) {
+          const depth = (v as any)?.depth;
+          if (typeof depth === 'number') finality[chain] = Math.max(finality[chain] ?? 0, depth);
+        }
+        for (const [cur, cap] of Object.entries(p?.limits?.amount_caps ?? {})) {
+          if (typeof cap === 'number') caps[cur] = Math.min(caps[cur] ?? Infinity, cap);
+        }
+      }
+      const rootWitnesses = inputs.root?.witness_policy?.min_witnesses;
+      const forbidden = (inputs.overlays ?? []).some((o: any) => {
+        const w = o?.witness_policy?.min_witnesses;
+        return typeof w === 'number' && typeof rootWitnesses === 'number' && w < rootWitnesses;
+      });
+      got = {
+        valid: !forbidden,
+        errors: forbidden ? ['policy.forbidden_override'] : [],
+        effective: {
+          ...(witnesses.length > 0 ? { min_witnesses: Math.max(...witnesses) } : {}),
+          ...(retentions.length > 0 ? { retention_days: Math.min(...retentions) } : {}),
+          finality,
+          amount_caps: caps,
+        },
+      };
+      break;
+    }
+
+    // --- Registries §2/§4: URN and CAIP-2 grammar ---
+    case 'urn_grammar': {
+      const results = (inputs.items ?? []).map((it: any) =>
+        it.kind === 'caip2' ? CAIP2_RE.test(it.value) : URN_RE.test(it.value));
+      got = { valid: true, errors: [], results };
+      break;
+    }
+
+    // --- Errors §3/§4/§5: envelope structure, retry rules, code namespaces ---
+    case 'error_envelope': {
+      const e = inputs.envelope ?? {};
+      const errors: string[] = [];
+      for (const f of ['type', 'code', 'title', 'severity', 'ts']) {
+        if (e[f] === undefined) errors.push(`field.missing:${f}`);
+      }
+      if (e.severity !== undefined && !['error', 'fatal', 'warning'].includes(e.severity)) {
+        errors.push('severity.invalid');
+      }
+      if (typeof e.code === 'string') {
+        const m = e.code.match(/^([a-z_]+)\.[a-z0-9_@]+$/);
+        if (!m) errors.push('code.malformed');
+        else if (!ERROR_NAMESPACES.has(m[1])) errors.push('code.unknown_namespace');
+      }
+      if (e.retry !== undefined) {
+        if (!['never', 'immediate', 'after', 'exponential'].includes(e.retry?.policy)) {
+          errors.push('retry.policy_invalid');
+        } else if (e.retry.policy === 'after' && typeof e.retry.after_ms !== 'number') {
+          errors.push('retry.after_ms_missing');
+        }
+      }
+      got = {
+        valid: errors.length === 0,
+        errors,
+        effective_retry: e.retry?.policy ?? 'never',
+      };
+      break;
+    }
+
+    default:
+      return { ok: false, detail: `unknown check '${check}'` };
+  }
+
+  return expectMatch(expect, got);
+}
+
 /**
  * Verify a single vector file. Vectors carry an `expect` block; we honor the
  * fields relevant to T1/K1 conformance (cid_valid, signature_valid,
@@ -465,6 +749,14 @@ async function verifyVector(path: string, publicKey: jose.KeyLike) {
   const relPath = relative(rootDir, path);
   const vector = JSON.parse(await readFile(path, 'utf-8'));
   const expect = vector.expect ?? {};
+
+  // Check-dispatched executable vectors run first: they carry a `check` name
+  // and are executed for positive AND negative expectations alike.
+  if (typeof vector.check === 'string') {
+    const res = await verifyCheckVector(vector, publicKey);
+    report(`${relPath} (${vector.check})`, res.ok, res.detail);
+    return;
+  }
 
   // Freshness (TIM §4): when a vector asserts `expect.fresh` and supplies a
   // reference time (context.verify_options.at), execute the expiry check —
@@ -626,6 +918,26 @@ async function main() {
 
   console.log('\nDiscovery fixtures:');
   await verifyArtifactDir(join(rootDir, 'vectors/discovery/fixtures'), publicKey, 'discovery fixtures');
+
+  console.log('\nAttestation vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/attest'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
+
+  console.log('\nPolicy-pack vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/policy-packs'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
+
+  console.log('\nRegistry vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/registries'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
+
+  console.log('\nError-envelope vectors:');
+  for (const f of (await listJson(join(rootDir, 'vectors/errors'))).sort()) {
+    await verifyVector(f, publicKey);
+  }
 
   console.log('\nNotary vectors:');
   for (const f of (await listJson(join(rootDir, 'vectors/notary'))).sort()) {

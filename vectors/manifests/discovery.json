@@ -1,7 +1,7 @@
 {
   "suite": "discovery",
   "spec": "ARKY-DISCOVERY-v1",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Service discovery test vectors for validating service discovery, descriptors, and revocation handling",
   "levels": {
     "D1": {
@@ -26,36 +26,47 @@
     },
     "D2": {
       "name": "Descriptors",
-      "description": "Validate service descriptor format and content",
+      "description": "Validate descriptors: signature/cid, spec-level compatibility, auth allowlist, policy-binding precedence",
       "vectors": [
-        "d2-001.json"
+        "d2-001.json",
+        "d2-002.json",
+        "d2-003.json",
+        "d2-004.json",
+        "d2-005.json",
+        "d2-006.json",
+        "d2-007.json",
+        "d2-008.json",
+        "d2-009.json"
       ],
-      "coverage": 1,
+      "coverage": 9,
       "focus_areas": [
-        "Service descriptor validation",
-        "Capability verification",
-        "Endpoint validation",
-        "Security requirement checks"
+        "Descriptor JWS + cid verification (positive and tampered)",
+        "Spec-level compatibility (section 6 step 4)",
+        "security.auth allowed-value enforcement",
+        "Policy binding precedence (section 6 step 5)"
       ]
     },
     "D3": {
       "name": "Advanced",
-      "description": "Validate advanced discovery features",
-      "vectors": [],
-      "coverage": 0,
+      "description": "Operate: capability accuracy and health/readiness endpoints",
+      "vectors": [
+        "d3-001.json",
+        "d3-002.json",
+        "d3-003.json",
+        "d3-004.json"
+      ],
+      "coverage": 4,
       "focus_areas": [
-        "Dynamic service discovery",
-        "Load balancing validation",
-        "Failover testing",
-        "Performance benchmarking"
+        "Descriptor capabilities vs live capabilities",
+        "Health and readiness endpoint presence (section 5)"
       ]
     }
   },
-  "total_vectors": 7,
+  "total_vectors": 19,
   "status": {
-    "overall_coverage": "partial",
+    "overall_coverage": "d1-d3 executable",
     "ready_for_production": false,
-    "last_updated": "2025-10-15T00:00:00Z"
+    "last_updated": "2026-08-15T00:00:00Z"
   },
   "dependencies": [
     "schemas/infrastructure/discovery-index-v1.json",

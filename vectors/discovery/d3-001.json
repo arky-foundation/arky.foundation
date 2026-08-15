@@ -1,0 +1,27 @@
+{
+  "id": "d3-001",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D3",
+  "description": "Descriptor capabilities accurately reflect live capabilities (spec 8 D3)",
+  "check": "capability_accuracy",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "advertised": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ],
+    "observed": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "match": true,
+    "missing": [],
+    "undeclared": []
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "d2-009",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Policy binding precedence: falls through to provider default when nothing else is set (spec 6 step 5)",
+  "check": "policy_binding",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "provider_default": "arky:policy/global@v1"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "bound": "arky:policy/global@v1"
+  }
+}

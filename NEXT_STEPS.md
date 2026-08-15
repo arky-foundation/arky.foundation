@@ -42,20 +42,21 @@ Definition of done:
 - `governance/ARKY-COMPAT-MATRIX-v1.md`, spec front matter, and
   `CONFORMANCE.md` agree on the lifecycle state.
 
-### 2. Bring Non-Core Suites Up To L2
+### 2. Bring Non-Core Suites Up To L2 — DONE (vectors release 0.3.0)
 
-Discovery and Attestations have partial/basic coverage. Policy Packs,
-Registries, Errors, SDK, and related specs need executable vectors or a clear
-statement that they are schema/prose-only for now.
-
-Definition of done:
-
-- Discovery has D2/D3 descriptor, compatibility, and negative vectors.
-- Attestations have AT2/AT3 chain, binding, freshness, policy, and error
-  vectors.
-- Policy/Registry/Error vectors cover the claims made in their specs.
-- Non-core manifests either have nonzero coverage for advertised levels or mark
-  the levels as future work.
+Shipped 2026-08-15: Discovery D2 (descriptor crypto incl. tampered-negative,
+spec-level compatibility, auth allowlist, policy-binding precedence) and D3
+(capability accuracy, health/readiness); Attestations AT2 (AR crypto,
+registry-driven freshness, content and key bindings) and AT3 (claims-vs-policy,
+registered-type enforcement); new executable policy-packs (P1 validity, P2
+most-restrictive-wins merge + forbidden overrides), registries (R1 snapshot
+signatures, R2 tamper rejection + URN/CAIP-2 grammar), and errors (E1 envelope
++ retry rules, E2 taxonomy) suites. All run by the check-dispatched executor in
+`scripts/verify-artifacts.ts` for positive AND negative expectations, and each
+check was corrupt-tested (flip expectation -> verifier fails -> restore).
+Operational levels (P3 auditability, E3 transport) are marked future work in
+their manifests; non-core specs stay `status: review`,
+`ready_for_production: false`.
 
 ### 3. Keep Docs And Manifests In Lockstep
 

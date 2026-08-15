@@ -1,0 +1,19 @@
+{
+  "id": "at2-003",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT2",
+  "description": "Fresh evidence: age 5m within registry max_age 10m + skew 1m (spec 6, registry freshness)",
+  "check": "freshness",
+  "context": {
+    "time": "2025-10-15T10:05:00Z"
+  },
+  "inputs": {
+    "type": "arky:attest/rats.eat@v1",
+    "ts": "2025-10-15T10:00:00Z"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "fresh": true
+  }
+}

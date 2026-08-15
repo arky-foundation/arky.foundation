@@ -1,0 +1,28 @@
+{
+  "id": "d3-002",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D3",
+  "description": "Descriptor advertises a verb the service does not support - inaccurate (spec 8 D3)",
+  "check": "capability_accuracy",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "advertised": [
+      "arky:verb/pay@v1",
+      "arky:verb/refund@v1"
+    ],
+    "observed": [
+      "arky:verb/pay@v1"
+    ]
+  },
+  "expect": {
+    "valid": false,
+    "errors": [],
+    "match": false,
+    "missing": [
+      "arky:verb/refund@v1"
+    ],
+    "undeclared": []
+  }
+}

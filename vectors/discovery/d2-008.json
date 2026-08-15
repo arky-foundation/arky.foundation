@@ -1,0 +1,20 @@
+{
+  "id": "d2-008",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Policy binding precedence: explicit request wins over scope and provider defaults (spec 6 step 5)",
+  "check": "policy_binding",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "explicit": "arky:policy/eu@v1",
+    "scope_default": "arky:policy/global@v1",
+    "provider_default": "arky:policy/na@v1"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "bound": "arky:policy/eu@v1"
+  }
+}

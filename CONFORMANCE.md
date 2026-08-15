@@ -41,8 +41,10 @@ dependency and is not part of `validate`.
 
 `bun run verify` does more than schema-shape checking — it **recomputes**
 results from inputs and compares them to each vector's `expect` block. Current
-runs report 100 passing vector/artifact checks; negative vectors and pure
-schema-shape vectors are still deferred to the AJV step where appropriate.
+runs report 136 passing vector/artifact checks. Check-dispatched vectors
+(Discovery D2/D3, Attestations AT2/AT3, policy-packs, registries, errors) are
+executed for positive AND negative expectations; remaining legacy negative
+vectors and pure schema-shape vectors are deferred to the AJV step.
 
 **Cryptographic checks**
 - **cid** = `multibase(multihash(sha2-256, JCS(body)))`, recomputed and compared
@@ -92,8 +94,11 @@ README for the scenario and content IDs.
 | Kernel | K1 eval, K2 behavioral decisions, K3 conflicts | K1 (10) + K2 (4) |
 | Notary | N1 witness, N2 anchor, N3 multi-anchor/DTN | N1 (8) + N2 (4) + N3 (3) |
 | Settlers | S1 basic, S2 failure/idempotency, S3 rollback/compensation | S1 (10) + S2 (2) + S3 (2) |
-| Discovery | D1 discovery, D2 descriptors, D3 advanced compatibility | D1 (6) + D2 (1) |
-| Attestations | AT1 intake, AT2 chains/freshness, AT3 policy/error handling | AT1 (2) |
+| Discovery | D1 discovery, D2 descriptors, D3 operate | D1 (6) + D2 (9) + D3 (4) |
+| Attestations | AT1 intake, AT2 verify (bindings/freshness), AT3 integrate | AT1 (2) + AT2 (8) + AT3 (4) |
+| Policy Packs | P1 pack validity, P2 enforcement (merge), P3 auditability | P1 (1) + P2 (2) |
+| Registries | R1 provider, R2 consumer | R1 (1) + R2 (2) |
+| Errors | E1 envelope, E2 taxonomy, E3 transport | E1 (3) + E2 (1) |
 
 A product **MAY** claim a level only if it passes the Foundation vectors for
 that level. Empty levels in the manifests (`coverage: 0`) are future work.

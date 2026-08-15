@@ -45,9 +45,11 @@ and count as one party) plus formal TC ratification. All other specs remain at
 | Kernel | ARKY‑KERNEL‑v1 | implementing | `…/schemas/core/kernel-v1.json` | K1 (10), **K2 (4)** |
 | Notary | ARKY‑NOTARY‑v1 | implementing | `…/schemas/core/anchor-object-v1.json` | N1 (8), N2 (4), N3 (3) |
 | Settlers | ARKY‑SETTLERS‑v1 | implementing | `…/schemas/core/execution-receipt-v1.json` | S1 (10), S2 (2), S3 (2) |
-| Discovery | ARKY‑DISCOVERY‑v1 | review | `…/schemas/infrastructure/discovery-index-v1.json` | D1 (6), D2 (1) |
-| Policy Packs | ARKY‑POLICY‑PACKS‑v1 | review | `…/schemas/core/policy-pack-v1.json` | (schema-validated) |
-| Attestations | ARKY‑ATTESTATION‑v1 | review | — | AT1 (2) |
+| Discovery | ARKY‑DISCOVERY‑v1 | review | `…/schemas/infrastructure/discovery-index-v1.json` | D1 (6), **D2 (9)**, **D3 (4)** |
+| Policy Packs | ARKY‑POLICY‑PACKS‑v1 | review | `…/schemas/core/policy-pack-v1.json` | **P1 (1)**, **P2 (2)** |
+| Attestations | ARKY‑ATTESTATION‑v1 | review | — | AT1 (2), **AT2 (8)**, **AT3 (4)** |
+| Registries | ARKY‑REGISTRIES‑v1 | review | `…/schemas/infrastructure/registries-v1.json` | **R1 (1)**, **R2 (2)** |
+| Errors | ARKY‑ERRORS‑v1 | review | — | **E1 (3)**, **E2 (1)** |
 
 - **The five core-loop suites (TIM, Canonicalization, Kernel, Notary, Settlers)
   now have L2 coverage** and pass on two independent implementations
@@ -57,8 +59,13 @@ and count as one party) plus formal TC ratification. All other specs remain at
   carry `ready_for_production: true`.
 - An **end-to-end reference path** (`vectors/integration/reference-path/`)
   exercises the full TIM→Notary→Kernel→Settler chain with cryptographic linkage.
-- Non-core suites (Discovery, Policy Packs, Attestations, …) remain at L1/partial
-  and are not production-ready.
+- Non-core suites now carry **executable** vectors run by the Foundation
+  verifier (Discovery D2/D3 descriptor crypto + compatibility + policy binding;
+  Attestations AT2/AT3 crypto, freshness, bindings, policy; Policy Packs
+  merge semantics; Registries snapshots + URN grammar; Errors envelope +
+  taxonomy). Their specs remain `status: review` and their manifests
+  `ready_for_production: false`; operational levels (P3, E3) are marked future
+  work in the manifests.
 
 ## 4. SDK Compatibility
 

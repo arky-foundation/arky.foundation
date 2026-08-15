@@ -1,0 +1,59 @@
+{
+  "id": "at2-001",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT2",
+  "description": "Valid signed AttestationResult - cid recomputes and JWS verifies (spec 5)",
+  "check": "ar_verify",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "ar": {
+      "type": "arky:attest/rats.eat@v1",
+      "subject": {
+        "id": "did:key:z6MuAHvAyKxM6RJ7n8r3QW1Y2v3Z4KqF8nT9sE5L2hB"
+      },
+      "status": "pass",
+      "freshness_ms": 120000,
+      "validity": {
+        "not_before": "2025-10-15T10:00:00Z",
+        "not_after": "2025-10-15T10:10:00Z"
+      },
+      "claims": {
+        "hw_vendor": "mock-vendor",
+        "hw_model": "mock-model",
+        "tee": "sgx",
+        "sw_measurement": "zQmc139bce03dbe49aa67b",
+        "debug": false,
+        "anti_rollback": true,
+        "boot_state": "secure",
+        "key_class": "device_key",
+        "origin": "tee"
+      },
+      "binding": {
+        "key": {
+          "id": "did:key:z6MuAHvAyKxM6RJ7n8r3QW1Y2v3Z4KqF8nT9sE5L2hB"
+        }
+      },
+      "trust": {
+        "chain": "root-",
+        "nonce_verified": true,
+        "replay_protected": true
+      },
+      "policy": {
+        "pack_id": "arky:policy/global@v1"
+      },
+      "evidence_cid": "zQmeDdvyp8Fpg1XmrR2LpSRk8oZAP9iLkdrMdWTf5Z94krZ",
+      "verifier_id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw",
+      "ts_verified": "2025-10-15T10:02:00Z",
+      "cid": "zQmPTdzVUfQEmfigkDsz5qMiT32aPGKwGeuek9EWs15gGYY",
+      "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEifQ..jFsJ_6swjSNmZekkR6bRco9BsEEckotWNrmRD1Jc6smZt2F59DZ6o5_fbYhaXJZMAB5dEb1-nWxL8PInMuJQAQ"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "cid_valid": true,
+    "signature_valid": true
+  }
+}

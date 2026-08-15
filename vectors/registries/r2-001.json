@@ -1,0 +1,95 @@
+{
+  "id": "r2-001",
+  "spec": "ARKY-REGISTRIES-v1",
+  "level": "R2",
+  "description": "Tampered registry snapshot (name changed after signing) MUST fail (spec 3)",
+  "check": "registry_verify",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "snapshot": {
+      "registry_id": "arky:registry:devices@v1",
+      "name": "Tampered Registry",
+      "ts": "2025-10-15T00:00:00Z",
+      "entries": {
+        "arky:device/camera.rgb": {
+          "urn": "arky:device/camera.rgb",
+          "description": "RGB camera sensor",
+          "fields": {
+            "fov_deg": "number",
+            "sn": "string"
+          },
+          "attestation": {
+            "recommended": true
+          }
+        },
+        "arky:device/gpu.cluster": {
+          "urn": "arky:device/gpu.cluster",
+          "description": "GPU compute cluster",
+          "fields": {
+            "nodes": "integer",
+            "model": "string"
+          },
+          "attestation": {
+            "recommended": true
+          }
+        },
+        "arky:device/controller": {
+          "urn": "arky:device/controller",
+          "description": "Robot controller",
+          "fields": {
+            "fw_version": "string",
+            "sn": "string"
+          },
+          "attestation": {
+            "recommended": true
+          }
+        },
+        "arky:device/sensor.pipeline": {
+          "urn": "arky:device/sensor.pipeline",
+          "description": "Sensor processing pipeline",
+          "fields": {
+            "latency_ms": "number"
+          },
+          "attestation": {
+            "recommended": true
+          }
+        },
+        "arky:device/temp-sensor": {
+          "urn": "arky:device/temp-sensor",
+          "description": "Temperature sensor",
+          "fields": {
+            "range_min": "number",
+            "range_max": "number",
+            "accuracy": "number"
+          },
+          "attestation": {
+            "recommended": false
+          }
+        },
+        "arky:device/humidity-sensor": {
+          "urn": "arky:device/humidity-sensor",
+          "description": "Humidity sensor",
+          "fields": {
+            "range_min": "number",
+            "range_max": "number",
+            "accuracy": "number"
+          },
+          "attestation": {
+            "recommended": false
+          }
+        }
+      },
+      "aliases": {},
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..5dm1u0Hk7iLSrKkATPybSQuOCZQtT4zFgYSvJD8dh61wSlb8p7lPA-4Kyxyo4xj_dCF1-ANgWLIZiQIR5_OmDA"
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "tim.invalid_signature"
+    ],
+    "signature_valid": false
+  }
+}

@@ -1,7 +1,7 @@
 {
   "suite": "attestations",
   "spec": "ARKY-ATTESTATION-v1",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Attestation test vectors for validating attestation format processing and verification",
   "levels": {
     "AT1": {
@@ -22,33 +22,45 @@
     "AT2": {
       "name": "Verify",
       "description": "Validate chains, bindings, and freshness",
-      "vectors": [],
-      "coverage": 0,
+      "vectors": [
+        "at2-001.json",
+        "at2-002.json",
+        "at2-003.json",
+        "at2-004.json",
+        "at2-005.json",
+        "at2-006.json",
+        "at2-007.json",
+        "at2-008.json"
+      ],
+      "coverage": 8,
       "focus_areas": [
-        "Certificate chain validation",
-        "Key binding verification",
-        "Freshness checks",
-        "Trust anchor validation"
+        "AttestationResult cid + JWS verification (positive and tampered)",
+        "Freshness against registry max_age + accept_skew (section 6)",
+        "Content binding: nonce hashes canonical content",
+        "Key binding: subject did:key verifies the TIM signature"
       ]
     },
     "AT3": {
       "name": "Integrate",
       "description": "Honor policy packs and error handling",
-      "vectors": [],
-      "coverage": 0,
+      "vectors": [
+        "at3-001.json",
+        "at3-002.json",
+        "at3-003.json",
+        "at3-004.json"
+      ],
+      "coverage": 4,
       "focus_areas": [
-        "Policy pack integration",
-        "Error handling validation",
-        "Compliance checking",
-        "Security enforcement"
+        "Normalized claims vs policy requirements (pass/fail with violations)",
+        "Registered-type enforcement via registries (unknown types rejected)"
       ]
     }
   },
-  "total_vectors": 2,
+  "total_vectors": 14,
   "status": {
-    "overall_coverage": "basic",
+    "overall_coverage": "at1 structural; at2-at3 executable",
     "ready_for_production": false,
-    "last_updated": "2025-10-15T00:00:00Z"
+    "last_updated": "2026-08-15T00:00:00Z"
   },
   "dependencies": [
     "schemas/attestations-v1.json",

@@ -1,0 +1,38 @@
+{
+  "id": "at3-002",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT3",
+  "description": "Debug-enabled evidence violates policy - fail with named violations (spec 5.1/7 step 3)",
+  "check": "attest_policy",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "claims": {
+      "debug": true,
+      "boot_state": "measured",
+      "tee": "sgx"
+    },
+    "require": {
+      "equals": {
+        "debug": false,
+        "boot_state": "secure"
+      },
+      "one_of": {
+        "tee": [
+          "sgx",
+          "tdx"
+        ]
+      }
+    }
+  },
+  "expect": {
+    "valid": false,
+    "errors": [],
+    "status": "fail",
+    "violations": [
+      "debug",
+      "boot_state"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "d3-004",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D3",
+  "description": "Missing readiness endpoint - provider MUST implement /ready (spec 5)",
+  "check": "health_endpoints",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "endpoints": [
+      {
+        "name": "health",
+        "path": "/health",
+        "method": "GET"
+      }
+    ]
+  },
+  "expect": {
+    "valid": false,
+    "errors": [
+      "health.missing:ready"
+    ]
+  }
+}

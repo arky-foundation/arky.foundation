@@ -1,0 +1,99 @@
+{
+  "id": "d2-002",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Valid signed service descriptor - cid recomputes and JWS verifies (spec 4.2)",
+  "check": "descriptor_verify",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "descriptor": {
+      "service_id": "arky:example/notary",
+      "service_type": "notary",
+      "version": "1.0.0",
+      "spec_ids": [
+        "ARKY-NOTARY-v1",
+        "ARKY-WIRE-v1",
+        "ARKY-DISCOVERY-v1"
+      ],
+      "endpoints": [
+        {
+          "name": "submit",
+          "path": "/notary/submit",
+          "method": "POST",
+          "media_types": [
+            "application/arky.tim+json"
+          ]
+        },
+        {
+          "name": "status",
+          "path": "/notary/status/{cid}",
+          "method": "GET",
+          "media_types": [
+            "application/json"
+          ]
+        },
+        {
+          "name": "proof",
+          "path": "/notary/proof/{cid}",
+          "method": "GET",
+          "media_types": [
+            "application/arky.anchor+json"
+          ]
+        }
+      ],
+      "capabilities": {
+        "anchor_targets": [
+          "caip2:eip155:1",
+          "solana:mainnet",
+          "log:arky:transparency@v1"
+        ],
+        "finality_defaults": {
+          "caip2:eip155:1": 64,
+          "solana:mainnet": 150
+        },
+        "batch_limits": {
+          "max_count": 1024,
+          "max_bytes": 1048576,
+          "max_dwell_ms": 5000
+        },
+        "witness_algorithms": [
+          "Ed25519"
+        ],
+        "dtn_ordering": true,
+        "policy_required": false,
+        "attestation": {
+          "required": false,
+          "types": [
+            "arky:attest/rats.eat@v1"
+          ]
+        }
+      },
+      "policy_defaults": {
+        "policy_pack_id": "arky:policy/global@v1"
+      },
+      "security": {
+        "transport": [
+          "https"
+        ],
+        "auth": [
+          "none"
+        ],
+        "rate_limits": {
+          "per_minute": 600,
+          "burst": 300
+        }
+      },
+      "ts": "2025-10-15T00:00:00Z",
+      "cid": "zQmZrXW3L8LyXgrKDC8d6fd45BhhnHL6Nz1xk5QFdyafjD9",
+      "sig": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..od8ucefx85BAHoFg_Vz52EicUe6hUZOKSwdbzxRAQghWlYqO-erDpDnGUpXNbW3oyT-fJe3PiijVbX2yBGqUBQ"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "cid_valid": true,
+    "signature_valid": true
+  }
+}

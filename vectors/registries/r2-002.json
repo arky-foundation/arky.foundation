@@ -1,0 +1,70 @@
+{
+  "id": "r2-002",
+  "spec": "ARKY-REGISTRIES-v1",
+  "level": "R2",
+  "description": "URN grammar: arky:<namespace>/<name>[@v<major>] and CAIP-2 chain ids (spec 2/4)",
+  "check": "urn_grammar",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "items": [
+      {
+        "value": "arky:unit/temp.C",
+        "kind": "urn"
+      },
+      {
+        "value": "arky:verb/pay@v1",
+        "kind": "urn"
+      },
+      {
+        "value": "arky:ru/tflops",
+        "kind": "urn"
+      },
+      {
+        "value": "arky:Unit/temp",
+        "kind": "urn"
+      },
+      {
+        "value": "arky:unit",
+        "kind": "urn"
+      },
+      {
+        "value": "unit/temp.C",
+        "kind": "urn"
+      },
+      {
+        "value": "arky:verb/pay@vX",
+        "kind": "urn"
+      },
+      {
+        "value": "caip2:eip155:1",
+        "kind": "caip2"
+      },
+      {
+        "value": "caip2:eip155",
+        "kind": "caip2"
+      },
+      {
+        "value": "eip155:1",
+        "kind": "caip2"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "results": [
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  }
+}

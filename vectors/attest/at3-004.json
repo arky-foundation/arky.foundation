@@ -1,0 +1,18 @@
+{
+  "id": "at3-004",
+  "spec": "ARKY-ATTESTATION-v1",
+  "level": "AT3",
+  "description": "Registered attestation type accepted (registry arky:attest/* membership)",
+  "check": "attest_type",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "type": "arky:attest/tpm2.quote@v1"
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "registered": true
+  }
+}

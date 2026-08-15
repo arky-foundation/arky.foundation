@@ -1,0 +1,24 @@
+{
+  "id": "d2-004",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D2",
+  "description": "Spec-level compatibility: advertised N3 satisfies required N2 (spec 6 step 4)",
+  "check": "spec_compat",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "required": {
+      "ARKY-NOTARY-v1": "N2"
+    },
+    "advertised": [
+      "ARKY-NOTARY-v1 N3",
+      "ARKY-DISCOVERY-v1 D1"
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "compatible": true
+  }
+}

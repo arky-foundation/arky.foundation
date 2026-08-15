@@ -1,0 +1,24 @@
+{
+  "id": "e1-002",
+  "spec": "ARKY-ERRORS-v1",
+  "level": "E1",
+  "description": "Minimal envelope; omitted retry MUST be treated as never (spec 4)",
+  "check": "error_envelope",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "envelope": {
+      "type": "about:blank",
+      "code": "common.not_found",
+      "title": "Resource not found",
+      "severity": "error",
+      "ts": "2025-10-15T12:00:00Z"
+    }
+  },
+  "expect": {
+    "valid": true,
+    "errors": [],
+    "effective_retry": "never"
+  }
+}

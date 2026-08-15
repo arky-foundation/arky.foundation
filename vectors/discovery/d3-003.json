@@ -1,0 +1,33 @@
+{
+  "id": "d3-003",
+  "spec": "ARKY-DISCOVERY-v1",
+  "level": "D3",
+  "description": "Health and readiness endpoints present as unauthenticated GET (spec 5)",
+  "check": "health_endpoints",
+  "context": {
+    "time": "2025-10-15T12:00:00Z"
+  },
+  "inputs": {
+    "endpoints": [
+      {
+        "name": "health",
+        "path": "/health",
+        "method": "GET"
+      },
+      {
+        "name": "ready",
+        "path": "/ready",
+        "method": "GET"
+      },
+      {
+        "name": "submit",
+        "path": "/notary/submit",
+        "method": "POST"
+      }
+    ]
+  },
+  "expect": {
+    "valid": true,
+    "errors": []
+  }
+}
