@@ -39,7 +39,7 @@ Definition of done:
   `guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md`.
 - The implementation is listed in the public conformance directory (§8).
 - The §5 TC vote is then held; minutes are published citing the external
-  results plus both reference implementations' artifacts.
+  results plus the reference implementations' artifacts.
 - `governance/ARKY-COMPAT-MATRIX-v1.md`, spec front matter, and
   `CONFORMANCE.md` agree on the lifecycle state.
 

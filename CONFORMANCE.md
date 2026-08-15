@@ -9,13 +9,13 @@ is the practical companion to "Vectors over vibes" (see `Mission.md`).
 > `status: review`. Per `governance/ARKY-GOVERNANCE-v1.md` §4, a spec is
 > **Stable** only once vectors are published **and ≥2 independent
 > implementations pass, at least one external** (§9.1.7). The technical bar
-> holds for the core loop (`@arky/core` TS and `arky-core` Rust pass at L2 and
-> are cross-checked byte-for-byte), but both reference stacks share authorship
-> and count as one party — promotion to **Stable** waits on an external
+> holds for the core loop (the Rust, Python, Go and TypeScript stacks pass at L2
+> and are cross-checked byte-for-byte), but all four reference stacks share
+> authorship and count as one party — promotion to **Stable** waits on an external
 > implementation passing the vectors
 > (`guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md`) plus the recorded TC vote, so the
 > core specs are labelled `implementing` rather than `stable`. The tooling in `scripts/` is
-> maintenance and conformance tooling, **not** a third reference implementation.
+> maintenance and conformance tooling, **not** a reference implementation.
 
 ## Run everything
 

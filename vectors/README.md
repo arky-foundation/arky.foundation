@@ -85,7 +85,7 @@ PYTHONPATH=src:tests python -m pytest tests/ -q  # from packages/core-py
 `bun run validate` runs JSON parsing, signed artifact/vector verification,
 Kernel schema checks, and link checking. `bun test` exercises the TypeScript
 reference implementation against the vectors. The Rust, Go and Python commands
-exercise the second, third and fourth independent implementations.
+exercise the other three independent implementations.
 
 `scripts/cross-check.sh` then asserts that all four stacks agree byte-for-byte
 end to end: canonical bytes, cids, Ed25519 signatures, Kernel decisions, and
