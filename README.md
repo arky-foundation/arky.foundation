@@ -124,13 +124,19 @@ Non-core specs remain at `status: review` or partial vector coverage. See
 
 ## Implementations
 
-Two independent reference implementations cover the TIM → Kernel → Settler loop
-and are cross‑checked **byte‑for‑byte** against each other in CI:
+Four independent reference implementations cover the TIM → Kernel → Settler loop
+and are cross‑checked **byte‑for‑byte** against each other in CI — canonical
+bytes → cids → Ed25519 signatures → Kernel decisions → execution receipts:
 
+- [`packages/core-rs`](packages/core-rs) — **`arky-core`** (Rust). Systems‑language
+  stack for embedded/high‑assurance use; hand‑rolled RFC 8785 number formatting.
+- [`packages/core-py`](packages/core-py) — **`arky-core`** (Python). No runtime
+  dependencies; Ed25519 implemented from RFC 8032 and checked against its vectors.
+- [`packages/core-go`](packages/core-go) — **`arky-core`** (Go). Standard library
+  only; imported as `github.com/arky-foundation/arky.foundation/packages/core-go`.
 - [`packages/core`](packages/core) — **`@arky/core`** (TypeScript). `npm install`,
-  then `generateKeyPair()` + `createTim()` + `verifyTim()`. See its README/quickstart.
-- [`packages/core-rs`](packages/core-rs) — **`arky-core`** (Rust). Same loop;
-  systems‑language stack for embedded/high‑assurance use.
+  then `generateKeyPair()` + `createTim()` + `verifyTim()`. Browser‑safe; powers
+  the in‑page verifier at [arky.foundation/verify](https://arky.foundation/verify).
 
 Built on them:
 
