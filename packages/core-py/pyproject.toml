@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "arky-core"
+version = "0.1.0"
+description = "Reference Python implementation of Arky TIM: produce and verify Time-Identity-Measurement receipts (canonicalization, content addressing, detached JWS, witnessing)."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+keywords = ["arky", "tim", "jcs", "rfc8785", "ed25519", "receipts"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Topic :: Security :: Cryptography",
+  "Typing :: Typed",
+]
+# No runtime dependencies. Ed25519 (RFC 8032) is implemented from the spec on
+# top of hashlib, matching the zero-dependency posture of the TS, Rust and Go
+# stacks: a reference implementation should not import the thing it defines.
+dependencies = []
+
+[project.urls]
+Homepage = "https://arky.foundation"
+Repository = "https://github.com/arky-foundation/arky.foundation"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/arky_core"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

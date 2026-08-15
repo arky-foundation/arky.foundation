@@ -87,7 +87,7 @@ of exactly 34 bytes, matching `@arky/core` byte for byte.
 
 ## Regression coverage
 
-All three stacks now carry a mirrored adversarial suite, so the *failure*
+All four stacks now carry a mirrored adversarial suite, so the *failure*
 behaviour is pinned on each side rather than only on the TS one:
 
 - `packages/core/test/security.test.ts` (26 cases, TS)
@@ -97,9 +97,14 @@ behaviour is pinned on each side rather than only on the TS one:
 - `packages/core-go/security_test.go` (Go) — the same attack set again, plus
   JWS-shape rejections and an enumeration showing that for Ed25519 did:keys the
   `z6Mk` prefix check already implies the 34-byte length check.
+- `packages/core-py/tests/test_security.py` (Python) — the same attack set, plus
+  Ed25519 malleability (`S >= L`) rejection and the RFC 8032 vectors in
+  `tests/test_ed25519.py`, which are load-bearing because that stack implements
+  the signature scheme from the RFC rather than importing it.
 
-The Rust and Go suites additionally lock the RFC 8785 number forms and amount
-validation. CI runs all three suites plus the cross-language `cross-check.sh`.
+The Rust, Go and Python suites additionally lock the RFC 8785 number forms and
+amount validation. CI runs all four suites plus the cross-language
+`cross-check.sh`.
 
 Each new assertion was negative-tested (break the guard → the test must fail →
 restore), so the suite is known to have teeth rather than rubber-stamping. The
@@ -110,3 +115,23 @@ the Kernel, UTF-8 key ordering, and the public-key size check dropped); every on
 was caught. That exercise corrected a test whose name claimed the 34-byte length
 check was load-bearing when the prefix check was in fact rejecting those inputs
 first.
+
+### Notes from the Python stack (2026-08-15)
+
+Two observations worth recording, neither a vulnerability:
+
+* **Ed25519 from RFC 8032.** Python has no stdlib Ed25519, and importing
+  `cryptography`/`PyNaCl` would make the reference implementation depend on
+  another party's reading of the scheme. It is implemented from the RFC instead,
+  with the official test vectors as the gate — which immediately caught a real
+  bug (a 253-bit scalar ladder where clamping yields a 255-bit scalar, silently
+  producing wrong public keys). The implementation is written for auditability,
+  not constant time; that limit is documented in the module and README, with
+  verification (public data only) called out as the operation that is unaffected.
+* **A non-list `time.witnesses` is ignored by every stack.** A TIM whose
+  `witnesses` is a scalar rather than an array verifies on its issuer signature
+  alone, in TypeScript, Rust, Go and Python alike. This was found while writing
+  the Python security suite and confirmed against the other three. It is now
+  pinned by a test rather than "fixed", because changing it in one stack would
+  make that stack reject artifacts the others accept. Tightening it is a spec
+  decision that must move all four together.

@@ -96,5 +96,27 @@ jobs:
           fi
           go vet ./...
 
-      - name: Cross-language agreement (TS == Rust == Go, bytes -> cids -> decisions -> receipts)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install Python tooling
+        run: pipx install ruff==0.16.3 || pip install ruff==0.16.3
+
+      - name: "arky-core (Python) conformance (fourth independent stack)"
+        working-directory: packages/core-py
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pytest
+          PYTHONPATH=src:tests python -m pytest tests/ -q
+
+      - name: "arky-core (Python) lint and format"
+        working-directory: packages/core-py
+        run: |
+          set -euo pipefail
+          ruff check src tests tools
+          ruff format --check src tests tools
+
+      - name: Cross-language agreement (TS == Rust == Go == Python, bytes -> cids -> decisions -> receipts)
         run: bash scripts/cross-check.sh

@@ -78,17 +78,18 @@ bun install
 bun run validate
 bun test
 cargo test --manifest-path packages/core-rs/Cargo.toml
-go test ./... # from packages/core-go
+go test ./...                                    # from packages/core-go
+PYTHONPATH=src:tests python -m pytest tests/ -q  # from packages/core-py
 ```
 
 `bun run validate` runs JSON parsing, signed artifact/vector verification,
 Kernel schema checks, and link checking. `bun test` exercises the TypeScript
-reference implementation against the vectors. The Rust and Go commands exercise
-the second and third independent implementations.
+reference implementation against the vectors. The Rust, Go and Python commands
+exercise the second, third and fourth independent implementations.
 
-`scripts/cross-check.sh` then asserts that all three stacks agree
-byte-for-byte end to end: canonical bytes, cids, Ed25519 signatures, Kernel
-decisions, and execution receipts.
+`scripts/cross-check.sh` then asserts that all four stacks agree byte-for-byte
+end to end: canonical bytes, cids, Ed25519 signatures, Kernel decisions, and
+execution receipts.
 
 For just the vector/artifact verifier:
 
@@ -124,10 +125,16 @@ All vectors follow `ARKY-VECTORS-v1`:
 
 - [`packages/core`](../packages/core/) - `@arky/core` TypeScript.
 - [`packages/core-rs`](../packages/core-rs/) - `arky-core` Rust.
+- [`packages/core-go`](../packages/core-go/) - `arky-core-go` Go.
+- [`packages/core-py`](../packages/core-py/) - `arky-core` Python.
 
 The cross-language check in [`../scripts/cross-check.sh`](../scripts/cross-check.sh)
 compares canonical bytes, CIDs, timestamp parsing, kernel decisions, and
-execution receipts.
+execution receipts across all four stacks.
+
+All four are reference implementations by the same authors, so per governance
+§9.1.7 they count as one party and do not satisfy the external-implementation
+requirement for `stable`.
 
 ## Contributing
 
