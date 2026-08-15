@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "bun run build:core && bun install && astro build",
+    "build:core": "cd ../packages/core && bun install && bun run build",
+    "build:site": "astro build",
     "preview": "astro preview",
     "lint": "oxlint -D correctness -D suspicious -D pedantic src/ public/scripts/",
     "fmt": "oxfmt --write src/ public/scripts/"
