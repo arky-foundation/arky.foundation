@@ -47,6 +47,9 @@ jobs:
       - name: Verify CIDs, signatures, and algorithmic vectors (conformance)
         run: bun run scripts/verify-artifacts.ts
 
+      - name: Release counts consistent (manifests, RELEASES.json, README)
+        run: bun run scripts/release-check.ts
+
       - name: Install @arky/core deps
         run: bun install --cwd packages/core --frozen-lockfile
 

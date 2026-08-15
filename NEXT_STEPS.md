@@ -71,17 +71,18 @@ Definition of done:
 - Schema version language avoids implying spec lifecycle `stable`.
 - Every status table is generated or easy to audit from manifests.
 
-### 4. Improve Release Automation
+### 4. Improve Release Automation — DONE
 
-Reduce manual drift between vector files, manifests, release metadata, and
-result artifacts.
-
-Definition of done:
-
-- A release script recomputes per-suite vector counts and updates
-  `vectors/RELEASES.json`.
-- `bun run results` is run as part of release preparation.
-- CI fails if manifest counts, README tables, or release summaries disagree.
+Shipped 2026-08-15: `scripts/release-check.ts` recounts vector files on disk
+(each vector's own `level` field) and compares against every manifest,
+`vectors/RELEASES.json`, and the `vectors/README.md` suite table. `--write`
+regenerates manifests and RELEASES from disk; the README stays hand-written
+and drift there always fails. Runs in `bun run validate` and as a dedicated
+step in `.github/workflows/vectors-smoke.yaml`, so CI fails on any count
+disagreement. Gate was negative-tested (manifest coverage drift, phantom
+vector, RELEASES level drift, README row drift all caught; `--write`
+verified to repair). It found and fixed a real drift on first run: the README
+grand total said 106 where disk had 110.
 
 ### 5. Build External Runner Guidance Carefully
 

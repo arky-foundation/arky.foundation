@@ -32,6 +32,7 @@ bun run validate
 | Conformance verifier | `bun run verify` | Recomputes cids, verifies signatures + witnesses, and executes algorithmic vectors (below). |
 | Kernel vs schema | `bun run validate-kernel` | Each Kernel vector's `schema_valid` expectation matches AJV. |
 | Link checker | `bun run check-links` | Every relative link in the docs resolves. |
+| Release counts | `bun run release-check` | Vector counts on disk match every manifest, `vectors/RELEASES.json`, and the `vectors/README.md` table (governance §9.1.4). `--write` regenerates manifests and RELEASES from disk. |
 
 Schema (AJV) validation of every artifact type runs in CI
 (`.github/workflows/validate-schemas.yaml`); it needs the `ajv-cli` dev

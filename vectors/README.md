@@ -28,7 +28,7 @@ partial.
 | Policy Packs | ARKY-POLICY-PACKS-v1 | 1 | 2 | 0 | 3 | P1-P2 executable; P3 future |
 | Registries | ARKY-REGISTRIES-v1 | 1 | 2 | — | 3 | R1-R2 executable |
 | Errors | ARKY-ERRORS-v1 | 3 | 1 | 0 | 4 | E1-E2 executable; E3 future |
-| **Total** | | **54** | **39** | **13** | **106** | |
+| **Total** | | **54** | **43** | **13** | **110** | |
 
 See [`../CONFORMANCE.md`](../CONFORMANCE.md) and
 [`../governance/ARKY-COMPAT-MATRIX-v1.md`](../governance/ARKY-COMPAT-MATRIX-v1.md)

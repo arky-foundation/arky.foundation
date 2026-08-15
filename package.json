@@ -9,6 +9,7 @@
     "verify": "bun run scripts/verify-artifacts.ts",
     "results": "bun run scripts/verify-artifacts.ts --results vectors/RESULTS.json",
     "check-links": "bun run scripts/check-links.ts",
+    "release-check": "bun run scripts/release-check.ts",
     "validate-kernel": "bun run scripts/validate-kernel-vectors.ts",
     "validate": "bun run scripts/validate.ts",
     "gen-reference-path": "bun run scripts/gen-reference-path.ts",
