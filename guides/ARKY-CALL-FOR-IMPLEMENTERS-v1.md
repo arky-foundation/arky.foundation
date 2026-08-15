@@ -33,8 +33,8 @@ last_updated: 2026-08-14
 
 Arky's governance (ARKY-GOVERNANCE-v1 §9.1.7) makes a deliberate commitment:
 **the core specs stay `implementing` until someone we do not control passes
-the vectors.** The two reference stacks (`@arky/core` in TypeScript,
-`arky-core` in Rust) share authorship, so they count as one party. The bar for
+the vectors.** The four reference stacks (Rust, Python, Go and TypeScript)
+share authorship, so they count as one party. The bar for
 `stable` is an external, independent implementation - and this guide exists to
 make building one as cheap as possible.
 
@@ -46,10 +46,14 @@ make building one as cheap as possible.
 - **You get listed.** Passing implementations are cited in the public
   conformance directory (§8) and in the promotion record when the specs go
   stable.
-- **The specs are small.** The full core loop is five specs; two independent
+- **The specs are small.** The full core loop is five specs; four independent
   stacks already reproduce every artifact byte-for-byte, so ambiguities have
   been burned out by construction. Where you find one anyway, that is a spec
   bug - report it and it gets fixed by RFC.
+- **Pick the closest reference.** Whatever your language, one of the four
+  existing stacks is probably near it: Rust, Python, Go, or TypeScript. Each is
+  Apache-2.0 and written clean-room from the specs, so it reads as a worked
+  example rather than a framework to copy.
 
 ## Scope tiers
 

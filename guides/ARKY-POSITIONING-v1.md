@@ -72,9 +72,9 @@ time/order) -> Kernel (deterministic decision) -> Settler (execution) -> XR
 ## 3. What is distinct about Arky
 
 1. **Deterministic and replayable.** Decisions are pure functions of signed
-   evidence and a declared commitment; two independent implementations
-   (TypeScript and Rust) reproduce every artifact byte-for-byte and are
-   cross-checked in CI.
+   evidence and a declared commitment; four independent implementations
+   (Rust, Python, Go and TypeScript) reproduce every artifact byte-for-byte and
+   are cross-checked in CI.
 2. **Rail-agnostic.** The same receipt language covers a bank transfer, an
    on-chain settlement, an x402 payment, or a device command.
 3. **Offline-verifiable.** Verification needs only the artifacts and public

@@ -34,7 +34,7 @@ Concrete state as of vectors release **0.2.0** (`vectors/RELEASES.json`). The
 five **core-loop** specs are at `status: implementing` — they meet the
 `ARKY-GOVERNANCE-v1` §4 *technical* bar (vectors published at L2 + ≥2
 implementations passing), but promotion to `stable` additionally requires an
-**external** implementation (§9.1.7 — both reference stacks share authorship
+**external** implementation (§9.1.7 — all reference stacks share authorship
 and count as one party) plus formal TC ratification. All other specs remain at
 `status: review`.
 
@@ -52,8 +52,8 @@ and count as one party) plus formal TC ratification. All other specs remain at
 | Errors | ARKY‑ERRORS‑v1 | review | — | **E1 (3)**, **E2 (1)** |
 
 - **The five core-loop suites (TIM, Canonicalization, Kernel, Notary, Settlers)
-  now have L2 coverage** and pass on two independent implementations
-  (`@arky/core` TS, `arky-core` Rust), cross-checked byte-identically by
+  now have L2 coverage** and pass on four independent implementations
+  (Rust, Python, Go and TypeScript), cross-checked byte-identically by
   `scripts/cross-check.sh` (canonical bytes → cids → kernel decisions →
   execution receipts, including K2 timezone-offset decisions). Their manifests
   carry `ready_for_production: true`.
