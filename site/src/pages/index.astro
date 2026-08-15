@@ -1,6 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/Button.astro";
+
+// Specimen receipt (examples/agents/tool-call-tim.json): the barcode is the
+// cid itself — each base58 character maps to a bar width, so the bars are as
+// content-addressed as the document they decorate.
+const receiptCid = "zQmYceAJULYysZ9TKoCcHz4pePdXnZgEXcC5yQBthgGGX5Q";
+const receiptBars = [...receiptCid].map((c) => (c.codePointAt(0)! % 3) + 1);
 ---
 
 <Layout
@@ -322,27 +328,36 @@ import Button from "../components/Button.astro";
           <div class="section-head reveal">
             <p class="section-label">The artifact</p>
             <h2 id="receipt-title">This is a receipt.</h2>
-            <p class="head-note">Vector <code>t1-001</code> from the published conformance suite &mdash; a real, signed TIM, not an illustration.</p>
+            <p class="head-note">The signed evidence <code>@arky/mcp</code> emits when an agent pays through a policy-gated tool &mdash; a real artifact (<code>examples/agents/</code>), not an illustration.</p>
           </div>
-          <p class="lead reveal" style="--reveal-delay: 100ms">Everything Arky produces reduces to documents like this one: small, canonical, content-addressed, signed. It carries everything needed to check itself &mdash; no API, no issuer, no network. Replay it in your browser right now.</p>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Every action an agent takes reduces to documents like this one: small, canonical, content-addressed, signed. It carries everything needed to check itself &mdash; no API, no issuer, no network. Replay it in your browser right now.</p>
         </div>
 
         <div class="receipt-stage">
-          <article class="receipt-card reveal" aria-label="Specimen TIM receipt, vector t1-001">
+          <article class="receipt-card reveal" aria-label="Specimen agent tool-call receipt">
             <header class="receipt-head">
-              <span class="receipt-org">Arky Foundation</span>
-              <span class="receipt-kind">TIM receipt &middot; specimen t1-001</span>
+              <span class="receipt-org">Arky Protocol</span>
+              <span class="receipt-kind">agent action receipt &middot; signed specimen</span>
             </header>
-            <dl class="receipt-rows">
-              <div><dt>recorded</dt><dd>2025-10-15T12:00:00Z</dd></div>
-              <div><dt>identity</dt><dd>did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw</dd></div>
-              <div><dt>measurement</dt><dd>temperature = 22.5 &middot; arky:unit/temp.C</dd></div>
-              <div><dt>method</dt><dd>sensor &middot; device:temp-sensor-01</dd></div>
-            </dl>
+            <div class="receipt-items">
+              <div class="receipt-item"><span>agent</span><i></i><span>did:key:z6Mktwupdm&hellip;N4Zq7oMMsw</span></div>
+              <div class="receipt-item"><span>tool</span><i></i><span>pay</span></div>
+              <div class="receipt-item"><span>provider</span><i></i><span>payments-mcp</span></div>
+              <div class="receipt-item"><span>to</span><i></i><span>acme-cloud</span></div>
+              <div class="receipt-item"><span>memo</span><i></i><span>api credits</span></div>
+              <div class="receipt-item"><span>recorded</span><i></i><span>2026-08-15T09:41:07Z</span></div>
+            </div>
+            <div class="receipt-total">
+              <span>total authorized</span>
+              <b>USD 18.50</b>
+            </div>
             <dl class="receipt-hash">
-              <div><dt>cid</dt><dd>zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH</dd></div>
-              <div><dt>sig</dt><dd>eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIs&hellip;M1zGNWECg</dd></div>
+              <div><dt>cid</dt><dd>{receiptCid}</dd></div>
+              <div><dt>sig</dt><dd>eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2Us&hellip;EATSthcAQ</dd></div>
             </dl>
+            <div class="receipt-barcode" aria-hidden="true">
+              {receiptBars.map((w) => <i style={`width:${w}px`}></i>)}
+            </div>
             <footer class="receipt-foot">replayable offline &middot; anyone can verify</footer>
             <span class="receipt-stamp" aria-hidden="true"><b>verified</b>Ed25519</span>
           </article>
@@ -358,7 +373,11 @@ import Button from "../components/Button.astro";
             </div>
             <div class="anatomy-item">
               <span class="anatomy-key">identity.id</span>
-              <p>A did:key that resolves to the signing key itself &mdash; verification needs nothing beyond the document.</p>
+              <p>The agent&rsquo;s did:key, which resolves to the signing key itself &mdash; verification needs nothing beyond the document.</p>
+            </div>
+            <div class="anatomy-item">
+              <span class="anatomy-key">provenance</span>
+              <p>The raw tool arguments, recorded verbatim &mdash; ask why the agent paid and the answer is signed.</p>
             </div>
             <div class="receipt-cta">
               <Button tone="primary" href="/verify?example">Replay this receipt</Button>
@@ -456,13 +475,18 @@ import Button from "../components/Button.astro";
           <article class="path-card reveal" style="--reveal-delay: 90ms">
             <p class="claim">2 / VERIFY</p>
             <h3>Validate</h3>
-            <p>Recompute every artifact locally and replay the published vectors against the Rust reference stack.</p>
+            <p>Recompute every artifact locally and replay the published vectors against any of the reference stacks.</p>
             <div class="terminal">
               <div class="terminal-head">
-                <span>core-rs conformance</span>
-                <Button class="copy-command" tone="ghost" size="sm" mono data-copy="cargo test -p arky-core">copy</Button>
+                <div class="lang-tabs" role="group" aria-label="Reference stack">
+                  <button type="button" class="lang-btn" data-cmd="cd packages/core-rs && cargo test" aria-pressed="true">Rust</button>
+                  <button type="button" class="lang-btn" data-cmd="cd packages/core-py && PYTHONPATH=src:tests python -m pytest tests/ -q" aria-pressed="false">Python</button>
+                  <button type="button" class="lang-btn" data-cmd="cd packages/core-go && go test ./..." aria-pressed="false">Go</button>
+                  <button type="button" class="lang-btn" data-cmd="cd packages/core && bun test" aria-pressed="false">TS</button>
+                </div>
+                <Button class="copy-command" tone="ghost" size="sm" mono data-copy="cd packages/core-rs && cargo test">copy</Button>
               </div>
-              <pre><code>cargo test -p arky-core</code></pre>
+              <pre><code id="verify-cmd">cd packages/core-rs && cargo test</code></pre>
             </div>
           </article>
 

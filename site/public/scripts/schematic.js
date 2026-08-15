@@ -206,6 +206,21 @@ import { isTabVisible, onResume, visibilityOf } from "./anim-gate.js";
     });
   });
 
+  // Validate card: switch the conformance command between reference stacks.
+  const langTabs = Array.from(document.querySelectorAll(".lang-btn"));
+  if (langTabs.length > 0) {
+    const cmdEl = document.querySelector("#verify-cmd");
+    const copyBtn = cmdEl?.closest(".terminal")?.querySelector("[data-copy]");
+    langTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        langTabs.forEach((other) => other.setAttribute("aria-pressed", String(other === tab)));
+        const cmd = tab.dataset.cmd || "";
+        if (cmdEl) cmdEl.textContent = cmd;
+        if (copyBtn) copyBtn.dataset.copy = cmd;
+      });
+    });
+  }
+
   initActorNetwork({ reduceMotion });
 
   // Header lift: once the page scrolls off the top, the header casts a shadow.

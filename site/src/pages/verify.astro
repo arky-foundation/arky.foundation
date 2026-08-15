@@ -71,17 +71,19 @@ import Button from "../components/Button.astro";
       ok ? "M3 8.5l3.2 3L13 4.5" : "M4 4l8 8M12 4l-8 8"
     }"/></svg>${ok ? passText : failText}</span>`;
 
+  // The homepage specimen: an @arky/mcp tool-call TIM (examples/agents/).
   const EXAMPLE_TIM = {
-    time: { ts: "2025-10-15T12:00:00Z" },
+    time: { ts: "2026-08-15T09:41:07Z" },
     identity: { id: "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw" },
     measurement: {
-      name: "temperature",
-      value: 22.5,
-      unit: "arky:unit/temp.C",
-      method: { type: "sensor", source: "device:temp-sensor-01" },
+      name: "tool",
+      value: "pay",
+      code: "tool",
+      method: { type: "mcp", source: "payments-mcp" },
+      provenance: { arguments: { to: "acme-cloud", amount: 18.5, currency: "USD", memo: "api credits" } },
     },
-    cid: "zQmXquHjwTg2tLjk75DWuqNTmoEpsSs2JZykY2iBPqyefsH",
-    sig: "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXUyIsImtpZCI6InRlc3Qta2V5LTIwMjUtMDEiLCJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdfQ..i3Wael9VfCyFE-2O-ncTcghG_MxzkRIP_BLf3Et3-2QH-61rjdX7daXtLL4Qfr1Lxaw31aKFSouEZM1zGNWECg",
+    cid: "zQmYceAJULYysZ9TKoCcHz4pePdXnZgEXcC5yQBthgGGX5Q",
+    sig: "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6ImRpZDprZXk6ejZNa3R3dXBkbUxYVlZxVHpDdzRpNDZyNHVHeW9zR1hSblIzWGpONFpxN29NTXN3In0..-3ue0nPnEYFAdsfK32dtYI7DZp0H_HFjs58TL1mBkJ89mGqQlumFe763iIe_wfb45axfCM1IkJDNuEATSthcAQ",
   };
 
   function detectKind(a: Record<string, unknown>): string {
