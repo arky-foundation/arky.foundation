@@ -55,22 +55,20 @@ import Layout from "../layouts/Layout.astro";
     type Tim,
   } from "@arky/core";
 
-  interface Item {
-    label: string;
-    data: Record<string, unknown>;
-  }
+  interface Item { label: string; data: Record<string, unknown>; }
   interface Check {
     name: string;
     /** null means not applicable / unverifiable */
     ok: boolean | null;
     note?: string;
   }
-  interface Result {
-    label: string;
-    kind: string;
-    cid?: string;
-    checks: Check[];
-  }
+  interface Result { label: string; kind: string; cid?: string; checks: Check[]; }
+
+  /** Verdict badge: check or cross icon + label, green for pass, oxide for fail. */
+  const verdict = (ok: boolean, passText: string, failText: string) =>
+    `<span class="v-verdict ${ok ? "pass" : "fail"}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${
+      ok ? "M3 8.5l3.2 3L13 4.5" : "M4 4l8 8M12 4l-8 8"
+    }"/></svg>${ok ? passText : failText}</span>`;
 
   const EXAMPLE_TIM = {
     time: { ts: "2025-10-15T12:00:00Z" },
@@ -246,7 +244,7 @@ import Layout from "../layouts/Layout.astro";
           `<div class="v-card ${ok ? "" : "v-invalid"}">
             <div class="v-card-head">
               <span class="v-kind">${esc(result.kind)}</span>
-              <span class="v-verdict ${ok ? "pass" : "fail"}">${ok ? "VALID" : "INVALID"}</span>
+              ${verdict(ok, "VERIFIED", "INVALID")}
             </div>
             <p class="v-meta">${esc(result.label)}${result.cid ? ` &middot; <code>${esc(String(result.cid))}</code>` : ""}</p>
             <ul class="v-checks">${rows}</ul>
@@ -264,7 +262,7 @@ import Layout from "../layouts/Layout.astro";
       results.append(
         el(
           `<div class="v-card v-cross">
-            <div class="v-card-head"><span class="v-kind">Chain</span><span class="v-verdict ${cross.every((c) => c.ok !== false) ? "pass" : "fail"}">${cross.every((c) => c.ok !== false) ? "LINKED" : "BROKEN"}</span></div>
+            <div class="v-card-head"><span class="v-kind">Chain</span>${verdict(cross.every((c) => c.ok !== false), "LINKED", "BROKEN")}</div>
             <ul class="v-checks">${rows}</ul>
           </div>`,
         ),
@@ -446,7 +444,7 @@ import Layout from "../layouts/Layout.astro";
 
   .v-card {
     border: 1px solid var(--hairline);
-    border-left: 2px solid var(--accent);
+    border-left: 2px solid var(--verified);
     border-radius: 5px;
     background: rgba(251, 250, 245, 0.7);
     padding: var(--space-5) var(--space-6);
@@ -468,7 +466,7 @@ import Layout from "../layouts/Layout.astro";
 
   .v-card-head {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
   }
@@ -481,13 +479,38 @@ import Layout from "../layouts/Layout.astro";
   }
 
   .v-verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 4px 10px;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
   }
 
-  .v-verdict.pass { color: var(--accent); }
-  .v-verdict.fail { color: var(--oxide); }
+  .v-verdict svg {
+    width: 12px;
+    height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .v-verdict.pass {
+    color: var(--verified);
+    border-color: rgba(46, 107, 79, 0.4);
+    background: var(--verified-soft);
+  }
+
+  .v-verdict.fail {
+    color: var(--oxide);
+    border-color: rgba(188, 75, 42, 0.4);
+    background: rgba(188, 75, 42, 0.06);
+  }
 
   .v-meta {
     margin: var(--space-2) 0 var(--space-4);
@@ -528,7 +551,7 @@ import Layout from "../layouts/Layout.astro";
     border: 1px solid var(--hairline);
   }
 
-  .v-badge.pass { color: var(--accent); border-color: var(--accent); }
+  .v-badge.pass { color: var(--verified); border-color: rgba(46, 107, 79, 0.5); }
   .v-badge.fail { color: #fff; background: var(--oxide); border-color: var(--oxide); }
   .v-badge.na { color: var(--text-dim); }
 

@@ -7,6 +7,8 @@
   --accent-soft: rgba(30, 61, 92, 0.06);
   --oxide: #bc4b2a;
   --oxide-soft: rgba(188, 75, 42, 0.08);
+  --verified: #2e6b4f;
+  --verified-soft: rgba(46, 107, 79, 0.07);
   --panel: #fbfaf5;
   --hairline: #d9d1c0;
   --max: 1440px;
@@ -1651,10 +1653,10 @@ code {
   align-items: center;
   gap: var(--space-2);
   justify-self: end;
-  border: 1px solid rgba(30, 61, 92, 0.28);
+  border: 1px solid rgba(46, 107, 79, 0.35);
   border-radius: 3px;
-  background: rgba(30, 61, 92, 0.04);
-  color: var(--accent);
+  background: var(--verified-soft);
+  color: var(--verified);
   font-family: var(--font-mono);
   font-size: 0.64rem;
   letter-spacing: 0.08em;
@@ -1666,7 +1668,7 @@ code {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--verified);
   content: "";
 }
 
