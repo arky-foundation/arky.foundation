@@ -1,6 +1,6 @@
 # arky-core (Python)
 
-Reference **Python** implementation of Arky TIM — a fourth independent stack.
+Reference **Python** implementation of Arky TIM — one of four independent stacks.
 
 Produce and verify Time-Identity-Measurement receipts: JCS canonicalization
 (RFC 8785), content addressing (multihash sha2-256 + base58btc multibase), and
@@ -8,9 +8,9 @@ detached-payload Ed25519 JWS (RFC 7797), with witnessing — plus the Kernel
 (commitment evaluation) and Settler (execution receipts).
 
 Built clean-room from the specs. It passes the published conformance vectors and
-is cross-checked **byte-for-byte** against `@arky/core` (TypeScript), `arky-core`
-(Rust) and `arky-core` (Go): canonical bytes, cids, Ed25519 signatures,
-Kernel decisions, and execution receipts are all identical.
+is cross-checked **byte-for-byte** against the Rust, Go and TypeScript stacks:
+canonical bytes, cids, Ed25519 signatures, Kernel decisions, and execution
+receipts are all identical.
 
 ## Requirements
 
@@ -76,8 +76,8 @@ edges in the cross-check battery — the largest divergence of any stack here.
 `json` also parses `9007199254740993` into an exact `int`, which would
 canonicalize losslessly and produce a cid no other implementation agrees with.
 
-**Ed25519 is implemented from RFC 8032 rather than imported.** The other three
-stacks are dependency-free, and a *reference* implementation of a signature
+**Ed25519 is implemented from RFC 8032 rather than imported.** The Go stack is
+dependency-free and the others are dependency-light, and a *reference* implementation of a signature
 protocol should not defer to someone else's reading of it — nor add a
 supply-chain surface to a package whose purpose is auditability. It is verified
 against the RFC's official test vectors.
@@ -103,7 +103,7 @@ handles only public data, so the side-channel concern does not apply.
 
 ## Security notes
 
-These mirror the guarantees of the other three stacks; all four are held to them
+These mirror the guarantees of the other stacks; all four are held to them
 by a shared adversarial suite (`tests/test_security.py` here).
 
 - **Verification never raises on hostile input.** A malformed identity,
@@ -134,17 +134,17 @@ bash ../../scripts/cross-check.sh                 # byte-identity vs the other s
 ```
 
 The `tools/` drivers (`canon`, `canonjson`, `decide`, `xr`, `parsetime`) exist so
-CI can byte-diff this stack's output against the other three.
+CI can byte-diff this stack's output against the others.
 
 ## Status
 
 Pre-1.0 (`0.1.0`); the five core-loop specs are at `status: implementing` with
 L2 conformance coverage (other specs remain `status: review`). Passes the
-published vectors at L2 and is cross-checked byte-for-byte against the TS, Rust
-and Go stacks.
+published vectors at L2 and is cross-checked byte-for-byte against the other
+stacks.
 
 Note on governance: this is a **reference** implementation by the same authors as
-the other three, so per governance section 9.1.7 it does **not** satisfy the
+the others, so per governance section 9.1.7 it does **not** satisfy the
 external-implementation requirement for promoting specs to `stable`. Its value is
 contradiction-hunting — another clean-room reading of the specs — not quorum.
 

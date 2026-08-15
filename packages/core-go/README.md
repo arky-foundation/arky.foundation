@@ -1,6 +1,6 @@
 # arky-core (Go)
 
-Reference **Go** implementation of Arky TIM — a third independent stack.
+Reference **Go** implementation of Arky TIM — one of four independent stacks.
 
 Go modules are identified by import path, not by a package name, so there is no
 `arky-core-go` artifact anywhere: the module is
@@ -13,9 +13,9 @@ detached-payload Ed25519 JWS (RFC 7797), with witnessing — plus the Kernel
 (commitment evaluation) and Settler (execution receipts).
 
 Built clean-room from the specs. It passes the published conformance vectors and
-is cross-checked **byte-for-byte** against `@arky/core` (TypeScript) and
-`arky-core` (Rust): canonical bytes, cids, Ed25519 signatures, Kernel decisions,
-and execution receipts are all identical.
+is cross-checked **byte-for-byte** against the Rust, Python and TypeScript
+stacks: canonical bytes, cids, Ed25519 signatures, Kernel decisions, and
+execution receipts are all identical.
 
 ## Requirements
 
@@ -105,7 +105,7 @@ pinned by a dedicated test.
 
 ## Security notes
 
-These mirror the guarantees of the other two stacks; all three are held to them
+These mirror the guarantees of the other stacks; all four are held to them
 by a shared adversarial suite (`security_test.go` here).
 
 - **Verification never panics on hostile input.** A malformed identity,
@@ -129,23 +129,23 @@ by a shared adversarial suite (`security_test.go` here).
 ```sh
 go test ./...                    # unit + conformance vectors + security suite
 gofmt -l . && go vet ./...       # formatting and vet gates
-bash ../../scripts/cross-check.sh  # byte-identity against the TS and Rust stacks
+bash ../../scripts/cross-check.sh  # byte-identity against the other stacks
 ```
 
 The `cmd/` drivers (`canon`, `canonjson`, `decide`, `xr`, `parsetime`) exist so
-CI can byte-diff this stack's output against the other two.
+CI can byte-diff this stack's output against the others.
 
 ## Status
 
 Pre-1.0 (`v0.1.0`); the five core-loop specs are at `status: implementing` with
 L2 conformance coverage (other specs remain `status: review`). Passes the
-published vectors at L2 and is cross-checked byte-for-byte against the TS and
-Rust stacks.
+published vectors at L2 and is cross-checked byte-for-byte against the other
+stacks.
 
 Note on governance: this is a **reference** implementation by the same authors as
-the other two, so per governance section 9.1.7 it does **not** satisfy the
+the others, so per governance section 9.1.7 it does **not** satisfy the
 external-implementation requirement for promoting specs to `stable`. Its value is
-contradiction-hunting — a third clean-room reading of the specs — not quorum.
+contradiction-hunting — another clean-room reading of the specs — not quorum.
 
 Fixture keys are TEST KEYS — generate your own with `GenerateKeyPair()`.
 

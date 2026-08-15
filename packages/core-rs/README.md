@@ -1,8 +1,9 @@
 # arky-core (Rust)
 
 Reference Rust implementation of **Arky TIM** — produce and verify
-Time-Identity-Measurement receipts. A second independent stack alongside the
-TypeScript [`@arky/core`](../core): JCS canonicalization (RFC 8785, including the
+Time-Identity-Measurement receipts. One of four independent stacks, alongside
+[Python](../core-py), [Go](../core-go) and [TypeScript](../core): JCS
+canonicalization (RFC 8785, including the
 number formatter — no runtime float-printing crutch), content addressing
 (multihash sha2-256 + base58btc multibase), detached Ed25519 JWS (RFC 7797) over
 `ed25519-dalek`, and Kernel/Settler evaluation.
@@ -59,7 +60,7 @@ Run the full example: `cargo run --example quickstart`.
 
 ## Security notes
 
-These mirror `@arky/core`'s guarantees; both stacks are held to them by a shared
+These mirror `@arky/core`'s guarantees; all four stacks are held to them by a shared
 adversarial suite (`tests/security.rs` here, `test/security.test.ts` there).
 
 - **Verification never panics on hostile input.** A malformed identity,
