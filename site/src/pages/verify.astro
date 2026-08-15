@@ -66,7 +66,7 @@ import Layout from "../layouts/Layout.astro";
 
   /** Verdict badge: check or cross icon + label, green for pass, oxide for fail. */
   const verdict = (ok: boolean, passText: string, failText: string) =>
-    `<span class="v-verdict ${ok ? "pass" : "fail"}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${
+    `<span class="v-verdict ${ok ? "pass" : "fail"}"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${
       ok ? "M3 8.5l3.2 3L13 4.5" : "M4 4l8 8M12 4l-8 8"
     }"/></svg>${ok ? passText : failText}</span>`;
 
@@ -342,7 +342,7 @@ import Layout from "../layouts/Layout.astro";
   });
 </script>
 
-<style>
+<style is:global>
   .v-hero {
     width: min(100% - calc(var(--gutter) * 2), var(--max-text));
     margin: 0 auto;
