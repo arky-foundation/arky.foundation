@@ -385,8 +385,8 @@ import Button from "../components/Button.astro";
             <span class="cap">published vectors passing<br>on the reference stack</span>
           </div>
           <div class="metric">
-            <span class="num">2</span>
-            <span class="cap">independent implementations<br>Rust &middot; TypeScript, cross-checked byte-for-byte</span>
+            <span class="num">4</span>
+            <span class="cap"><a href="#implementations">independent implementations</a><br>Rust &middot; Python &middot; Go &middot; TypeScript, cross-checked byte-for-byte</span>
           </div>
           <div class="metric">
             <span class="num">L2</span>
@@ -440,7 +440,7 @@ import Button from "../components/Button.astro";
             <p class="section-label">Adoption path</p>
             <h2 id="adopt-title">Read. Verify. Ship.</h2>
           </div>
-          <p class="lead reveal" style="--reveal-delay: 100ms">Technical adoption, not a signup. Validate artifacts locally, compare behavior against the vectors, then implement the loop in your stack against two executable reference anchors.</p>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Technical adoption, not a signup. Validate artifacts locally, compare behavior against the vectors, then implement the loop in your stack against four executable reference anchors.</p>
         </div>
 
         <div class="path-grid">
@@ -469,10 +469,93 @@ import Button from "../components/Button.astro";
           <article class="path-card reveal" style="--reveal-delay: 180ms">
             <p class="claim">3 / IMPLEMENT</p>
             <h3>Build</h3>
-            <p>Use the Rust and TypeScript reference packages as executable anchors for conformant behavior.</p>
+            <p>Use the four reference packages as executable anchors for conformant behavior &mdash; they agree byte-for-byte, so any of them settles a question.</p>
             <div class="path-links">
-              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core-rs/README.md" target="_blank" rel="noopener">Rust</a>
-              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core/README.md" target="_blank" rel="noopener">TypeScript</a>
+              <a class="path-link" href="#implementations">Pick your stack</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band section" id="implementations" aria-labelledby="impl-title">
+      <div class="wrap">
+        <div class="section-grid">
+          <div class="section-head reveal">
+            <p class="section-label">Reference implementations</p>
+            <h2 id="impl-title">Four stacks. Identical bytes.</h2>
+          </div>
+          <p class="lead reveal" style="--reveal-delay: 100ms">Each one is written clean-room from the specs, then held to the same line in CI: canonical bytes &rarr; content IDs &rarr; Ed25519 signatures &rarr; Kernel decisions &rarr; execution receipts must match <em>byte-for-byte</em> across every stack. A disagreement anywhere fails the build.</p>
+        </div>
+
+        <div class="dim" aria-hidden="true"><span class="dim-label">APACHE-2.0&ensp;·&ensp;CLEAN-ROOM FROM THE SPECS&ensp;·&ensp;CROSS-CHECKED IN CI</span></div>
+
+        <div class="impl-grid">
+          <article class="impl-card reveal">
+            <div class="impl-head">
+              <h3>Rust</h3>
+              <span class="impl-pkg">crates.io / arky-core</span>
+            </div>
+            <p class="impl-role">Primary reference. Hand-rolled RFC 8785 canonicalization including the ECMAScript number formatter, so nothing depends on a JS engine's rounding.</p>
+            <ul class="impl-facts">
+              <li><span>Tests</span><strong>44</strong></li>
+              <li><span>Deps</span><strong>5 crates</strong></li>
+              <li><span>Coverage</span><strong>TIM &middot; Kernel &middot; Settler</strong></li>
+            </ul>
+            <div class="path-links">
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core-rs/README.md" target="_blank" rel="noopener">README</a>
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/tree/master/packages/core-rs" target="_blank" rel="noopener">Source</a>
+            </div>
+          </article>
+
+          <article class="impl-card reveal" style="--reveal-delay: 80ms">
+            <div class="impl-head">
+              <h3>Python</h3>
+              <span class="impl-pkg">PyPI / arky-core</span>
+            </div>
+            <p class="impl-role">Zero dependencies &mdash; Ed25519 implemented from RFC 8032 on <code>hashlib</code> and checked against the RFC's own vectors. Built for agent and data tooling.</p>
+            <ul class="impl-facts">
+              <li><span>Tests</span><strong>149</strong></li>
+              <li><span>Deps</span><strong>none</strong></li>
+              <li><span>Coverage</span><strong>TIM &middot; Kernel &middot; Settler</strong></li>
+            </ul>
+            <div class="path-links">
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core-py/README.md" target="_blank" rel="noopener">README</a>
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/tree/master/packages/core-py" target="_blank" rel="noopener">Source</a>
+            </div>
+          </article>
+
+          <article class="impl-card reveal" style="--reveal-delay: 160ms">
+            <div class="impl-head">
+              <h3>Go</h3>
+              <span class="impl-pkg">go get &hellip;/packages/core-go</span>
+            </div>
+            <p class="impl-role">Standard library only. A hand-written JSON parser keeps key order and number precision that <code>encoding/json</code> would discard before signing.</p>
+            <ul class="impl-facts">
+              <li><span>Tests</span><strong>49</strong></li>
+              <li><span>Deps</span><strong>none</strong></li>
+              <li><span>Coverage</span><strong>TIM &middot; Kernel &middot; Settler</strong></li>
+            </ul>
+            <div class="path-links">
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core-go/README.md" target="_blank" rel="noopener">README</a>
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/tree/master/packages/core-go" target="_blank" rel="noopener">Source</a>
+            </div>
+          </article>
+
+          <article class="impl-card reveal" style="--reveal-delay: 240ms">
+            <div class="impl-head">
+              <h3>TypeScript</h3>
+              <span class="impl-pkg">npm / @arky/core</span>
+            </div>
+            <p class="impl-role">Browser-safe and dependency-light. It is the stack behind <a href="/verify">/verify</a>, so the in-page verifier runs the same code path as the published vectors.</p>
+            <ul class="impl-facts">
+              <li><span>Tests</span><strong>106</strong></li>
+              <li><span>Deps</span><strong>2 (@noble)</strong></li>
+              <li><span>Coverage</span><strong>TIM &middot; Kernel &middot; Settler</strong></li>
+            </ul>
+            <div class="path-links">
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core/README.md" target="_blank" rel="noopener">README</a>
+              <a class="path-link" href="https://github.com/arky-foundation/arky.foundation/tree/master/packages/core" target="_blank" rel="noopener">Source</a>
             </div>
           </article>
         </div>
@@ -522,7 +605,7 @@ import Button from "../components/Button.astro";
         </div>
 
         <div class="closing reveal">
-          <p class="closing-text">Ready to adopt? Read the spec, replay the vectors, and ship conformance against two independent reference stacks. The first external implementation to pass the vectors unlocks Stable.</p>
+          <p class="closing-text">Ready to adopt? Read the spec, replay the vectors, and ship conformance.</p>
           <div class="closing-actions" aria-label="Get started">
             <Button tone="primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md">Read the spec</Button>
             <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md">Run vectors</Button>

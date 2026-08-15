@@ -815,8 +815,7 @@ h1 .h1-mark::after {
   /* Optical correction: the serif rides high in its em box, so the top
      pad is grown and the bottom pad shrunk by the same amount. The box
      height is unchanged; only the label moves. */
-  padding: calc(var(--btn-pad-y) + var(--btn-optical))
-    var(--btn-pad-x)
+  padding: calc(var(--btn-pad-y) + var(--btn-optical)) var(--btn-pad-x)
     calc(var(--btn-pad-y) - var(--btn-optical));
   font-family: var(--font-body);
   font-size: 1rem;
@@ -1646,6 +1645,109 @@ h2 {
   gap: var(--space-3);
 }
 
+/* Reference implementations -------------------------------------------- */
+
+.impl-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.impl-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--hairline);
+  border-top: 2px solid var(--accent);
+  border-radius: 5px;
+  background: rgba(251, 250, 245, 0.7);
+  padding: var(--space-6);
+  transition:
+    border-color 240ms ease,
+    transform 240ms var(--ease-out),
+    box-shadow 240ms ease;
+}
+
+.impl-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+}
+
+.impl-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.impl-head h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.impl-pkg {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.impl-role {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+  margin: 0 0 var(--space-5);
+}
+
+.impl-role code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.impl-facts {
+  list-style: none;
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.impl-facts li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--panel);
+  padding: var(--space-2) var(--space-3);
+}
+
+.impl-facts span {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.impl-facts strong {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 560;
+  color: var(--text);
+  text-align: right;
+}
+
 .terminal {
   margin-top: var(--space-6);
   border: 1px solid var(--hairline);
@@ -2374,6 +2476,11 @@ code {
 
 /* ---- 900px: tablet — the hero h1 is the main "stretched" offender ---- */
 @media (max-width: 900px) {
+  /* Four implementation cards get too narrow to read; pair them up. */
+  .impl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   h1 {
     font-size: clamp(3.4rem, 14vw, 7rem);
   }
@@ -2463,6 +2570,10 @@ code {
   }
 
   .path-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .impl-grid {
     grid-template-columns: 1fr;
   }
 
