@@ -78,12 +78,23 @@ code {
   overflow-wrap: anywhere;
 }
 
-/* Fine dot-grid + coarse module grid + blueprint texture, full viewport */
+/* Fine dot-grid + coarse module grid + blueprint texture, full viewport.
+
+   The drift is animated with `transform`, never `background-position`:
+   background-position cannot be handed to the compositor, so animating it
+   forces a full-viewport re-raster of all five gradient layers every
+   frame, forever. A transform runs on its own GPU layer for ~free.
+
+   To translate without exposing an edge, the element is oversized by one
+   144px tile on every side (inset: -144px) and travels exactly 144px --
+   the LCM of the tile sizes (144, 24, 36), so all five layers complete a
+   whole number of periods and the pattern wraps seamlessly. */
 body::before {
   position: fixed;
-  inset: -2px;
+  inset: -144px;
   z-index: -3;
   content: "";
+  will-change: transform;
   background-image:
         /* coarse module grid */
     linear-gradient(rgba(197, 188, 168, 0.12) 1px, transparent 1px),
@@ -118,12 +129,7 @@ body::after {
 
 @keyframes grid-drift {
   to {
-    background-position:
-      144px 144px,
-      144px 144px,
-      24px 24px,
-      36px 36px,
-      36px 36px;
+    transform: translate3d(144px, 144px, 0);
   }
 }
 
@@ -196,6 +202,25 @@ button {
 .bp-via {
   fill: var(--lines);
   opacity: 0.4;
+}
+
+/* ============ ANIMATION SUSPENSION ============
+   schematic.js sets .anim-idle on <html> whenever the tab is hidden, and
+   .is-idle on a section whose animations have scrolled out of view. Both
+   halt continuous work that nothing is watching: CSS keyframes are frozen
+   here, and the matching rAF loops bail in JS. Without this the hero
+   repaints at 60fps forever, even in a backgrounded tab. */
+.anim-idle body::before,
+.anim-idle .net-orbit.spin,
+.anim-idle .net-spoke-live,
+.anim-idle .net-hub-pulse {
+  animation-play-state: paused;
+}
+
+.hero-net.is-idle .net-orbit.spin,
+.hero-net.is-idle .net-spoke-live,
+.hero-net.is-idle .net-hub-pulse {
+  animation-play-state: paused;
 }
 
 .wrap {
@@ -643,6 +668,14 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The full-viewport grid drift is the single most expensive animation
+     on the page, so reduced-motion must stop it too -- and with it the
+     compositor layer it would otherwise hold open. */
+  body::before {
+    animation: none;
+    will-change: auto;
+  }
+
   .net-orbit.spin,
   .net-spoke-live,
   .net-hub-pulse {

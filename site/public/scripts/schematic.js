@@ -1,4 +1,5 @@
-const lerp = (a, b, t) => a + (b - a) * t;
+import { initActorNetwork } from "./actor-network.js";
+import { isTabVisible, onResume, visibilityOf } from "./anim-gate.js";
 
 (() => {
   const route = document.querySelector("#live-route");
@@ -143,8 +144,18 @@ const lerp = (a, b, t) => a + (b - a) * t;
     // Seed the description for the initial stage.
     if (stageDesc) stageDesc.innerHTML = copy[mode][0];
 
+    // The schematic only animates while it is on screen in a live tab.
+    // getPointAtLength() forces SVG geometry work every frame, so running
+    // it against a scrolled-away diagram is pure waste.
+    const stageEl = document.querySelector(".hero-stage");
+    const stageOnScreen = visibilityOf(stageEl);
+    // Guards against stacking rAF chains when several resume triggers
+    // (tab focus + scroll back into view) fire together.
+    let running = false;
+
     const render = (timestamp) => {
-      if (paused) {
+      if (paused || !isTabVisible() || !stageOnScreen()) {
+        running = false;
         return;
       }
       const progress = reduceMotion ? 0.94 : (timestamp % 9000) / 9000;
@@ -153,16 +164,25 @@ const lerp = (a, b, t) => a + (b - a) * t;
       const index = Math.min(nodes.length - 1, Math.floor(progress * nodes.length));
       if (index !== current) setActive(index);
 
-      if (!reduceMotion) {
-        window.requestAnimationFrame(render);
+      if (reduceMotion) {
+        running = false;
+        return;
       }
+      window.requestAnimationFrame(render);
+    };
+
+    const startRender = () => {
+      if (running || paused || reduceMotion) return;
+      running = true;
+      window.requestAnimationFrame(render);
     };
 
     if (reduceMotion) {
       // No animation: rest on the final, signed-receipt stage.
       setStage(nodes.length - 1);
     } else {
-      render(0);
+      onResume(startRender);
+      startRender();
     }
   }
 
@@ -186,69 +206,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
     });
   });
 
-  // Hero actor-network: evidence in -> Arky hub -> signed receipt out.
-  const netRoot = document.querySelector(".hero-net");
-  if (netRoot) {
-    const hub = { x: 200, y: 200 };
-    const actors = Array.from(netRoot.querySelectorAll(".net-node")).map((el) => {
-      const m = /translate\(([-\d.]+)\s+([-\d.]+)\)/u.exec(el.getAttribute("transform") || "");
-      return { el, x: m ? Number(m[1]) : hub.x, y: m ? Number(m[2]) : hub.y };
-    });
-    // Packet A carries evidence (actor to hub); packet B carries the receipt back.
-    const pktA = netRoot.querySelector("#net-packet-a");
-    const pktB = netRoot.querySelector("#net-packet-b");
-
-    const place = (pkt, from, to, t) => {
-      pkt.setAttribute("cx", lerp(from.x, to.x, t).toFixed(2));
-      pkt.setAttribute("cy", lerp(from.y, to.y, t).toFixed(2));
-    };
-
-    if (pktA && pktB && actors.length > 0 && !reduceMotion) {
-      // Milliseconds per leg; phase 0 = evidence inbound, phase 1 = receipt outbound.
-      const LEG = 1500;
-      let idx = 0;
-      let legStart = null;
-      let phase = 0;
-
-      const tick = (ts) => {
-        if (legStart === null) legStart = ts;
-        const t = Math.min(1, (ts - legStart) / LEG);
-        const actor = actors[idx];
-
-        if (phase === 0) {
-          place(pktA, actor, hub, t);
-          pktA.style.opacity = "1";
-          pktB.style.opacity = "0";
-          if (t > 0.08 && t < 0.96) actor.el.classList.add("lit");
-        } else {
-          place(pktB, hub, actor, t);
-          pktB.style.opacity = "1";
-          pktA.style.opacity = "0";
-          if (t > 0.9) actor.el.classList.remove("lit");
-        }
-
-        if (t >= 1) {
-          legStart = ts;
-          if (phase === 0) {
-            phase = 1;
-          } else {
-            phase = 0;
-            actor.el.classList.remove("lit");
-            idx = (idx + 1) % actors.length;
-          }
-        }
-        window.requestAnimationFrame(tick);
-      };
-      window.requestAnimationFrame(tick);
-    } else if (pktA && pktB) {
-      // Reduced motion: rest with one actor lit and the receipt delivered.
-      pktA.style.opacity = "0";
-      if (actors[0]) {
-        actors[0].el.classList.add("lit");
-        place(pktB, hub, actors[0], 1);
-      }
-    }
-  }
+  initActorNetwork({ reduceMotion });
 
   // Header lift: once the page scrolls off the top, the header casts a shadow.
   const siteHeader = document.querySelector(".site-header");
