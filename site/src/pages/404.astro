@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Button from "../components/Button.astro";
 ---
 
 <Layout title="No Receipt Found - Arky Foundation" description="There is no signed receipt for this address.">
@@ -17,8 +18,8 @@ import Layout from "../layouts/Layout.astro";
         <div><dt>sig</dt><dd>&mdash; (nothing was signed)</dd></div>
       </dl>
       <div class="nf-actions reveal hero-load" style="--reveal-delay: 240ms">
-        <a class="button primary" href="/">Back to a verifiable page</a>
-        <a class="button" href="/verify">Verify a real receipt</a>
+        <Button tone="primary" href="/">Back to a verifiable page</Button>
+        <Button href="/verify">Verify a real receipt</Button>
       </div>
     </section>
   </main>

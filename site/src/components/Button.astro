@@ -1,0 +1,58 @@
+---
+/**
+ * The single button primitive for the site.
+ *
+ * Renders an <a> when `href` is set, otherwise a <button>. Every clickable
+ * control on the site (hero CTAs, header CTA, segmented depth toggles, the
+ * terminal copy affordance) resolves to this component so that height,
+ * padding, radius, focus ring, and the optical baseline correction stay in
+ * exactly one place.
+ */
+interface Props {
+  href?: string;
+  /** Visual weight. `ghost` is chromeless until hovered. */
+  tone?: "default" | "primary" | "ghost";
+  /** Height ramp: sm 32px, md 40px, lg 48px. */
+  size?: "sm" | "md" | "lg";
+  /** Mono, uppercase, letterspaced label — for controls, not prose CTAs. */
+  mono?: boolean;
+  /** Stretch to fill the inline axis of its container. */
+  block?: boolean;
+  type?: "button" | "submit" | "reset";
+  id?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  tone = "default",
+  size = "lg",
+  mono = false,
+  block = false,
+  type = "button",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+const classes = [
+  "button",
+  tone !== "default" && tone,
+  size !== "lg" && size,
+  mono && "mono",
+  block && "block",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+
+// External links get the standard safety + affordance attributes for free.
+const external = href?.startsWith("http");
+const linkAttrs = href
+  ? { href, ...(external ? { target: "_blank", rel: "noopener" } : {}) }
+  : { type };
+---
+
+<Tag class={classes} {...linkAttrs} {...rest}><slot /></Tag>

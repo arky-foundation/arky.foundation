@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Button from "../components/Button.astro";
 ---
 
 <Layout
@@ -30,9 +31,9 @@ import Layout from "../layouts/Layout.astro";
           </div>
           <input id="v-file" type="file" multiple accept=".json,application/json" class="sr-only" />
           <div class="v-actions">
-            <button id="v-run" class="button primary" type="button">Verify</button>
-            <button id="v-example" class="button" type="button">Load example</button>
-            <button id="v-clear" class="button" type="button">Clear</button>
+            <Button id="v-run" tone="primary">Verify</Button>
+            <Button id="v-example">Load example</Button>
+            <Button id="v-clear" tone="ghost">Clear</Button>
           </div>
         </div>
 
@@ -426,6 +427,17 @@ import Layout from "../layouts/Layout.astro";
   .v-drop:hover {
     border-color: var(--accent);
     color: var(--text);
+  }
+
+  /* It is a role="button" target, so it needs the same focus ring the
+     real buttons get. */
+  .v-drop:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .v-drop.over {
+    background: var(--accent-soft);
   }
 
   .v-actions {

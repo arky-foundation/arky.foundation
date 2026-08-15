@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Button from "../components/Button.astro";
 ---
 
 <Layout
@@ -16,9 +17,9 @@ import Layout from "../layouts/Layout.astro";
           <p class="tagline reveal hero-load" style="--reveal-delay: 120ms">A public protocol for action and verification across agents, money, chains, and machines.</p>
           <p class="subline reveal hero-load" style="--reveal-delay: 180ms">Every action records who acted, on what evidence, under which policy, and what happened &mdash; as a signed, content-addressed receipt any system can replay.</p>
           <div class="hero-actions reveal hero-load" style="--reveal-delay: 240ms" aria-label="Primary actions">
-            <a class="button primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md" target="_blank" rel="noopener">Read the spec</a>
-            <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md" target="_blank" rel="noopener">Run vectors</a>
-            <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core/README.md" target="_blank" rel="noopener">Implement</a>
+            <Button tone="primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md">Read the spec</Button>
+            <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md">Run vectors</Button>
+            <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core/README.md">Implement</Button>
           </div>
         </div>
 
@@ -210,8 +211,8 @@ import Layout from "../layouts/Layout.astro";
           </span>
         </div>
         <div class="depth-toggle" role="group" aria-label="Explanation depth">
-          <button type="button" class="depth-btn" data-mode="plain" aria-pressed="true">Plain</button>
-          <button type="button" class="depth-btn" data-mode="engineer" aria-pressed="false">Engineer</button>
+          <Button class="depth-btn" tone="ghost" size="sm" mono data-mode="plain" aria-pressed="true">Plain</Button>
+          <Button class="depth-btn" tone="ghost" size="sm" mono data-mode="engineer" aria-pressed="false">Engineer</Button>
         </div>
       </div>
       <p class="stage-desc" id="stage-desc" aria-live="polite"></p>
@@ -237,8 +238,8 @@ import Layout from "../layouts/Layout.astro";
           <div class="flow-mobile-head">
             <span class="flow-mobile-title">Protocol flow</span>
             <div class="depth-toggle depth-toggle-m" role="group" aria-label="Explanation depth">
-              <button type="button" class="depth-btn" data-mode="plain" aria-pressed="true">Plain</button>
-              <button type="button" class="depth-btn" data-mode="engineer" aria-pressed="false">Engineer</button>
+              <Button class="depth-btn" tone="ghost" size="sm" mono data-mode="plain" aria-pressed="true">Plain</Button>
+              <Button class="depth-btn" tone="ghost" size="sm" mono data-mode="engineer" aria-pressed="false">Engineer</Button>
             </div>
           </div>
           <ol class="flow-steps">
@@ -360,7 +361,7 @@ import Layout from "../layouts/Layout.astro";
               <p>A did:key that resolves to the signing key itself &mdash; verification needs nothing beyond the document.</p>
             </div>
             <div class="receipt-cta">
-              <a class="button primary" href="/verify?example">Replay this receipt</a>
+              <Button tone="primary" href="/verify?example">Replay this receipt</Button>
               <span class="receipt-cta-note">loads this exact artifact into the verifier in your browser</span>
             </div>
           </div>
@@ -459,7 +460,7 @@ import Layout from "../layouts/Layout.astro";
             <div class="terminal">
               <div class="terminal-head">
                 <span>core-rs conformance</span>
-                <button class="copy-command" type="button" data-copy="cargo test -p arky-core">copy</button>
+                <Button class="copy-command" tone="ghost" size="sm" mono data-copy="cargo test -p arky-core">copy</Button>
               </div>
               <pre><code>cargo test -p arky-core</code></pre>
             </div>
@@ -523,9 +524,9 @@ import Layout from "../layouts/Layout.astro";
         <div class="closing reveal">
           <p class="closing-text">Ready to adopt? Read the spec, replay the vectors, and ship conformance against two independent reference stacks. The first external implementation to pass the vectors unlocks Stable.</p>
           <div class="closing-actions" aria-label="Get started">
-            <a class="button primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md" target="_blank" rel="noopener">Read the spec</a>
-            <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md" target="_blank" rel="noopener">Run vectors</a>
-            <a class="button" href="https://github.com/arky-foundation/arky.foundation/blob/master/guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md" target="_blank" rel="noopener">Become an implementer</a>
+            <Button tone="primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md">Read the spec</Button>
+            <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md">Run vectors</Button>
+            <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/guides/ARKY-CALL-FOR-IMPLEMENTERS-v1.md">Become an implementer</Button>
           </div>
         </div>
       </div>

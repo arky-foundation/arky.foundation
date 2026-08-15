@@ -174,12 +174,14 @@ const lerp = (a, b, t) => a + (b - a) * t;
       try {
         await navigator.clipboard.writeText(value);
         button.textContent = "copied";
+        button.classList.add("is-copied");
       } catch {
         button.textContent = "select";
       }
 
       window.setTimeout(() => {
         button.textContent = original;
+        button.classList.remove("is-copied");
       }, 1600);
     });
   });
