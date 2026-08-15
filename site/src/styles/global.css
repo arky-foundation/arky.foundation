@@ -1809,6 +1809,11 @@ h2 {
   color: #f4f1e8;
 }
 
+/* Reserve two command lines so switching stacks never shifts the layout. */
+.terminal pre {
+  min-height: calc(2 * 1.7 * 0.88rem + 2 * var(--space-4));
+}
+
 /* Copy affordance in the terminal chrome — the shared primitive, shrunk
    to sit inside the 42px terminal head without stretching it. */
 .button.copy-command {
@@ -1995,6 +2000,17 @@ code {
   font-size: 0.68rem;
   letter-spacing: 0.06em;
   line-height: 1.5;
+}
+
+.metric .cap a {
+  border-bottom: 1px solid rgba(30, 61, 92, 0.28);
+  padding-bottom: 1px;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+.metric .cap a:hover {
+  color: var(--oxide);
+  border-color: var(--oxide);
 }
 
 .claim {

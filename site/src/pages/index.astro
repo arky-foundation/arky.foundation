@@ -25,7 +25,7 @@ const receiptBars = [...receiptCid].map((c) => (c.codePointAt(0)! % 3) + 1);
           <div class="hero-actions reveal hero-load" style="--reveal-delay: 240ms" aria-label="Primary actions">
             <Button tone="primary" href="https://github.com/arky-foundation/arky.foundation/blob/master/specs/core/ARKY-TIM-v1.md">Read the spec</Button>
             <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/CONFORMANCE.md">Run vectors</Button>
-            <Button href="https://github.com/arky-foundation/arky.foundation/blob/master/packages/core/README.md">Implement</Button>
+            <Button href="#implementations">Implement</Button>
           </div>
         </div>
 
@@ -221,7 +221,7 @@ const receiptBars = [...receiptCid].map((c) => (c.codePointAt(0)! % 3) + 1);
           <Button class="depth-btn" tone="ghost" size="sm" mono data-mode="engineer" aria-pressed="false">Engineer</Button>
         </div>
       </div>
-      <p class="stage-desc" id="stage-desc" aria-live="polite"></p>
+      <p class="stage-desc" id="stage-desc"></p>
     </section>
 
     <section class="band section" id="standard" aria-labelledby="standard-title">
@@ -332,6 +332,8 @@ const receiptBars = [...receiptCid].map((c) => (c.codePointAt(0)! % 3) + 1);
           </div>
           <p class="lead reveal" style="--reveal-delay: 100ms">Every action an agent takes reduces to documents like this one: small, canonical, content-addressed, signed. It carries everything needed to check itself &mdash; no API, no issuer, no network. Replay it in your browser right now.</p>
         </div>
+
+        <div class="dim" aria-hidden="true"><span class="dim-label">SPECIMEN&ensp;·&ensp;EMITTED BY @ARKY/MCP&ensp;·&ensp;REPLAYABLE OFFLINE</span></div>
 
         <div class="receipt-stage">
           <article class="receipt-card reveal" aria-label="Specimen agent tool-call receipt">
@@ -603,7 +605,7 @@ const receiptBars = [...receiptCid].map((c) => (c.codePointAt(0)! % 3) + 1);
               <rect x="14" y="14" width="20" height="20" rx="2" stroke="currentColor" stroke-width="1"></rect>
             </svg>
             <h3>AI and agents</h3>
-            <p>Action records with cited evidence and declared policy.</p>
+            <p>Every tool call and payment an agent makes, policy-gated and receipted.</p>
           </article>
           <article class="domain reveal" style="--reveal-delay: 80ms">
             <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
