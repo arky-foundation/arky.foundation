@@ -9,7 +9,7 @@ detached-payload Ed25519 JWS (RFC 7797), with witnessing — plus the Kernel
 
 Built clean-room from the specs. It passes the published conformance vectors and
 is cross-checked **byte-for-byte** against `@arky/core` (TypeScript), `arky-core`
-(Rust) and `arky-core-go` (Go): canonical bytes, cids, Ed25519 signatures,
+(Rust) and `arky-core` (Go): canonical bytes, cids, Ed25519 signatures,
 Kernel decisions, and execution receipts are all identical.
 
 ## Requirements

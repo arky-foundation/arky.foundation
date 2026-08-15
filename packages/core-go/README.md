@@ -1,6 +1,11 @@
-# arky-core-go
+# arky-core (Go)
 
 Reference **Go** implementation of Arky TIM — a third independent stack.
+
+Go modules are identified by import path, not by a package name, so there is no
+`arky-core-go` artifact anywhere: the module is
+`github.com/arky-foundation/arky.foundation/packages/core-go`, conventionally
+imported as `arky`.
 
 Produce and verify Time-Identity-Measurement receipts: JCS canonicalization
 (RFC 8785), content addressing (multihash sha2-256 + base58btc multibase), and

@@ -80,11 +80,11 @@ jobs:
         with:
           go-version-file: packages/core-go/go.mod
 
-      - name: "arky-core-go (Go) conformance (third independent stack)"
+      - name: "arky-core (Go) conformance (third independent stack)"
         run: go test ./...
         working-directory: packages/core-go
 
-      - name: "arky-core-go formatting and vet"
+      - name: "arky-core (Go) formatting and vet"
         working-directory: packages/core-go
         run: |
           set -euo pipefail

@@ -125,7 +125,7 @@ All vectors follow `ARKY-VECTORS-v1`:
 
 - [`packages/core`](../packages/core/) - `@arky/core` TypeScript.
 - [`packages/core-rs`](../packages/core-rs/) - `arky-core` Rust.
-- [`packages/core-go`](../packages/core-go/) - `arky-core-go` Go.
+- [`packages/core-go`](../packages/core-go/) - `arky-core` Go.
 - [`packages/core-py`](../packages/core-py/) - `arky-core` Python.
 
 The cross-language check in [`../scripts/cross-check.sh`](../scripts/cross-check.sh)

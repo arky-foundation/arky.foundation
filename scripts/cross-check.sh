@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Cross-language determinism check: assert @arky/core (TS), arky-core (Rust),
-# arky-core-go (Go) and arky-core (Python) produce BYTE-IDENTICAL results for
+# arky-core (Go) and arky-core (Python) produce BYTE-IDENTICAL results for
 # the shared fixtures and vectors. This is the heart of the "independent stacks
 # agree" guarantee: canonical bytes -> cids -> Ed25519 signatures -> kernel
 # decisions -> receipts.
