@@ -16,9 +16,13 @@ cargo test --manifest-path packages/core-rs/Cargo.toml
 Use `bun run validate` for repository conformance hygiene:
 
 - JSON syntax across schemas, registries, policies, vectors, and examples.
-- Signed artifact and vector verification via `bun run verify`.
+- Signed artifact and vector verification via `bun run verify` (also emits
+  `vectors/RESULTS.json`).
 - Kernel vector expectations against the Kernel JSON Schema.
 - Relative Markdown link checking.
+- Vector-count consistency across manifests, `RELEASES.json`, and every prose
+  table via `bun run release-check` (`--write` regenerates the machine-owned
+  files).
 
 Use `bun test` for the TypeScript reference implementation and `cargo test` for
 the Rust reference implementation.
@@ -75,6 +79,14 @@ reproducible artifact tied to the commit used for the run.
 - Notary Merkle roots, inclusion proofs, finality depth, and reorg behavior.
 - Settler idempotency keys, STOP_ON_FAILURE cascades, compensation mapping, and
   XR state transitions.
+- Check-dispatched non-core vectors (a `check` field names the executor):
+  Discovery descriptor crypto, spec-level compatibility, auth allowlists,
+  policy binding, capability accuracy, and health endpoints; Attestation
+  result crypto, registry-driven freshness, content/key bindings,
+  claims-vs-policy, and type registration; Policy Pack signatures and
+  most-restrictive-wins merges; Registry snapshots and URN/CAIP-2 grammar;
+  Error envelopes, retry rules, and code taxonomy. These execute for positive
+  and negative expectations alike.
 - End-to-end reference path links from TIM to Notary anchor to Kernel decision
   to Settler receipt.
 
@@ -102,12 +114,17 @@ For cross-language reference behavior, compare against:
 
 ## Adding Vectors
 
-- Add the vector under the appropriate suite directory.
-- Reference it from `vectors/manifests/<suite>.json`.
+- Add the vector under the appropriate suite directory with its own `id` and
+  `level` fields (the `level` field is what the count gate recounts).
+- Run `bun run release-check --write` to update the suite manifest and
+  `vectors/RELEASES.json`; update the prose tables (`vectors/README.md`, this
+  guide, `CONFORMANCE.md`, the compatibility matrix) by hand — the gate fails
+  CI until they agree.
 - Include fixtures under `vectors/fixtures/` only when they are shared.
 - Use test keys only; never commit production credentials, PII, PHI, or real
   account data.
-- Update `vectors/RELEASES.json` when publishing a vector release.
+- Negative-test any new verifier check: corrupt the expectation, confirm the
+  verifier fails, restore.
 
 ## Troubleshooting
 

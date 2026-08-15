@@ -14,7 +14,7 @@ depends_on:
 summary: >
   Defines roles, authorities, RFC lifecycle, voting, versioning, deprecation,
   registry admissions, conformance claims, release packaging, and security
-  incident response for the Arky standards.
+  incident response for the Arky protocol specifications.
 links:
   rfcs: https://arky.foundation/rfcs/
   vectors: https://arky.foundation/vectors/

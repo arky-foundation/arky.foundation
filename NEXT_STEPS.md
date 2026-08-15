@@ -6,20 +6,21 @@ baseline. It is intentionally subordinate to `CONFORMANCE.md`,
 
 ## Current Read
 
-The core accountability loop is mechanically healthy:
+The protocol surface is mechanically healthy:
 
-- TIM, Canonicalization, Kernel, Notary, and Settlers are at
-  `status: implementing`.
-- Their vector manifests are `ready_for_production: true` with L2-or-better
-  coverage.
-- `@arky/core` and `arky-core` both pass the vectors and are cross-checked
-  byte-for-byte.
-- `bun run validate`, `bun test`, and the Rust crate tests pass locally.
+- The five core-loop specs (TIM, Canonicalization, Kernel, Notary, Settlers)
+  are at `status: implementing` with `ready_for_production: true` manifests at
+  L2-or-better coverage.
+- `@arky/core` (TypeScript) and `arky-core` (Rust) both pass the vectors and
+  are cross-checked byte-for-byte in CI.
+- Non-core suites (Discovery, Attestations, Policy Packs, Registries, Errors)
+  carry executable vectors run by the verifier; their specs remain
+  `status: review` and their manifests `ready_for_production: false`.
+- Count consistency across manifests, `RELEASES.json`, and every prose table
+  is CI-enforced by `bun run release-check`.
 
-The core-loop specs are not yet labelled `stable` because formal TC
-ratification is still pending. Non-core suites such as Discovery, Attestations,
-Policy Packs, Registries, Errors, and SDK guidance remain at `status: review`
-or partial vector coverage.
+Promotion of the core loop to `stable` is gated on one thing: an external
+implementation (governance §9.1.7), followed by the recorded TC vote.
 
 ## Development Priorities
 
@@ -28,8 +29,8 @@ or partial vector coverage.
 Per governance §9.1.7, `stable` requires an implementation built outside the
 editors' team passing the published vectors. Both reference stacks share
 authorship, so they count as one party; the TC vote records the gates, it does
-not substitute for them. This is now the top priority — ratification follows
-from it.
+not substitute for them. This is the top priority — ratification follows from
+it.
 
 Definition of done:
 
@@ -42,49 +43,7 @@ Definition of done:
 - `governance/ARKY-COMPAT-MATRIX-v1.md`, spec front matter, and
   `CONFORMANCE.md` agree on the lifecycle state.
 
-### 2. Bring Non-Core Suites Up To L2 — DONE (vectors release 0.3.0)
-
-Shipped 2026-08-15: Discovery D2 (descriptor crypto incl. tampered-negative,
-spec-level compatibility, auth allowlist, policy-binding precedence) and D3
-(capability accuracy, health/readiness); Attestations AT2 (AR crypto,
-registry-driven freshness, content and key bindings) and AT3 (claims-vs-policy,
-registered-type enforcement); new executable policy-packs (P1 validity, P2
-most-restrictive-wins merge + forbidden overrides), registries (R1 snapshot
-signatures, R2 tamper rejection + URN/CAIP-2 grammar), and errors (E1 envelope
-+ retry rules, E2 taxonomy) suites. All run by the check-dispatched executor in
-`scripts/verify-artifacts.ts` for positive AND negative expectations, and each
-check was corrupt-tested (flip expectation -> verifier fails -> restore).
-Operational levels (P3 auditability, E3 transport) are marked future work in
-their manifests; non-core specs stay `status: review`,
-`ready_for_production: false`.
-
-### 3. Keep Docs And Manifests In Lockstep
-
-Status claims should converge on one story: core-loop implementing and
-production-ready by technical bar; non-core review/partial; stable pending an
-external implementation (§9.1.7) plus the recorded TC vote.
-
-Definition of done:
-
-- `README.md`, package READMEs, `vectors/README.md`, `CONFORMANCE.md`,
-  `vectors/RELEASES.json`, and the compatibility matrix agree.
-- Schema version language avoids implying spec lifecycle `stable`.
-- Every status table is generated or easy to audit from manifests.
-
-### 4. Improve Release Automation — DONE
-
-Shipped 2026-08-15: `scripts/release-check.ts` recounts vector files on disk
-(each vector's own `level` field) and compares against every manifest,
-`vectors/RELEASES.json`, and the `vectors/README.md` suite table. `--write`
-regenerates manifests and RELEASES from disk; the README stays hand-written
-and drift there always fails. Runs in `bun run validate` and as a dedicated
-step in `.github/workflows/vectors-smoke.yaml`, so CI fails on any count
-disagreement. Gate was negative-tested (manifest coverage drift, phantom
-vector, RELEASES level drift, README row drift all caught; `--write`
-verified to repair). It found and fixed a real drift on first run: the README
-grand total said 106 where disk had 110.
-
-### 5. Build External Runner Guidance Carefully
+### 2. Build External Runner Guidance Carefully
 
 The repo has local verifiers and reference implementation tests. A packaged
 external `arky-test` runner is not part of this repository today.
@@ -92,9 +51,34 @@ external `arky-test` runner is not part of this repository today.
 Definition of done:
 
 - `vectors/testing-guide.md` distinguishes current local commands from proposed
-  third-party runner interfaces.
+  third-party runner interfaces (it does today; keep it true).
 - Any published runner name maps to an actual package, repository, and support
   policy.
+
+## Standing Invariants
+
+Enforced continuously, not tracked as tasks:
+
+- **Status lockstep** — `README.md`, package READMEs, `vectors/README.md`,
+  `CONFORMANCE.md`, `vectors/RELEASES.json`, and the compatibility matrix tell
+  one story: core loop implementing and production-ready by technical bar;
+  non-core review; `stable` pending an external implementation plus the TC
+  vote. Vector counts in all of these are gated by `bun run release-check`.
+- **Vectors over vibes** — new behavioral claims ship with executable vectors,
+  and new verifier checks are negative-tested (corrupt the expectation, watch
+  it fail, restore).
+
+## Completed
+
+- **Non-core suites to L2** (2026-08-15, vectors release 0.3.0): executable
+  Discovery D2/D3, Attestations AT2/AT3, and new policy-packs, registries, and
+  errors suites — 34 vectors run by the verifier's check-dispatched executor
+  for positive and negative expectations. Operational levels (P3, E3) are
+  marked future work in their manifests.
+- **Release automation** (2026-08-15): `scripts/release-check.ts` recounts
+  vectors from disk and fails CI on drift across manifests, `RELEASES.json`,
+  and every prose count surface; `--write` regenerates the machine-owned
+  files. It caught a real README total drift on its first run.
 
 ## Validation Commands
 
@@ -102,15 +86,16 @@ Run these locally before proposing changes:
 
 ```sh
 bun install
-bun run validate
-bun test
+bun run validate      # syntax, verifier (+results), kernel-vs-schema, links, counts
+bun test              # TypeScript reference implementation
 cargo test --manifest-path packages/core-rs/Cargo.toml
 git diff --check
 ```
 
-For a narrower conformance pass:
+For a narrower pass:
 
 ```sh
-bun run verify
+bun run verify         # conformance verifier only
+bun run release-check  # count-consistency gate only (--write to regenerate)
 bun run check-links
 ```

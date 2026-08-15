@@ -25,7 +25,7 @@ links:
   errors: specs/core/ARKY-ERRORS-v1.md
   vectors: specs/development/ARKY-VECTORS-v1.md
 permalink: /philosophy
-last_updated: 2025-10-15
+last_updated: 2026-08-15
 ---
 
 # Arky - Philosophy
