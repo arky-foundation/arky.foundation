@@ -42,7 +42,7 @@ dependency and is not part of `validate`.
 
 `bun run verify` does more than schema-shape checking — it **recomputes**
 results from inputs and compares them to each vector's `expect` block. Current
-runs report 136 passing vector/artifact checks. Check-dispatched vectors
+runs report 137 passing vector/artifact checks. Check-dispatched vectors
 (Discovery D2/D3, Attestations AT2/AT3, policy-packs, registries, errors) are
 executed for positive AND negative expectations; remaining legacy negative
 vectors and pure schema-shape vectors are deferred to the AJV step.

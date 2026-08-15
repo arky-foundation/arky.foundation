@@ -959,6 +959,9 @@ async function main() {
     reportArtifact(relative(rootDir, path), await verifyArtifact(artifact, publicKey));
   }
 
+  console.log('\nAgent examples:');
+  await verifyArtifactDir(join(rootDir, 'examples/agents'), publicKey, 'agent examples');
+
   console.log('\nRegistries:');
   await verifyArtifactDir(join(rootDir, 'registries'), publicKey, 'registries');
 

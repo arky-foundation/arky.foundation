@@ -1,0 +1,27 @@
+{
+  "time": {
+    "ts": "2026-08-15T09:41:07Z"
+  },
+  "identity": {
+    "id": "did:key:z6MktwupdmLXVVqTzCw4i46r4uGyosGXRnR3XjN4Zq7oMMsw"
+  },
+  "measurement": {
+    "name": "tool",
+    "value": "pay",
+    "code": "tool",
+    "method": {
+      "type": "mcp",
+      "source": "payments-mcp"
+    },
+    "provenance": {
+      "arguments": {
+        "to": "acme-cloud",
+        "amount": 18.5,
+        "currency": "USD",
+        "memo": "api credits"
+      }
+    }
+  },
+  "cid": "zQmYceAJULYysZ9TKoCcHz4pePdXnZgEXcC5yQBthgGGX5Q",
+  "sig": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il0sInR5cCI6IkpXUyIsImtpZCI6ImRpZDprZXk6ejZNa3R3dXBkbUxYVlZxVHpDdzRpNDZyNHVHeW9zR1hSblIzWGpONFpxN29NTXN3In0..-3ue0nPnEYFAdsfK32dtYI7DZp0H_HFjs58TL1mBkJ89mGqQlumFe763iIe_wfb45axfCM1IkJDNuEATSthcAQ"
+}
