@@ -44,6 +44,19 @@ checked that required arg keys were present, never their values. `pay
 stacks. **Fix:** amount validation per §3.2 in TS and Rust — a present `amount`
 MUST be `{ value: number > 0 (finite), unit: string }`. (commit `10460ca`)
 
+### 5. `did:key` resolution contract diverged between the stacks — Low
+`resolve_did_key` (Rust) accepted any `did:key:z…` whose decoded bytes merely
+*started* with the Ed25519 multicodec `0xed 0x01`, with no length check, so a
+short payload such as `did:key:z332DkP4ju` returned a 4-byte "public key" where
+`@arky/core` returned `undefined`. **Not exploitable** — `verifying_key_from_bytes`
+requires exactly 32 bytes, so such a TIM still failed closed with
+`tim.key_unresolved`, and no forgery was possible. But the two stacks disagreed on
+an API's return value, which is precisely the class of drift the second
+implementation exists to catch, and a caller using `resolve_did_key` directly
+would have seen a `Some(...)` that is not a key.
+**Fix:** Rust now requires the literal `did:key:z6Mk` prefix and a decoded length
+of exactly 34 bytes, matching `@arky/core` byte for byte.
+
 ## What held (correctly blocked, now under regression test)
 
 - Signature forgery: mutated body with original cid/sig; mutated body + fixed
@@ -74,6 +87,16 @@ MUST be `{ value: number > 0 (finite), unit: string }`. (commit `10460ca`)
 
 ## Regression coverage
 
-`packages/core/test/security.test.ts` (26 cases) exercises every finding and the
-"what held" attacks; the Rust crate's unit tests lock the RFC 8785 number forms
-and amount validation. CI runs both suites plus the cross-language `cross-check.sh`.
+Both stacks now carry a mirrored adversarial suite, so the *failure* behaviour is
+pinned on each side rather than only on the TS one:
+
+- `packages/core/test/security.test.ts` (26 cases, TS)
+- `packages/core-rs/tests/security.rs` (19 cases, Rust) — the same forgery,
+  downgrade, malformed-input, freshness, Settler-amount, and Kernel-evidence
+  attacks, plus the `did:key` length/prefix contract from finding 5.
+
+The Rust crate's unit tests additionally lock the RFC 8785 number forms and
+amount validation. CI runs both suites plus the cross-language `cross-check.sh`.
+
+Each new assertion was negative-tested (break the guard → the test must fail →
+restore), so the suite is known to have teeth rather than rubber-stamping.

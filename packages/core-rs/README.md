@@ -57,6 +57,26 @@ Run the full example: `cargo run --example quickstart`.
 - `evaluate_kernel(...)`, `evaluate_assertion(...)` — Kernel.
 - `settler::execute(...)` — Settler.
 
+## Security notes
+
+These mirror `@arky/core`'s guarantees; both stacks are held to them by a shared
+adversarial suite (`tests/security.rs` here, `test/security.test.ts` there).
+
+- **Verification never panics on hostile input.** A malformed identity,
+  signature, or witness yields `valid: false`, not a panic — safe to run on
+  untrusted TIMs.
+- **Freshness is opt-in.** `verify_tim` is a pure cryptographic check; use
+  `verify_tim_at(&tim, &resolver, Some(now))` to also reject expired receipts
+  (`exp` ≤ `at` → `tim.expired`).
+- **`resolve_did_key` is strict.** It accepts only `did:key:z6Mk…` decoding to
+  exactly 34 bytes (`0xed 0x01` + a 32-byte Ed25519 key) and returns `None` for
+  anything else, so it never hands back a byte slice that is not a key.
+- **Anti-replay (`nonce`) and causal chains (`prev`, cross-identity) are the
+  caller's responsibility.** Single-TIM verification cannot enforce them — they
+  need external state (a seen-nonce store, the prior chain).
+- **`did:key` keys are resolved from `identity.id`**, so a DID that does not
+  match the signing key fails verification (no hardcoded trust).
+
 ## Status
 
 Pre-1.0 (`v0.1.0`); the five core-loop specs are at `status: implementing` with

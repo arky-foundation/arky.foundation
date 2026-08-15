@@ -78,10 +78,19 @@ pub fn create_tim(body: Value, signing_key: &SigningKey, kid: Option<&str>) -> V
 
 /// Extract an Ed25519 public key from a did:key:z6Mk… identity (multicodec
 /// 0xed 0x01 || 32-byte key).
+///
+/// Returns `None` for any malformed input — bad base58, wrong multicodec, or a
+/// payload that is not exactly 32 bytes — and never panics, so a verifier
+/// processing untrusted TIMs cannot be crashed by a hostile identity string.
+///
+/// The `z6Mk` prefix and the 34-byte total length are both enforced: an Ed25519
+/// did:key is always `z6Mk…`, and accepting a short-but-well-formed multicodec
+/// payload would return a byte slice that is not a key. `@arky/core` applies the
+/// identical rule, so both stacks agree on exactly which identities resolve.
 pub fn resolve_did_key(id: &str) -> Option<Vec<u8>> {
-    let rest = id.strip_prefix("did:key:z")?;
-    let decoded = from_multibase(&format!("z{rest}")).ok()?;
-    if decoded.len() < 2 || decoded[0] != 0xed || decoded[1] != 0x01 {
+    let rest = id.strip_prefix("did:key:z6Mk")?;
+    let decoded = from_multibase(&format!("z6Mk{rest}")).ok()?;
+    if decoded.len() != 34 || decoded[0] != 0xed || decoded[1] != 0x01 {
         return None;
     }
     Some(decoded[2..].to_vec())
